@@ -76,6 +76,9 @@ devDependencies:
   tailwindcss:
     specifier: ^3.3.0
     version: 3.4.3
+  tsc-files:
+    specifier: ^1.1.4
+    version: 1.1.4(typescript@5.4.3)
   typescript:
     specifier: ^5
     version: 5.4.3
@@ -3483,6 +3486,15 @@ packages:
 
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
+
+  /tsc-files@1.1.4(typescript@5.4.3):
+    resolution: {integrity: sha512-RePsRsOLru3BPpnf237y1Xe1oCGta8rmSYzM76kYo5tLGsv5R2r3s64yapYorGTPuuLyfS9NVbh9ydzmvNie2w==}
+    hasBin: true
+    peerDependencies:
+      typescript: '>=3'
+    dependencies:
+      typescript: 5.4.3
+    dev: true
 
   /tsconfig-paths@3.15.0:
     resolution: {integrity: sha512-2Ac2RgzDe/cn48GvOe3M+o82pEFewD3UPbyoUHHdKasHwJKjds4fLXWf/Ux5kATBKN20oaFGu+jbElp1pos0mg==}
