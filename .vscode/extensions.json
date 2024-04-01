@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "stivo.tailwind-fold",
+    "bradlc.vscode-tailwindcss",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "aaron-bond.better-comments"
+  ]
+}
