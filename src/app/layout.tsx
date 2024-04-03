@@ -5,7 +5,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 import UserLogin from "@/components/home/user-login";
 import { cn } from "@/lib/utils";
-import PageFooter from "@/components/home/page-footer";
+import PageFooter from "@/components/common/page-footer";
 import Navigation, { NavItemType } from "@/components/home/navigation";
 
 import "./globals.css";
