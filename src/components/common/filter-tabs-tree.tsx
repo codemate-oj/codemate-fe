@@ -45,9 +45,10 @@ const FilerTabsTree = ({ filerTabsTreeData, onChange, defaultActiveKey }: FilerT
           })?.children ?? [];
       }
     });
+
     return nextTabs?.length
       ? nextTabs.map((i) => ({ label: i.label, key: i.key }))
-      : parseInt(level) === 1
+      : parseInt(level) === 0
         ? filerTabsTreeData.map((i) => ({ label: i.label, key: i.key }))
         : [];
   };
