@@ -32,7 +32,7 @@ const HomeLayout = async ({
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
-      {children}
+      <div className="m-auto max-w-screen-lg">{children}</div>
     </>
   );
 };

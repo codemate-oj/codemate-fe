@@ -1,12 +1,9 @@
-import PageTitle from "@/components/common/page-title";
+"use client";
+
 import React from "react";
 
 const UserRecordPage = () => {
-  return (
-    <div>
-      <PageTitle>评测记录</PageTitle>
-    </div>
-  );
+  return <div>评测记录</div>;
 };
 
 export default UserRecordPage;

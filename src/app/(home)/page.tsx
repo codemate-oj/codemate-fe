@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import React from "react";
 
+export const metadata: Metadata = {
+  title: "首页 (修炼场) - CODEMATE",
+};
+
 const HomePage = () => {
-  return <div>修炼场</div>;
+  return <div></div>;
 };
 
 export default HomePage;
