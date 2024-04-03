@@ -2,24 +2,32 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import React from "react";
 import Image from "next/image";
 
-const HomeLayout = ({
+// this is a server action example
+// (any async func running on server can be called 'server action')
+async function getCarousel() {
+  // this is a simple data mock, which will be replaced with real API end points in future
+  return [
+    { imageSrc: "/img/carousel/1.jpg", title: "carousel-1", width: 1920, height: 320 },
+    { imageSrc: "/img/carousel/2.jpg", title: "carousel-2", width: 1920, height: 320 },
+  ];
+}
+
+const HomeLayout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
+  const carouselData = await getCarousel();
+
   return (
     <>
-      <Carousel className="w-full max-w-full" opts={{ loop: true }}>
+      <Carousel autoPlay className="w-full max-w-full" opts={{ loop: true }}>
         <CarouselContent>
-          <CarouselItem>
-            <Image src="/img/carousel/1.jpg" alt="carousel-1" width={1920} height={320} />
-          </CarouselItem>
-          <CarouselItem>
-            <Image src="/img/carousel/1.jpg" alt="carousel-1" width={1920} height={320} />
-          </CarouselItem>
-          <CarouselItem>
-            <Image src="/img/carousel/1.jpg" alt="carousel-1" width={1920} height={320} />
-          </CarouselItem>
+          {carouselData.map((d) => (
+            <CarouselItem key={d.title}>
+              <Image src={d.imageSrc} alt={d.title} width={d.width} height={d.height} />
+            </CarouselItem>
+          ))}
         </CarouselContent>
         <CarouselPrevious />
         <CarouselNext />
