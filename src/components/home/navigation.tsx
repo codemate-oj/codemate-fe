@@ -20,7 +20,7 @@ const Navigation: FC<{ routes?: NavItemType[] }> = ({ routes = [] }) => {
         {routes.map((r) => (
           <li className="relative" key={r.path.toString()}>
             <Link
-              className={cn({
+              className={cn("truncate overflow-clip whitespace-nowrap", {
                 "opacity-50 cursor-default": r.disabled,
                 "text-orange-500 font-bold": pathname === r.path,
               })}
