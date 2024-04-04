@@ -1,4 +1,4 @@
-import { DialogStatusName } from "@/components/home/user-login";
+import type { DialogStatusName } from "@/components/login/user-login";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 

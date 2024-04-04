@@ -5,18 +5,18 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import UserPopup, { NavItemWithIcon } from "./user-popup";
+import UserPopup, { NavItemWithIcon } from "../user/user-popup";
 import { showDialog } from "../ui/headless-dialog";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import LoginRegisterModal from "../login/login-register-modal";
+import LoginRegisterModal from "./login-register-modal";
 import { userCenterRoutes } from "@/constants/routes";
-import LoginForm from "../login/login-form";
-import RegisterForm from "../login/register-form";
-import ForgetPasswordForm from "../login/forget-password-form";
-import EmailPhoneForm from "../login/email-phone-form";
-import { VERIFY_OPTIONS } from "../login/user-verify";
+import LoginForm from "./login-form";
+import RegisterForm from "./register-form";
+import ForgetPasswordForm from "./forget-password-form";
+import EmailPhoneForm from "./email-phone-form";
+import { VERIFY_OPTIONS } from "./user-verify";
 import { PrivacyAgreement } from "@/constants/agreements";
-import UserInfoForm from "../login/user-info-form";
+import UserInfoForm from "./user-info-form";
 import useLoginStore from "@/store/login";
 
 export type DialogStatusName =

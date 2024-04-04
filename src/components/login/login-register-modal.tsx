@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { DialogStatus } from "../home/user-login";
+import { DialogStatus } from "./user-login";
 
 interface IProps {
   hideLogo?: boolean;

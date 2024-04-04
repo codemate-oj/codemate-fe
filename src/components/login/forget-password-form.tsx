@@ -2,7 +2,7 @@ import React from "react";
 import UnderlinedText from "../common/underlined-text";
 import UserVerify, { EmailIcon, PhoneIcon, VERIFY_OPTIONS } from "./user-verify";
 import { Button } from "../ui/button";
-import { DialogStatusName } from "../home/user-login";
+import { DialogStatusName } from "./user-login";
 
 interface IProps {
   onNextStep: (status: DialogStatusName) => void;
