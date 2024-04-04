@@ -2,7 +2,7 @@
 
 import React, { useContext } from "react";
 import UnderlinedText from "../common/underlined-text";
-import useLoginStore from "@/store/login";
+import { useLoginStore } from "@/providers/login-store-provider";
 
 const UserInfoForm = () => {
   const identifier = useLoginStore((state) => state.lastRegisterIdentifier);

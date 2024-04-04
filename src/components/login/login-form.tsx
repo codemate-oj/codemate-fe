@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "../ui/button";
-import BaseInput from "../form/base-input";
+import { Input } from "../ui/input";
 
 interface IProps {
   onPhoneLogin?: () => void;
@@ -13,8 +13,8 @@ const LoginForm: React.FC<IProps> = ({ onPhoneLogin, onForgetPassword, onRegiste
     <>
       <form>
         <div className="flex flex-col gap-y-8 items-start">
-          <BaseInput name="username" type="text" placeholder="请输入用户名" />
-          <BaseInput name="password" type="password" placeholder="请输入密码" />
+          <Input name="username" type="text" placeholder="请输入用户名" />
+          <Input name="password" type="password" placeholder="请输入密码" />
           <Button onClick={onPhoneLogin} type="button" variant="link">
             短信验证码登录
           </Button>

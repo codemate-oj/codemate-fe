@@ -1,4 +1,4 @@
-import type { NavItemWithIcon } from "@/components/home/user-popup";
+import type { NavItemWithIcon } from "@/components/user/user-popup";
 import Image from "next/image";
 
 export const mainRoutes: NavItemType[] = [

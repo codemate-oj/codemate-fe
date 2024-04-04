@@ -5,10 +5,10 @@ import { Button } from "../ui/button";
 import { DialogStatusName } from "./user-login";
 
 interface IProps {
-  onNextStep: (status: DialogStatusName) => void;
+  onNextStep?: (option: VERIFY_OPTIONS) => void;
 }
 
-const ForgetPasswordForm = () => {
+const ForgetPasswordForm: React.FC<IProps> = ({ onNextStep }) => {
   const [selected, setSelected] = React.useState<VERIFY_OPTIONS>(VERIFY_OPTIONS.PHONE);
 
   return (
@@ -35,7 +35,9 @@ const ForgetPasswordForm = () => {
           },
         ]}
       />
-      <Button className="mt-5 w-full block">下一步</Button>
+      <Button onClick={() => onNextStep?.(selected)} className="mt-5 w-full block">
+        下一步
+      </Button>
     </div>
   );
 };

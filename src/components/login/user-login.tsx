@@ -17,7 +17,7 @@ import EmailPhoneForm from "./email-phone-form";
 import { VERIFY_OPTIONS } from "./user-verify";
 import { PrivacyAgreement } from "@/constants/agreements";
 import UserInfoForm from "./user-info-form";
-import useLoginStore from "@/store/login";
+import { useLoginStore } from "@/providers/login-store-provider";
 
 export type DialogStatusName =
   | "login"
@@ -84,7 +84,17 @@ const UserLogin = () => {
     },
     {
       name: "forget-password",
-      component: <ForgetPasswordForm />,
+      component: (
+        <ForgetPasswordForm
+          onNextStep={(opt) => {
+            if (opt === VERIFY_OPTIONS.PHONE) {
+              pushStack("input-phone-reset");
+            } else {
+              pushStack("input-email-reset");
+            }
+          }}
+        />
+      ),
       hideLogo: true,
     },
     {
@@ -95,10 +105,11 @@ const UserLogin = () => {
           buttonText="同意协议并注册"
           agreements={[PrivacyAgreement]}
           category={VERIFY_OPTIONS.EMAIL}
-          onNextStep={() => pushStack("user-info")}
+          onNextStep={(id) => {
+            pushStack("user-info");
+          }}
         />
       ),
-      hideLogo: actionStack.current[actionStack.current.length - 2]?.name === "forget-password",
     },
     {
       name: "input-phone-register",
@@ -108,10 +119,21 @@ const UserLogin = () => {
           buttonText="同意协议并注册"
           agreements={[PrivacyAgreement]}
           category={VERIFY_OPTIONS.PHONE}
-          onNextStep={() => pushStack("user-info")}
+          onNextStep={() => {
+            pushStack("user-info");
+          }}
         />
       ),
-      hideLogo: actionStack.current[actionStack.current.length - 2]?.name === "forget-password",
+    },
+    {
+      name: "input-email-reset",
+      component: <EmailPhoneForm title="重置密码" description="请输入您绑定的邮箱" category={VERIFY_OPTIONS.EMAIL} />,
+      hideLogo: true,
+    },
+    {
+      name: "input-phone-reset",
+      component: <EmailPhoneForm title="重置密码" description="请输入您绑定的手机号" category={VERIFY_OPTIONS.PHONE} />,
+      hideLogo: true,
     },
     {
       name: "user-info",
