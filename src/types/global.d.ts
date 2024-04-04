@@ -4,3 +4,9 @@ interface NavItemType {
   isActive?: boolean;
   disabled?: boolean;
 }
+
+interface AgreementType {
+  title: string;
+  href: string;
+  className?: string;
+}

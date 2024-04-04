@@ -2,15 +2,13 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 
-export interface LinkItem {
+export interface NavItemWithIcon extends NavItemType {
   icon?: React.ReactNode;
-  name: string;
-  href: Parameters<typeof Link>[0]["href"];
 }
 
 interface IProps {
   displayName?: string;
-  links?: LinkItem[];
+  links?: NavItemWithIcon[];
   onLogout?: () => void;
 }
 
