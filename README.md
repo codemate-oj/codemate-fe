@@ -27,6 +27,10 @@
 ```bash
 $ pnpm install
 $ pnpm dev
+
+# mock - add env file in root
+# .env.local
+NEXT_PUBLIC_API_MOCK=true
 ```
 
 ## 项目架构
@@ -48,3 +52,11 @@ $ pnpm dev
 - 检查你的commit log是否满足[conventional commit](https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-conventional#type-enum)规范
 - 检查你的代码中是否含有ts和eslint错误，如果有也会被阻塞
 - 如果你实在没有办法了，可以使用`--no-verify`来跳过commit时的类型和规范检查，但在PR的时候仍然会被阻塞，因此该方法**强烈不推荐**，你应该先解决代码中的问题
+
+### Q：如何使用storybook框架来创建组件文档和测试？
+
+参考文档：[Writing stories in Typescript](https://storybook.js.org/docs/writing-stories/typescript)
+
+- 在`/src/stories`中新建`*.stories.ts`即可创建一个Story，具体格式可以参考`Button.stories.ts`和`PageTitle.stories.ts`
+- 要求story描述中的namespace必须与组件的scope对应
+- 要求所有common组件都要写story测试文件，其他随缘写，因为有storybook才能直观地看见有哪些组件可用，要怎么调用，以及各种边界渲染情况
