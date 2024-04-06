@@ -21,7 +21,7 @@ export default defineMock({
       ],
     },
   ],
-  "/home/filter-aside": [
+  "/home/tabs": [
     {
       key: "all",
       label: "全部语言",
@@ -35,7 +35,7 @@ export default defineMock({
       label: "编程题",
       children: [
         { key: "c++", label: "C++" },
-        { key: "python", label: "Python" },
+        { key: "py.py3", label: "Python" },
       ],
     },
     {

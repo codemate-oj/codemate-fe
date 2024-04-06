@@ -9,6 +9,7 @@ export const alovaInstance = createAlova({
   baseURL: BASE_URL,
   statesHook: ReactHook,
   timeout: 1000,
+  localCache: null, // FIXME: 暂时关闭缓存 因为会直接存储Response对象 导致再次请求报错
   requestAdapter: process.env.NODE_ENV === "development" ? mockAdapter : GlobalFetch(),
   beforeRequest(method) {
     // 缺省状态下默认添加 Accept: application/json
@@ -38,3 +39,8 @@ export const request = {
     });
   },
 };
+
+export async function sendRequest<T>(fetcher: ReturnType<typeof request.get<T>> | ReturnType<typeof request.post<T>>) {
+  const resp = await fetcher.send();
+  return (await resp.json()) as T;
+}

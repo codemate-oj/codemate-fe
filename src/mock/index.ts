@@ -10,7 +10,7 @@ const mockAdapter = createAlovaMockAdapter([homeMock], {
   // 非模拟请求适配器，用于未匹配mock接口时发送请求
   httpAdapter: GlobalFetch(),
   // mock接口响应延迟，单位毫秒
-  delay: 500,
+  delay: 100,
   // 是否打印mock接口请求信息
   mockRequestLogger: true,
   // 模拟接口回调，data为返回的模拟数据，你可以用它构造任何你想要的对象返回给alova
