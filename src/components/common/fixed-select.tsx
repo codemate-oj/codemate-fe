@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "antd";
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";

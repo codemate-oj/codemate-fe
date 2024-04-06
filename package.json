@@ -11,6 +11,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@alova/mock": "^1.5.1",
     "@ant-design/nextjs-registry": "^1.0.0",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -20,8 +21,8 @@
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
     "ahooks": "^3.7.11",
+    "alova": "^2.18.2",
     "antd": "^5.16.0",
-    "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "embla-carousel-autoplay": "^8.0.0",
@@ -32,10 +33,10 @@
     "react-dom": "^18",
     "react-hook-form": "^7.51.2",
     "server-only": "^0.0.1",
-    "swr": "^2.2.5",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.2.26",
@@ -62,14 +63,14 @@
     "eslint-plugin-storybook": "^0.8.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
+    "mockjs": "^1.1.0",
     "postcss": "^8",
     "prettier": "3.2.5",
     "storybook": "^8.0.5",
     "tailwindcss": "^3.3.0",
     "tsc-files": "^1.1.4",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
-    "typescript": "^5",
-    "zustand": "^4.5.2"
+    "typescript": "^5"
   },
   "packageManager": "pnpm@8.15.5",
   "engines": {
