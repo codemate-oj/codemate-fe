@@ -27,6 +27,10 @@
 ```bash
 $ pnpm install
 $ pnpm dev
+
+# mock - add env file in root
+# .env.local
+NEXT_PUBLIC_API_MOCK=true
 ```
 
 ## 项目架构

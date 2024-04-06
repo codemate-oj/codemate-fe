@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { mainRoutes } from "@/constants/routes";
 import { LoginStoreProvider } from "@/providers/login-store-provider";
 import "./globals.css";
+import { ConfigProvider as AntdConfigProvider } from "antd";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,18 +29,24 @@ export default function RootLayout({
     <html lang="zh-cn">
       <body className={cn(inter.className)}>
         <AntdRegistry>
-          <LoginStoreProvider>
-            <header className="flex items-center justify-between m-auto py-2 max-w-screen-xl px-10 xl:px-0">
-              <section className="flex items-center gap-x-2.5">
-                <Image src="/img/logo.png" alt="website-logo" width={80} height={80} />
-                <h1 className="text-2xl font-bold hidden lg:block">AI推题，高效有趣玩OJ</h1>
-              </section>
-              <Navigation routes={mainRoutes} />
-              <UserLogin />
-            </header>
-            <main className="max-w-full">{children}</main>
-          </LoginStoreProvider>
-          <PageFooter />
+          <AntdConfigProvider
+            theme={{
+              token: { colorPrimary: "#FF7D37" },
+            }}
+          >
+            <LoginStoreProvider>
+              <header className="flex items-center justify-between m-auto py-2 max-w-screen-xl px-10 xl:px-0">
+                <section className="flex items-center gap-x-2.5">
+                  <Image src="/img/logo.png" alt="website-logo" width={80} height={80} />
+                  <h1 className="text-2xl font-bold hidden lg:block">AI推题，高效有趣玩OJ</h1>
+                </section>
+                <Navigation routes={mainRoutes} />
+                <UserLogin />
+              </header>
+              <main className="max-w-full">{children}</main>
+            </LoginStoreProvider>
+            <PageFooter />
+          </AntdConfigProvider>
         </AntdRegistry>
       </body>
     </html>
