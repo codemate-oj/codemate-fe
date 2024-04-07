@@ -27,11 +27,17 @@
 ```bash
 $ pnpm install
 $ pnpm dev
-
-# mock - add env file in root
-# .env.local
-NEXT_PUBLIC_API_MOCK=true
 ```
+
+### 如何接入API
+
+目前开发阶段默认的baseURL是`'/'`，如果需要设置请在`/.env.local`中设置：
+
+```
+API_BASE_URL=url_you_want
+```
+
+同时，mock在dev模式下默认开启，通过alova.js默认的mock adapter接入，使用mock.js作为数据提供方，详情查看`src/mock`下的目录组织
 
 ## 项目架构
 
