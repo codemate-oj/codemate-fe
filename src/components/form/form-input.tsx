@@ -1,21 +1,24 @@
 import React from "react";
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, useFormContext } from "react-hook-form";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
+import { cn } from "@/lib/utils";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  formInstance: UseFormReturn<any>;
   label?: string;
   name: string;
+  wrapperClassName?: string;
 }
 
-const FormInput: React.FC<InputProps> = ({ className, children, name, label, formInstance, ...props }) => {
+const FormInput: React.FC<InputProps> = ({ className, wrapperClassName, children, name, label, ...props }) => {
+  const form = useFormContext();
+
   return (
     <FormField
-      control={formInstance.control}
+      control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className={cn("w-full", wrapperClassName)}>
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
             <Input {...field} {...props} />

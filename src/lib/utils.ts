@@ -35,3 +35,16 @@ export function combineURLs(baseURL = "", relativeURL?: string) {
   // 将baseURL最后的斜杠和relativeURL最前面的斜杠去掉
   return relativeURL ? baseURL.replace(/\/+$/, "") + "/" + relativeURL.replace(/^\/+/, "") : baseURL;
 }
+
+/**
+ * Replaces placeholders in a template string with values from an array.
+ *
+ * @param {string} template - The template string containing placeholders.
+ * @param {string[]} values - An array of values to replace the placeholders.
+ * @return {string} The updated template string with placeholders replaced.
+ */
+export function parseTemplate(template: string, values: string[]) {
+  return template.replace(/{(\d+)}/g, function (match, index) {
+    return values[index] !== undefined ? values[index] : match;
+  });
+}

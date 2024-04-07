@@ -16,7 +16,7 @@ export const FooterSection: React.FC<React.PropsWithChildren<SectionProps>> = ({
 
 const PageFooter = () => {
   return (
-    <footer className="bg-[#F8F8F8] text-[#797979] w-full">
+    <footer className="bg-[#F8F8F8] text-[#797979] w-full text-center">
       <div className="m-auto p-10 max-w-screen-2xl flex justify-center gap-14">
         <section className="text-center">
           <Image src="/img/logo.png" alt="website-logo" width={178} height={178} />

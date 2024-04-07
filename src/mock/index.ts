@@ -4,9 +4,6 @@ import { createAlovaMockAdapter } from "@alova/mock";
 import homeMock from "./home";
 
 const mockAdapter = createAlovaMockAdapter([homeMock], {
-  // 全局控制是否启用mock接口，默认为true
-  // enable: process.env.MOCK === "true",
-  enable: true,
   // 非模拟请求适配器，用于未匹配mock接口时发送请求
   httpAdapter: GlobalFetch(),
   // mock接口响应延迟，单位毫秒

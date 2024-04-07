@@ -47,7 +47,7 @@ const Carousel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
     { orientation = "horizontal", opts, setApi, plugins: propPlugins, className, children, autoPlay, ...props },
     ref
   ) => {
-    const plugins = [...(autoPlay ? [Autoplay({ delay: 3000 })] : []), ...(propPlugins ?? [])];
+    const plugins = [...(autoPlay ? [Autoplay()] : []), ...(propPlugins ?? [])];
     const [carouselRef, api] = useEmblaCarousel(
       {
         ...opts,
