@@ -12,6 +12,7 @@ export interface FixedSelectOptions {
 
 interface FixedSelectProps {
   options: FixedSelectOptions[];
+  defaultSelectedValue?: string;
   onSelect?: (value: string) => void;
   slotRender?: (isChildren?: boolean, isChildrenExpend?: boolean) => React.ReactElement;
 }
@@ -67,10 +68,12 @@ const FixedSelectGroup = ({
   selected,
   setSelected,
   slotRender,
+  onSelect,
 }: {
   i: FixedSelectOptions;
   isChildren?: boolean;
   selected: string;
+  onSelect?: (value: string) => void;
   setSelected: Dispatch<SetStateAction<string>>;
   slotRender?: (isChildren?: boolean, isChildrenExpend?: boolean) => React.ReactElement;
 }) => {
@@ -80,6 +83,7 @@ const FixedSelectGroup = ({
   const handleClick = () => {
     isChildren ?? setIsChildrenShow(!isChildrenShow);
     setSelected(i.value);
+    onSelect && onSelect(i.value);
   };
   return (
     <div key={i.value} className="flex flex-col ">
@@ -92,7 +96,13 @@ const FixedSelectGroup = ({
         isChildrenExpend={isChildrenShow}
       />
       {i.children && isChildrenShow && (
-        <FixedSelect options={i.children} isChildren={true} selected={selected} setSelected={setSelected}></FixedSelect>
+        <FixedSelect
+          options={i.children}
+          isChildren={true}
+          selected={selected}
+          setSelected={setSelected}
+          onSelect={onSelect}
+        ></FixedSelect>
       )}
     </div>
   );
@@ -103,11 +113,19 @@ const FixedSelect = ({
   isChildren,
   selected,
   setSelected,
+  onSelect,
 }: FixedSelectProps & { isChildren?: boolean; selected: string; setSelected: Dispatch<SetStateAction<string>> }) => {
   return (
     <div className={isChildren ? "" : "fixed z-10 w-40 -left-5 top-45"}>
       {options.map((i, index) => (
-        <FixedSelectGroup i={i} isChildren={isChildren} key={index} selected={selected} setSelected={setSelected} />
+        <FixedSelectGroup
+          i={i}
+          isChildren={isChildren}
+          key={index}
+          selected={selected}
+          setSelected={setSelected}
+          onSelect={onSelect}
+        />
       ))}
     </div>
   );
@@ -116,11 +134,14 @@ const FixedSelect = ({
 const Index = (props: FixedSelectProps) => {
   const [selected, setSelected] = useState<string>("");
   useEffect(() => {
-    if (props.onSelect) {
-      props.onSelect(selected);
+    if (props.defaultSelectedValue && props.onSelect) {
+      setSelected(props.defaultSelectedValue);
+    } else {
+      setSelected(props?.options?.[0]?.value);
     }
-  }, [selected, props]);
-  return <FixedSelect {...props} selected={selected} setSelected={setSelected} />;
+  }, [props]);
+
+  return <FixedSelect {...props} selected={selected} setSelected={setSelected} onSelect={props?.onSelect} />;
 };
 
 export default Index;
