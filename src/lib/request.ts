@@ -50,8 +50,10 @@ export const alovaInstance = createAlova({
   },
 });
 
+type AlovaResponse<T = any> = WrappedResponse<T> | undefined;
+
 export const request = {
-  get: <T>(...args: Parameters<typeof alovaInstance.Get<WrappedResponse<T>>>) => {
+  get: <T>(...args: Parameters<typeof alovaInstance.Get<AlovaResponse<T>>>) => {
     const [url, config = {}] = args;
     return alovaInstance.Get(url, {
       ...config,
@@ -62,7 +64,7 @@ export const request = {
       mode: "cors",
     });
   },
-  post: <T>(...args: Parameters<typeof alovaInstance.Post<WrappedResponse<T>>>) => {
+  post: <T>(...args: Parameters<typeof alovaInstance.Post<AlovaResponse<T>>>) => {
     let [url, data, config = {}] = args;
     let contentType = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
     if (data instanceof FormData) contentType = "multipart/form-data";
