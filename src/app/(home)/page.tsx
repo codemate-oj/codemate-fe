@@ -99,26 +99,26 @@ const columns: TableColumnsType<DataType> = [
 const HomePage = () => {
   const { data: sideTabsData } = useRequest(request.get<FixedSelectOptions[]>("/home/tabs"));
   const { data: questionBankTabsData } = useRequest(request.get<FilerTabsTreeData>("/home/filter"));
-  const { data: tableDataData } = useRequest(request.get<DataType[]>("/home/table"));
+  const { data: tableDataData, loading: isTableLoading } = useRequest(request.get<DataType[]>("/home/table"));
   const { queryParams, updateQueryParams } = useUrl();
 
   return (
     <Suspense>
       <FixedSelect
-        options={sideTabsData?.data}
+        options={sideTabsData?.data ?? []}
         onSelect={(i) => updateQueryParams("fixedTab", i)}
         defaultSelectedValue={queryParams["fixedTab"]}
       />
       <>
         <FilerTabsTree
-          filerTabsTreeData={questionBankTabsData?.data}
+          filerTabsTreeData={questionBankTabsData?.data ?? []}
           onChange={(key) => {
-            console.log(key, 22);
             updateQueryParams("tab", key);
           }}
           defaultActiveKey={queryParams["tab"]}
         />
         <Table
+          loading={isTableLoading}
           columns={columns}
           dataSource={tableDataData?.data}
           size="small"
@@ -134,10 +134,10 @@ const HomePage = () => {
                 {record?.titleDescription}
               </div>
             ),
+            expandedRowClassName: () => "!text-grey",
             expandedRowKeys: tableDataData?.data?.map((item) => item.key),
             expandIcon: () => <></>,
           }}
-          expandedRowClassName={() => "!text-grey"}
           pagination={{
             current: Number(queryParams["pageIndex"]) || 1,
             onChange(page, pageSize) {
