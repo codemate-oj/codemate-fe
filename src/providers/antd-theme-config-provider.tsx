@@ -11,6 +11,9 @@ export const antdCustomTheme: AntdThemeProviderProps = {
     colorPrimaryBorder: "#FFFFFF",
   },
   components: {
+    Button: {
+      defaultActiveColor: "#FF7D37",
+    },
     Tabs: {
       inkBarColor: "#FF7D37",
       itemActiveColor: "#FF7D37",
@@ -20,6 +23,9 @@ export const antdCustomTheme: AntdThemeProviderProps = {
     Table: {
       headerColor: "#797979",
       cellFontSize: 14,
+      rowExpandedBg: "white",
+      borderColor: "white",
+      colorText: "#3D3D3D",
     },
     Form: {
       labelColor: "#797979",
@@ -30,6 +36,9 @@ export const antdCustomTheme: AntdThemeProviderProps = {
     Input: {
       activeBorderColor: "#FF7D37",
       hoverBorderColor: "#FF7D37",
+    },
+    Tag: {
+      defaultBg: "red",
     },
   },
 };
