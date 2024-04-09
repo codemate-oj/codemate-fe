@@ -10,14 +10,18 @@
   - CSS Module
 - 组件库
   - shadcn/ui (Recommended)
+  - daisy-ui
   - Ant Design
 - 脚手架
   - EditorConfig
   - ESLint
   - Prettier
   - Husky & CommitLint & lint-staged
+- 请求库: [alovajs](https://alova.js.org/zh-CN/tutorial/getting-started/)
+- 测试库
+  - storybook
 
-## 运行项目
+## 运行和开发项目
 
 运行环境在`package.json`中有说明：
 
@@ -29,17 +33,80 @@ $ pnpm install
 $ pnpm dev
 ```
 
-### 如何接入API
+### 环境变量说明
 
-目前开发阶段默认的baseURL是`'/'`，如果需要设置请在`/.env.local`中设置：
+Next使用`dot-env`库读取环境变量，推荐使用`.env*.local`命名规范定义本地环境变量（不会被上传到git）。
+
+以下环境变量可能在编译时/运行时影响程序的行为（所有`process.env`环境变量都会被Next自动注入）：
+
+- `BASE_URL`，影响API的baseUrl，默认为`/api`
+- `DISABLE_CACHE`，当值为`true`时会禁用alova的缓存机制（但暂时不会禁用Next的缓存机制）
+- `NEED_MOCK`，当值为`true`时会无视prod环境限制强制启用mock（基于alova）
+
+### 真实 API 说明
+
+Next的Node服务在生产环境中将与[codemate-core(hydro)](https://github.com/codemateDao/codemate-core)在同一主机运行，通过Caddy将后端反代到`/api`这个route下。
+
+因此，Alova中设置的baseUrl为`/api`，如果你的本地调试中想要修改这一行为，可以通过**环境变量**修改。
+
+### 本地 API 调试方法
+
+#### 1. 用Docker本地部署codemate-core
+
+感谢屈同学调试的Dockerfile，我们直接使用定义好的Docker Compose配置即可一键部署（如果网络顺畅，一般首次部署需要5~10分钟）
+
+```bash
+# this repo is public for AGPL License
+$ git clone https://github.com/codemateDao/codemate-core.git
+$ cd ./codemate-core
+# ensure you've configured Docker & Docker Compose on your machine before running this
+$ docker-compose up -d
+# just enjoy a cup of tea ...
 
 ```
-API_BASE_URL=url_you_want
+
+运行完成后，访问 http://localhost:8888 应该能看到Hydro的登录界面，该环境拥有**独立**的MongoDB数据库，**没有配备任何评测机**。
+
+你可能需要通过CLI完成注册和超管设置：
+
+```bash
+# 进入Hydro实例的Docker Terminal
+$ yarn hydrooj cli user create admin@hydro.local admin codemate123 2
+$ yarn user setSuperAdmin 2
 ```
 
-同时，mock在dev模式下默认开启，通过alova.js默认的mock adapter接入，使用mock.js作为数据提供方，详情查看`src/mock`下的目录组织
+这样，你就注册了一个用户名为admin，密码为codemate123的超管账号了，后续你也应该使用同样的方法完成其他账户的注册。
 
-## 项目架构
+#### 2. 使用next的rewrite功能将`/api`反向代理到本地服务上
+
+这部分的配置已经提供在了`next.config.mjs`中，会在开发环境下将`/api`下的所有请求转发到8888端口上。
+
+```javascript
+{
+  // ...
+  rewrites: async () => {
+    if (process.env.NODE_ENV === "development") {
+      return [
+        {
+          source: "/api/:path*",
+          destination: "http://localhost:8888/:path*",
+        },
+      ];
+    }
+    return [];
+  };
+}
+```
+
+#### 3. 数据mock
+
+前后端分离架构难免具有一定的滞后性，当UI没有对应的后端API时，mock is all u need
+
+接口Mock在DEV模式下默认开启，其基于alova的接口Adapter，因此**使用`fetch()`或其他请求库发起请求无法调用项目中的mock数据**。
+
+所有mock数据都存放在`src/mock`目录下，其中`index.ts`是adapter的配置，其他文件是不同scope的mock data slice，你可以简单地使用mock API来提供自定义Response和数据，也可以使用[mockjs](http://mockjs.com/)作为数据提供方。详见[alova-mock文档](https://alova.js.org/zh-CN/tutorial/request-adapter/alova-mock)。
+
+## 目录结构与规范
 
 > 注意：本项目内**目录和文件的命名规范是kebab-case**，即中间为短横线的分割方式
 

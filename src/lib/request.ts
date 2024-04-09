@@ -5,9 +5,10 @@ import mockAdapter from "@/mock";
 import { parseTemplate } from "./utils";
 import qs from "qs";
 
-const BASE_URL = process.env.API_BASE_URL ?? "https://www.aioj.net/";
+const BASE_URL = process.env.API_BASE_URL ?? "/api";
 const DISABLE_CACHE = process.env.DISABLE_CACHE === "true";
 const IS_DEV = process.env.NODE_ENV === "development";
+const NEED_MOCK = IS_DEV || process.env.NEED_MOCK === "true"; // DEV环境下默认启用Mock，或者也可以手动启用（用于Vercel）
 
 export interface WrappedResponse<T = any> {
   status: number;
@@ -21,8 +22,8 @@ export const alovaInstance = createAlova({
   statesHook: ReactHook,
   timeout: 1000,
   localCache: DISABLE_CACHE ? null : { GET: 60000 },
-  // requestAdapter: IS_DEV ? mockAdapter : GlobalFetch(),
-  requestAdapter: mockAdapter, // FIXME： 由于跨域没有配置好 先全部使用mock
+  requestAdapter: NEED_MOCK ? mockAdapter : GlobalFetch(),
+  // requestAdapter: mockAdapter, // FIXME： 由于跨域没有配置好 先全部使用mock
   beforeRequest(method) {
     // 缺省状态下默认添加 Accept: application/json
     const acc = method.config.headers["Accept"];

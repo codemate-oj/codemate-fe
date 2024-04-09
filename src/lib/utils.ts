@@ -31,7 +31,7 @@ export function isAbsoluteURL(url: string) {
  * @param {string} relativeURL The relative URL
  * @returns {string} The combined URL
  */
-export function combineURLs(baseURL = "", relativeURL?: string) {
+export function getFullUrl(baseURL = "", relativeURL?: string) {
   // 将baseURL最后的斜杠和relativeURL最前面的斜杠去掉
   return relativeURL ? baseURL.replace(/\/+$/, "") + "/" + relativeURL.replace(/^\/+/, "") : baseURL;
 }
