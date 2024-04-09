@@ -117,7 +117,7 @@ const FixedSelect = ({
 }: FixedSelectProps & { isChildren?: boolean; selected: string; setSelected: Dispatch<SetStateAction<string>> }) => {
   return (
     <div className={isChildren ? "" : "fixed z-10 w-40 -left-5 top-45"}>
-      {options.map((i, index) => (
+      {options?.map((i, index) => (
         <FixedSelectGroup
           i={i}
           isChildren={isChildren}
