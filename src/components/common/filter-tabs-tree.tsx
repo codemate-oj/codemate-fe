@@ -83,7 +83,6 @@ const FilerTabsTree = ({ filerTabsTreeData, onChange, defaultActiveKey }: FilerT
       if (isLastNode) {
         setCurrentSelectedLevel(currentSelectedKeysPath.length - 1);
         setSelectedKeys(currentSelectedKeysPath);
-        onChange?.(defaultActiveKey);
       }
     };
 
@@ -93,16 +92,12 @@ const FilerTabsTree = ({ filerTabsTreeData, onChange, defaultActiveKey }: FilerT
         setCurrentSelectedLevel(maxDeep);
         tmpSelectedKeys.push(initTab?.key);
         setSelectedKeys(tmpSelectedKeys);
-        if (!initTab.children) {
-          onChange?.(initTab.key);
-        }
       }
     };
 
     let maxDeep = 0;
     let nextTabs: TreeItem[] = [...(filerTabsTreeData ?? [])];
     const tmpSelectedKeys: string[] = [];
-
     while (nextTabs.length > 0) {
       if (defaultActiveKey) {
         initByDefaultActiveKey(defaultActiveKey);
