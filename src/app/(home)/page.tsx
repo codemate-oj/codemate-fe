@@ -2,8 +2,10 @@
 import FilerTabsTree, { type FilerTabsTreeData } from "@/components/common/filter-tabs-tree";
 import FixedSelect, { type FixedSelectOptions } from "@/components/common/fixed-select";
 import LinkBtn from "@/components/common/link-btn";
+import useHydroRequest from "@/hooks/useHydroRequest";
 import useUrl from "@/hooks/useUrl";
 import { request } from "@/lib/request";
+import { useRequest } from "alova";
 import { Switch, Table, TableColumnsType, Tag } from "antd";
 import Image from "next/image";
 import { useState, useEffect } from "react";
@@ -94,22 +96,11 @@ const columns: TableColumnsType<DataType> = [
   },
 ];
 
-async function getSideTabs() {
-  const { data } = await request.get<FixedSelectOptions[]>("/home/tabs");
-  return data;
-}
-
-async function getFilters() {
-  const { data } = await request.get<FilerTabsTreeData>("/home/filter");
-  return data;
-}
-
-async function getTable(params: any) {
-  const { data } = await request.get<DataType[]>("/home/table", { params });
-  return data;
-}
-
 const HomePage = () => {
+  const { data: sideTabsData } = useRequest(request.get<FixedSelectOptions[]>("/home/tabs"));
+  const { data: questionBankTabsData } = useRequest(request.get<FilerTabsTreeData>("/home/filter"));
+  const { data: tableDataData } = useRequest(request.get<DataType[]>("/home/table"));
+
   const [sideTabs, setSideTabs] = useState<FixedSelectOptions[]>([]);
   const [questionBankTabs, setQuestionBankTabs] = useState<FilerTabsTreeData>([]);
   const [tableData, setTableData] = useState<DataType[]>([]);
@@ -120,10 +111,20 @@ const HomePage = () => {
     fixedTab?: string;
   }>({});
   useEffect(() => {
-    getSideTabs().then(setSideTabs);
-    getFilters().then(setQuestionBankTabs);
-    getTable(tablePayload).then(setTableData);
-  }, []);
+    if (sideTabsData) {
+      setSideTabs(sideTabsData.data);
+    }
+  }, [sideTabsData]);
+  useEffect(() => {
+    if (questionBankTabsData) {
+      setQuestionBankTabs(questionBankTabsData.data);
+    }
+  }, [questionBankTabsData]);
+  useEffect(() => {
+    if (tableDataData) {
+      setTableData(tableDataData.data);
+    }
+  }, [tableDataData]);
 
   return (
     <>
@@ -164,7 +165,7 @@ const HomePage = () => {
           pagination={{
             current: Number(queryParams["pageIndex"]) || 1,
             onChange(page, pageSize) {
-              updateQueryParams("pageIndex", page);
+              updateQueryParams("pageIndex", String(page));
             },
             position: ["bottomCenter"],
             itemRender(page, type, element) {
