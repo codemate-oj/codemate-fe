@@ -117,7 +117,7 @@ const EmailPhoneForm: React.FC<IProps> = ({ title, category, buttonText, agreeme
           <Checkbox id="agreement" checked={agreed} onClick={() => setAgreed(!agreed)} />
           <label htmlFor="agreement">
             我已阅读并同意
-            {agreements.map((i) => (
+            {agreements?.map((i) => (
               <a href={i.href} target="_blank" key={i.href} className={cn("text-[#FF7D37]", i.className)}>
                 《{i.title}》
               </a>

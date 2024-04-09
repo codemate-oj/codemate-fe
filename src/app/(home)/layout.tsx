@@ -23,7 +23,7 @@ const HomeLayout = async ({
     <>
       <Carousel autoPlay className="w-full max-w-full" opts={{ loop: true }}>
         <CarouselContent>
-          {carouselData.map((d) => (
+          {carouselData?.map((d) => (
             <CarouselItem key={d.title}>
               <Image src={d.imageSrc} alt={d.title} width={d.width} height={d.height} />
             </CarouselItem>

@@ -36,7 +36,7 @@ const FilerTabsTree = ({ filerTabsTreeData, onChange, defaultActiveKey }: FilerT
 
   const getTabsByLevel = (level: string) => {
     let nextTabs: TreeItem[] = filerTabsTreeData;
-    selectedKeys.map((key, index) => {
+    selectedKeys?.map((key, index) => {
       if (index > parseInt(level)) return;
       if (index < parseInt(level)) {
         nextTabs =
@@ -47,7 +47,7 @@ const FilerTabsTree = ({ filerTabsTreeData, onChange, defaultActiveKey }: FilerT
     });
 
     return nextTabs?.length
-      ? nextTabs.map((i) => ({ label: i.label, key: i.key }))
+      ? nextTabs?.map((i) => ({ label: i.label, key: i.key }))
       : parseInt(level) === 0
         ? filerTabsTreeData?.map((i) => ({ label: i.label, key: i.key }))
         : [];
@@ -118,7 +118,7 @@ const FilerTabsTree = ({ filerTabsTreeData, onChange, defaultActiveKey }: FilerT
     <>
       {Array(maxDeep + 1)
         .fill(0)
-        .map((_, index) => {
+        ?.map((_, index) => {
           const items = getTabsByLevel(index.toString());
           return (
             index <= currentSelectedLevel &&
