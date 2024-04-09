@@ -33,7 +33,7 @@ interface IProps {
 const UserVerify: React.FC<IProps> = ({ accepts, value, onChange }) => {
   return (
     <div className="w-full flex gap-4">
-      {accepts.map((item, index) => (
+      {accepts?.map((item, index) => (
         <button
           key={item.text}
           type="button"

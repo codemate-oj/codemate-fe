@@ -63,9 +63,9 @@ const columns: TableColumnsType<DataType> = [
     width: "12%",
     render: (_, record) => (
       <div className="flex gap-1">
-        {new Array(Number(record?.difficulty)).fill(0).map((_, index) => (
-          <Image src="/svg/star.svg" alt="" key={index} width={15} height={15}></Image>
-        ))}
+        {new Array(Number(record?.difficulty))
+          .fill(0)
+          ?.map((_, index) => <Image src="/svg/star.svg" alt="" key={index} width={15} height={15}></Image>)}
       </div>
     ),
   },
@@ -88,9 +88,9 @@ const columns: TableColumnsType<DataType> = [
     width: "15%",
     render: (_, record) => (
       <div className="flex gap-1">
-        {new Array(Number(record?.difficulty)).fill(0).map((_, index) => (
-          <Image src="/img/fire.png" alt="" key={index} width={15} height={15}></Image>
-        ))}
+        {new Array(Number(record?.difficulty))
+          .fill(0)
+          ?.map((_, index) => <Image src="/img/fire.png" alt="" key={index} width={15} height={15}></Image>)}
       </div>
     ),
   },
@@ -105,13 +105,13 @@ const HomePage = () => {
   return (
     <Suspense>
       <FixedSelect
-        options={sideTabsData.data}
+        options={sideTabsData?.data}
         onSelect={(i) => updateQueryParams("fixedTab", i)}
         defaultSelectedValue={queryParams["fixedTab"]}
       />
       <>
         <FilerTabsTree
-          filerTabsTreeData={questionBankTabsData.data}
+          filerTabsTreeData={questionBankTabsData?.data}
           onChange={(key) => {
             console.log(key, 22);
             updateQueryParams("tab", key);
@@ -120,7 +120,7 @@ const HomePage = () => {
         />
         <Table
           columns={columns}
-          dataSource={tableDataData.data}
+          dataSource={tableDataData?.data}
           size="small"
           expandable={{
             expandedRowRender: (record) => (
@@ -134,7 +134,7 @@ const HomePage = () => {
                 {record?.titleDescription}
               </div>
             ),
-            expandedRowKeys: tableDataData.data.map((item) => item.key),
+            expandedRowKeys: tableDataData?.data?.map((item) => item.key),
             expandIcon: () => <></>,
           }}
           expandedRowClassName={() => "!text-grey"}
