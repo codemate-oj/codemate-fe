@@ -15,7 +15,7 @@ const UserCenterLayout = ({
   const pathname = usePathname();
 
   const navItems = useMemo<NavItemType[]>(() => {
-    return userCenterRoutes.map((r) => ({ ...r, isActive: pathname.startsWith(r.href) }));
+    return userCenterRoutes?.map((r) => ({ ...r, isActive: pathname.startsWith(r.href) }));
   }, [pathname]);
   return (
     <div className="m-auto max-w-screen-lg pb-10">

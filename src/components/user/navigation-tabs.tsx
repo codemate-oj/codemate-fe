@@ -14,7 +14,7 @@ const NavigationTabs: React.FC<IProps> = ({ items }) => {
   return (
     <nav className="min-w-[160px]">
       <ul className="w-full">
-        {items.map((item) => {
+        {items?.map((item) => {
           return (
             <li className="w-full" key={item.href.toString()}>
               <Link

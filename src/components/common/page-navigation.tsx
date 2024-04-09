@@ -11,7 +11,7 @@ const Navigation: FC<{ routes?: NavItemType[] }> = ({ routes = [] }) => {
   return (
     <nav>
       <ul className="flex gap-x-5">
-        {routes.map((r) => (
+        {routes?.map((r) => (
           <li className="relative" key={r.href.toString()}>
             <Link
               className={cn("truncate overflow-clip whitespace-nowrap", {
