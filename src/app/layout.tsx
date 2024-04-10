@@ -30,13 +30,15 @@ export default function RootLayout({
       <body className={cn(inter.className)}>
         <AntdRegistry>
           <AntdThemeConfigProvider>
-            <header className="flex items-center justify-between m-auto py-2 max-w-screen-xl px-10 xl:px-0">
-              <section className="flex items-center gap-x-2.5">
+            <header className="flex items-center relative justify-between m-auto py-2 max-w-screen-xl px-10 xl:px-0">
+              <section className="flex flex-none items-center gap-x-2.5">
                 <Image src="/img/logo.png" alt="website-logo" width={80} height={80} />
                 <h1 className="text-2xl font-bold hidden lg:block">AI推题，高效有趣玩OJ</h1>
               </section>
               <Navigation routes={mainRoutes} />
-              <UserLogin />
+              <div className="flex-none">
+                <UserLogin />
+              </div>
             </header>
             <main className="max-w-full">{children}</main>
             <PageFooter />
