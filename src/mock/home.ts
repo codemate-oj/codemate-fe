@@ -1,7 +1,7 @@
 import { defineMock } from "@alova/mock";
 
 export default defineMock({
-  "/api/home/filter": [
+  "/home/filter": [
     {
       key: "all",
       label: "全部题库",
@@ -21,7 +21,7 @@ export default defineMock({
       ],
     },
   ],
-  "/api/home/tabs": [
+  "/home/tabs": [
     {
       value: "all",
       label: "全部语言",
@@ -41,7 +41,7 @@ export default defineMock({
       ],
     },
   ],
-  "/api/home/table": [
+  "/home/table": [
     {
       _id: "660e604697cbf9f39c9e006e",
       owner: 23,
