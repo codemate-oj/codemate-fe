@@ -14,6 +14,8 @@ const mockAdapter = createAlovaMockAdapter([homeMock], {
   // 以下为默认的回调函数，它适用于使用GlobalFetch请求适配器
   // 如果你使用的是其他请求适配器，在模拟接口回调中请自定义返回适合适配器的数据结构
   // onMockResponse: (data) => ({ response: new Response(JSON.stringify(data), headers) }),
+  // 你可以在createAlovaMockAdapter中设置matchMode为methodurl，它将只匹配 method 实例中定义的 url
+  matchMode: "methodurl",
 });
 
 export default mockAdapter;
