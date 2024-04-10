@@ -9,7 +9,6 @@ import UserLogin from "@/components/login/user-login";
 import { cn } from "@/lib/utils";
 
 import { mainRoutes } from "@/constants/routes";
-import { LoginStoreProvider } from "@/providers/login-store-provider";
 import AntdThemeConfigProvider from "@/providers/antd-theme-config-provider";
 
 import "./globals.css";
@@ -31,17 +30,15 @@ export default function RootLayout({
       <body className={cn(inter.className)}>
         <AntdRegistry>
           <AntdThemeConfigProvider>
-            <LoginStoreProvider>
-              <header className="flex items-center justify-between m-auto py-2 max-w-screen-xl px-10 xl:px-0">
-                <section className="flex items-center gap-x-2.5">
-                  <Image src="/img/logo.png" alt="website-logo" width={80} height={80} />
-                  <h1 className="text-2xl font-bold hidden lg:block">AI推题，高效有趣玩OJ</h1>
-                </section>
-                <Navigation routes={mainRoutes} />
-                <UserLogin />
-              </header>
-              <main className="max-w-full">{children}</main>
-            </LoginStoreProvider>
+            <header className="flex items-center justify-between m-auto py-2 max-w-screen-xl px-10 xl:px-0">
+              <section className="flex items-center gap-x-2.5">
+                <Image src="/img/logo.png" alt="website-logo" width={80} height={80} />
+                <h1 className="text-2xl font-bold hidden lg:block">AI推题，高效有趣玩OJ</h1>
+              </section>
+              <Navigation routes={mainRoutes} />
+              <UserLogin />
+            </header>
+            <main className="max-w-full">{children}</main>
             <PageFooter />
           </AntdThemeConfigProvider>
         </AntdRegistry>

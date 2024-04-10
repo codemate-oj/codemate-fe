@@ -11,6 +11,9 @@ dependencies:
   '@ant-design/nextjs-registry':
     specifier: ^1.0.0
     version: 1.0.0(@ant-design/cssinjs@1.19.1)(antd@5.16.0)(next@14.1.4)(react-dom@18.2.0)(react@18.2.0)
+  '@davstack/store':
+    specifier: ^0.2.1
+    version: 0.2.1(@types/react@18.2.73)(react@18.2.0)
   '@hookform/resolvers':
     specifier: ^3.3.4
     version: 3.3.4(react-hook-form@7.51.2)
@@ -88,7 +91,7 @@ dependencies:
     version: 3.22.4
   zustand:
     specifier: ^4.5.2
-    version: 4.5.2(@types/react@18.2.73)(react@18.2.0)
+    version: 4.5.2(@types/react@18.2.73)(immer@10.0.4)(react@18.2.0)
 
 devDependencies:
   '@chromatic-com/storybook':
@@ -1823,6 +1826,17 @@ packages:
   /@ctrl/tinycolor@3.6.1:
     resolution: {integrity: sha512-SITSV6aIXsuVNV3f3O0f2n/cgyEDWoSqtZMYiAmcsYHydcKrOz3gUxB/iXd/Qf08+IZX4KpgNbvUdMBmWz+kcA==}
     engines: {node: '>=10'}
+    dev: false
+
+  /@davstack/store@0.2.1(@types/react@18.2.73)(react@18.2.0):
+    resolution: {integrity: sha512-Ez0R6jiKTifrmG/2Avi+2P1T0m60iqCCif2KV1Za49rHJtTsB8MMBcVWWJDYPRm5kFaSuHEvJ1fKO0t48ZMIbg==}
+    dependencies:
+      immer: 10.0.4
+      react-dom: 18.2.0(react@18.2.0)
+      zustand: 4.5.2(@types/react@18.2.73)(immer@10.0.4)(react@18.2.0)
+    transitivePeerDependencies:
+      - '@types/react'
+      - react
     dev: false
 
   /@discoveryjs/json-ext@0.5.7:
@@ -7740,6 +7754,10 @@ packages:
       queue: 6.0.2
     dev: true
 
+  /immer@10.0.4:
+    resolution: {integrity: sha512-cuBuGK40P/sk5IzWa9QPUaAdvPHjkk1c+xYsd9oZw+YQQEV+10G0P5uMpGctZZKnyQ+ibRO08bD25nWLmYi2pw==}
+    dev: false
+
   /import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -12254,7 +12272,7 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  /zustand@4.5.2(@types/react@18.2.73)(react@18.2.0):
+  /zustand@4.5.2(@types/react@18.2.73)(immer@10.0.4)(react@18.2.0):
     resolution: {integrity: sha512-2cN1tPkDVkwCy5ickKrI7vijSjPksFRfqS6237NzT0vqSsztTNnQdHw9mmN7uBdk3gceVXU0a+21jFzFzAc9+g==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
@@ -12270,6 +12288,7 @@ packages:
         optional: true
     dependencies:
       '@types/react': 18.2.73
+      immer: 10.0.4
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false

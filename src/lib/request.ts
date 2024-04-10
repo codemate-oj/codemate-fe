@@ -10,7 +10,7 @@ const DISABLE_CACHE = process.env.DISABLE_CACHE === "true";
 const IS_DEV = process.env.NODE_ENV === "development";
 const NEED_MOCK = IS_DEV || process.env.NEED_MOCK === "true"; // DEV环境下默认启用Mock，或者也可以手动启用（用于Vercel）
 
-export interface WrappedResponse<T = any> {
+export interface AlovaResponse<T = HydroResponse> {
   status: number;
   statusText: string;
   header: Headers;
@@ -40,7 +40,10 @@ export const alovaInstance = createAlova({
       const placeholders = data.error?.params ?? [];
       throw new Error(parseTemplate(msgTemplate, placeholders));
     }
-    const _resp: WrappedResponse = {
+    if (data?.UserContext) {
+      data.UserContext = JSON.parse(data.UserContext);
+    }
+    const _resp: AlovaResponse = {
       status: resp.status,
       statusText: resp.statusText,
       header: resp.headers,
@@ -50,10 +53,8 @@ export const alovaInstance = createAlova({
   },
 });
 
-type AlovaResponse<T = any> = WrappedResponse<T> | undefined;
-
 export const request = {
-  get: <T>(...args: Parameters<typeof alovaInstance.Get<AlovaResponse<T>>>) => {
+  get: <T = HydroResponse>(...args: Parameters<typeof alovaInstance.Get<AlovaResponse<T>>>) => {
     const [url, config = {}] = args;
     return alovaInstance.Get(url, {
       ...config,
@@ -64,7 +65,7 @@ export const request = {
       mode: "cors",
     });
   },
-  post: <T>(...args: Parameters<typeof alovaInstance.Post<AlovaResponse<T>>>) => {
+  post: <T = HydroResponse>(...args: Parameters<typeof alovaInstance.Post<AlovaResponse<T>>>) => {
     let [url, data, config = {}] = args;
     let contentType = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
     if (data instanceof FormData) contentType = "multipart/form-data";

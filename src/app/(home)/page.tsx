@@ -109,63 +109,62 @@ const HomePage = () => {
         onSelect={(i) => updateQueryParams("fixedTab", i)}
         defaultSelectedValue={queryParams["fixedTab"]}
       />
-      <>
-        <FilerTabsTree
-          filerTabsTreeData={questionBankTabsData?.data ?? []}
-          onChange={(key) => {
-            updateQueryParams("tab", key);
-          }}
-          defaultActiveKey={queryParams["tab"]}
-        />
-        <Table
-          loading={isTableLoading}
-          columns={columns}
-          dataSource={tableDataData?.data}
-          size="small"
-          expandable={{
-            expandedRowRender: (record) => (
-              <div
-                style={{
-                  color: "#797979",
-                  paddingBottom: "1rem",
-                  borderBottom: "0.1rem dashed #F1F1F1",
-                }}
-              >
-                {record?.titleDescription}
-              </div>
-            ),
-            expandedRowClassName: () => "!text-grey",
-            expandedRowKeys: tableDataData?.data?.map((item) => item.key),
-            expandIcon: () => <></>,
-          }}
-          pagination={{
-            current: Number(queryParams["pageIndex"]) || 1,
-            onChange(page, pageSize) {
-              updateQueryParams("pageIndex", String(page));
-            },
-            position: ["bottomCenter"],
-            itemRender(page, type, element) {
-              if (type === "prev") {
-                return (
-                  <>
-                    <LinkBtn>首页</LinkBtn>
-                    <LinkBtn>上一页</LinkBtn>
-                  </>
-                );
-              }
-              if (type === "next") {
-                return (
-                  <>
-                    <LinkBtn>下一页</LinkBtn>
-                    <LinkBtn>末页</LinkBtn>
-                  </>
-                );
-              }
-              return element;
-            },
-          }}
-        />
-      </>
+      <FilerTabsTree
+        filerTabsTreeData={questionBankTabsData?.data ?? []}
+        onChange={(key) => {
+          updateQueryParams("tab", key);
+        }}
+        defaultActiveKey={queryParams["tab"]}
+      />
+      <Table
+        loading={isTableLoading}
+        columns={columns}
+        dataSource={tableDataData?.data}
+        rowKey="pid"
+        size="small"
+        expandable={{
+          expandedRowRender: (record) => (
+            <div
+              style={{
+                color: "#797979",
+                paddingBottom: "1rem",
+                borderBottom: "0.1rem dashed #F1F1F1",
+              }}
+            >
+              {record?.titleDescription}
+            </div>
+          ),
+          expandedRowClassName: () => "!text-grey",
+          expandedRowKeys: tableDataData?.data?.map((item) => item.key),
+          expandIcon: () => <></>,
+        }}
+        pagination={{
+          current: Number(queryParams["pageIndex"]) || 1,
+          onChange(page, pageSize) {
+            updateQueryParams("pageIndex", String(page));
+          },
+          position: ["bottomCenter"],
+          itemRender(page, type, element) {
+            if (type === "prev") {
+              return (
+                <>
+                  <LinkBtn>首页</LinkBtn>
+                  <LinkBtn>上一页</LinkBtn>
+                </>
+              );
+            }
+            if (type === "next") {
+              return (
+                <>
+                  <LinkBtn>下一页</LinkBtn>
+                  <LinkBtn>末页</LinkBtn>
+                </>
+              );
+            }
+            return element;
+          },
+        }}
+      />
     </Suspense>
   );
 };

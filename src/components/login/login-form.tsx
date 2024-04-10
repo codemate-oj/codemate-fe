@@ -11,6 +11,7 @@ import FormInput from "../form/form-input";
 import useHydroRequest from "@/hooks/useHydroRequest";
 import { request } from "@/lib/request";
 import { useRequest } from "alova";
+import store from "@/store/login";
 
 interface IProps {
   onPhoneLogin?: () => void;
@@ -24,13 +25,14 @@ const formSchema = z.object({
 });
 
 const LoginForm: React.FC<IProps> = ({ onPhoneLogin, onForgetPassword, onRegister }) => {
-  const form = useForm<z.infer<typeof formSchema>>({ resolver: zodResolver(formSchema) });
-
-  const { send: handleLogin } = useRequest((data) => request.post("/login", data), { immediate: false });
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { uname: "", password: "" },
+  });
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((values) => handleLogin(values))}>
+      <form onSubmit={form.handleSubmit((values) => store.login(values.uname, values.password))}>
         <div className="flex flex-col gap-y-8 items-start">
           <FormInput name="uname" type="text" placeholder="请输入用户名" />
           <FormInput name="password" type="password" placeholder="请输入密码" />
