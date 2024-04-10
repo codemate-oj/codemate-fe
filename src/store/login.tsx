@@ -33,6 +33,7 @@ export const DialogStatusMap: Record<DialogStatusName, DialogPage> = {
   },
   "forget-password": {
     component: <ForgetPasswordForm />,
+    hideLogo: true,
   },
 };
 

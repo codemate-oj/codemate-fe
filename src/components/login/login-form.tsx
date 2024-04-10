@@ -8,23 +8,14 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput from "../form/form-input";
-import useHydroRequest from "@/hooks/useHydroRequest";
-import { request } from "@/lib/request";
-import { useRequest } from "alova";
 import store from "@/store/login";
-
-interface IProps {
-  onPhoneLogin?: () => void;
-  onForgetPassword?: () => void;
-  onRegister?: () => void;
-}
 
 const formSchema = z.object({
   uname: z.string().min(1, { message: "请输入用户名" }),
   password: z.string().min(1, { message: "请输入密码" }),
 });
 
-const LoginForm: React.FC<IProps> = ({ onPhoneLogin, onForgetPassword, onRegister }) => {
+const LoginForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { uname: "", password: "" },
@@ -36,7 +27,7 @@ const LoginForm: React.FC<IProps> = ({ onPhoneLogin, onForgetPassword, onRegiste
         <div className="flex flex-col gap-y-8 items-start">
           <FormInput name="uname" type="text" placeholder="请输入用户名" />
           <FormInput name="password" type="password" placeholder="请输入密码" />
-          <Button onClick={onPhoneLogin} type="button" variant="link">
+          <Button type="button" variant="link">
             短信验证码登录
           </Button>
           <Button type="submit" className="w-full block">
@@ -45,10 +36,15 @@ const LoginForm: React.FC<IProps> = ({ onPhoneLogin, onForgetPassword, onRegiste
         </div>
       </form>
       <div className="w-full flex justify-between">
-        <Button onClick={onForgetPassword} type="button" variant="link" className="text-[#9E9E9E]">
+        <Button
+          onClick={() => store.dialogJumpTo("forget-password")}
+          type="button"
+          variant="link"
+          className="text-[#9E9E9E]"
+        >
           忘记密码？
         </Button>
-        <Button onClick={onRegister} type="button" variant="link">
+        <Button onClick={() => store.dialogJumpTo("register")} type="button" variant="link">
           注册账号
         </Button>
       </div>
