@@ -133,3 +133,15 @@ $ yarn user setSuperAdmin 2
 - 在`/src/stories`中新建`*.stories.ts`即可创建一个Story，具体格式可以参考`Button.stories.ts`和`PageTitle.stories.ts`
 - 要求story描述中的namespace必须与组件的scope对应
 - 要求所有common组件都要写story测试文件，其他随缘写，因为有storybook才能直观地看见有哪些组件可用，要怎么调用，以及各种边界渲染情况
+
+### Q: 我在本地初始化好后端环境后所有请求都被403 Forbidden了怎么办？
+
+> 这种情况下PostMan是可以正常工作的，如果PM不能正常工作应该与本问题无关。
+
+这是由于Hydro的CSRF防护导致的，可以将本机的dev host加入到CORS白名单解决。
+
+具体方法：
+
+1. 以管理员身份访问 http://localhost:8888/manage/setting （Hydro系统管理页面）
+2. 搜索 server.cors，找到跨域白名单
+3. 将 localhost:3000 添加到里面，滑动到底部保存更改，在Docker中重启镜像
