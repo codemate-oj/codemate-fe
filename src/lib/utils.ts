@@ -44,7 +44,7 @@ export function getFullUrl(baseURL = "", relativeURL?: string) {
  * @return {string} The updated template string with placeholders replaced.
  */
 export function parseTemplate(template: string, values: string[]) {
-  return template.replace(/{(\d+)}/g, function (match, index) {
+  return template.replace(/{(\d+)}/g, (match, index) => {
     return values[index] !== undefined ? values[index] : match;
   });
 }

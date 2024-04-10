@@ -17,6 +17,7 @@ const ChooseVerifyForm = () => {
           title: "注册账户",
           buttonText: "同意协议并注册",
           agreements: [PrivacyAgreement],
+          purpose: "register",
         });
         break;
 
@@ -26,6 +27,7 @@ const ChooseVerifyForm = () => {
           title: "忘记密码",
           description: selected === VERIFY_OPTIONS.PHONE ? "请输入手机号码" : "请输入邮箱",
           hideLogo: true,
+          purpose: "reset",
         });
         break;
 

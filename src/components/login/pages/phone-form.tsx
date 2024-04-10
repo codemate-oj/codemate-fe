@@ -19,7 +19,7 @@ interface IProps {
   title?: string;
   description?: string;
   buttonText?: string;
-  onSubmit?: (values: z.infer<typeof formSchema>) => void;
+  onSubmit?: (value: string) => void;
 }
 
 const PhoneForm: React.FC<IProps> = ({ title = "请输入手机号码", description, buttonText = "提交", onSubmit }) => {
@@ -38,7 +38,7 @@ const PhoneForm: React.FC<IProps> = ({ title = "请输入手机号码", descript
       )}
       {description && <p className=" mt-3 text-sm text-[#797979]">{description}</p>}
       <Form {...form}>
-        <form className="my-10" onSubmit={form.handleSubmit((values) => onSubmit?.(values))}>
+        <form className="my-10" onSubmit={form.handleSubmit((values) => onSubmit?.(values.phone))}>
           <div className="flex flex-col gap-8">
             <FormField
               control={form.control}

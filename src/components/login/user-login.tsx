@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { userCenterRoutes } from "@/constants/routes";
@@ -14,6 +14,7 @@ import UserPopup from "../user/user-popup";
 import LoginRegisterModal from "./login-register-modal";
 
 const UserLogin = () => {
+  const [isLoaded, setIsLoaded] = React.useState(false);
   const isDialogShow = store.isDialogShow.use();
   const userContext = store.user.use();
   const currentDialogPage = store.useCurrentContext();
@@ -24,6 +25,15 @@ const UserLogin = () => {
       store.dialogReset();
     }
   };
+
+  useEffect(() => {
+    // 登录是纯客户端行为 为防止闪动 在服务端屏蔽渲染
+    setIsLoaded(true);
+  }, []);
+
+  if (!isLoaded) {
+    return null;
+  }
 
   if (!userContext) {
     return (
@@ -38,6 +48,7 @@ const UserLogin = () => {
               onClick={() =>
                 store.dialogJumpTo("choose-verify", {
                   title: "请选择注册方式",
+                  category: "register",
                 })
               }
             >
@@ -62,7 +73,7 @@ const UserLogin = () => {
           </Avatar>
         </HoverCardTrigger>
         <HoverCardContent className="min-w-[287px] rounded-lg p-0">
-          <UserPopup displayName="user" links={userCenterRoutes} onLogout={store.logout} />
+          <UserPopup displayName={userContext.uname} links={userCenterRoutes} onLogout={store.logout} />
         </HoverCardContent>
       </HoverCard>
     );

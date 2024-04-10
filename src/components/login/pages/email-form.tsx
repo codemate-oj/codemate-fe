@@ -19,7 +19,7 @@ interface IProps {
   title?: string;
   description?: string;
   buttonText?: string;
-  onSubmit?: (values: z.infer<typeof formSchema>) => void;
+  onSubmit?: (value: string) => void;
 }
 
 const EmailForm: React.FC<IProps> = ({ title = "请输入邮箱", description, buttonText = "提交", onSubmit }) => {
@@ -38,7 +38,7 @@ const EmailForm: React.FC<IProps> = ({ title = "请输入邮箱", description, b
       )}
       {description && <p className=" mt-3 text-sm text-[#797979]">{description}</p>}
       <Form {...form}>
-        <form className="my-10" onSubmit={form.handleSubmit((values) => onSubmit?.(values))}>
+        <form className="my-10" onSubmit={form.handleSubmit((values) => onSubmit?.(values.email))}>
           <div className="flex flex-col gap-8">
             <FormField
               control={form.control}

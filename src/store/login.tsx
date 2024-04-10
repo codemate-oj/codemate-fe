@@ -5,16 +5,9 @@ import { request } from "@/lib/request";
 import LoginForm from "@/components/login/pages/login-form";
 import EmailOrPhoneForm from "@/components/login/pages/email-or-phone-form";
 import ChooseVerifyForm from "@/components/login/pages/choose-verify-form";
+import UserInfoForm from "@/components/login/pages/user-info-form";
 
-export type DialogStatusName = "login" | "choose-verify" | "input-email-or-phone";
-// | "phone-login"
-// | "input-email-register"
-// | "input-email-reset"
-// | "input-phone-register"
-// | "input-phone-reset"
-// | "verify-code"
-// | "reset-password"
-// | "user-info";
+export type DialogStatusName = "login" | "choose-verify" | "input-email-or-phone" | "user-info";
 
 export interface DialogPage {
   component: React.ReactNode;
@@ -36,31 +29,49 @@ export const DialogStatusMap: Record<DialogStatusName, DialogPage> = {
   "input-email-or-phone": {
     component: <EmailOrPhoneForm />,
   },
+  "user-info": {
+    component: <UserInfoForm />,
+    hideLogo: true,
+  },
 };
 
 const loginStore = store(
   {
-    user: null as HydroUserContext | null,
+    user: null as Hydro.UserContext | null,
+    lastSendCode: null as Date | null,
     isDialogShow: false,
     dialogContextStack: [] as DialogPageContext[],
   },
   {
+    name: "login",
+    // 支持使用 redux devtools 调试
+    devtools: {
+      enabled: true,
+      name: "login-store",
+      store: "login",
+      anonymousActionType: "update",
+    },
     persist: {
       enabled: true,
       name: "login-store",
+      partialize(state) {
+        // 持久化记忆只能记忆user状态，否则会出问题
+        return { ...state, isDialogShow: false, dialogContextStack: [] };
+      },
     },
   }
 ).extend((store) => ({
   login: async (uname: string, password: string) => {
     const { data } = await request.post("/login", { uname, password });
-    if (data && data.UserContext) {
-      if (store.user.get() === null) store.user.set(data.UserContext);
-      else store.user.assign(data.UserContext);
-      store.isDialogShow.set(false);
-      store.dialogContextStack.set([]);
-    } else {
+    // 登录失败：访客 _id=0 也算失败
+    if (!data || !data.UserContext || data.UserContext._id === 0) {
+      store.user.assign(null);
       throw new Error("登录失败");
     }
+    if (store.user.get() === null) store.user.set(data.UserContext);
+    else store.user.assign(data.UserContext);
+    store.isDialogShow.set(false);
+    store.dialogContextStack.set([]);
   },
   logout: async () => {
     await request.post("/logout");

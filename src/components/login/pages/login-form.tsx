@@ -8,18 +8,27 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput from "@/components/form/form-input";
 import store from "@/store/login";
+import { passwordSchema, unameSchema } from "@/lib/validate";
 
 const formSchema = z.object({
-  uname: z.string().min(1, { message: "请输入用户名" }),
-  password: z.string().min(1, { message: "请输入密码" }),
+  uname: unameSchema,
+  password: passwordSchema,
 });
 
 const LoginForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({ resolver: zodResolver(formSchema) });
 
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await store.login(values.uname, values.password);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((values) => store.login(values.uname, values.password))}>
+      <form onSubmit={form.handleSubmit(handleSubmit)}>
         <div className="flex flex-col gap-y-8 items-start">
           <FormInput name="uname" type="text" placeholder="请输入用户名" />
           <FormInput name="password" type="password" placeholder="请输入密码" />
@@ -50,6 +59,7 @@ const LoginForm = () => {
           onClick={() =>
             store.dialogJumpTo("choose-verify", {
               title: "请选择注册方式",
+              category: "register",
             })
           }
           type="button"

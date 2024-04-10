@@ -7,18 +7,45 @@ import { cn } from "@/lib/utils";
 import store from "@/store/login";
 import EmailForm from "./email-form";
 import PhoneForm from "./phone-form";
+import { request } from "@/lib/request";
+
+const sendCode = async (payload: string, type: "phone" | "mail") => {
+  const _body =
+    type === "phone"
+      ? {
+          phone: payload,
+        }
+      : {
+          mail: payload,
+        };
+  const { data } = await request.post<Hydro.RedirectResponse>("/register", _body);
+  const _slices = data.url.split("/");
+  return _slices[_slices.length - 1] ?? "";
+};
 
 const EmailOrPhoneForm = () => {
   const [agreed, setAgreed] = useState(false);
   const formContext = store.useCurrentContext();
+  const isEmail = formContext?.category === VERIFY_OPTIONS.EMAIL;
 
-  const handleSubmit = () => {
+  const handleSubmit = async (value: string) => {
     setAgreed(true);
+    const token = await sendCode(value, isEmail ? "mail" : "phone");
+    console.log(token);
+    switch (formContext?.purpose) {
+      case "register":
+        store.dialogJumpTo("user-info", {
+          sendTo: value,
+        });
+        break;
+      default:
+        break;
+    }
   };
 
   return (
     <div className="flex flex-col">
-      {formContext?.category === VERIFY_OPTIONS.EMAIL ? (
+      {isEmail ? (
         <EmailForm
           title={formContext?.title}
           description={formContext?.description}
