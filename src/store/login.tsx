@@ -1,10 +1,12 @@
+"use client";
+
 import { store } from "@davstack/store";
 import { request } from "@/lib/request";
-import LoginForm from "@/components/login/login-form";
-import RegisterForm from "@/components/login/register-form";
-import ForgetPasswordForm from "@/components/login/forget-password-form";
+import LoginForm from "@/components/login/pages/login-form";
+import EmailOrPhoneForm from "@/components/login/pages/email-or-phone-form";
+import ChooseVerifyForm from "@/components/login/pages/choose-verify-form";
 
-export type DialogStatusName = "login" | "register" | "forget-password";
+export type DialogStatusName = "login" | "choose-verify" | "input-email-or-phone";
 // | "phone-login"
 // | "input-email-register"
 // | "input-email-reset"
@@ -28,12 +30,11 @@ export const DialogStatusMap: Record<DialogStatusName, DialogPage> = {
   login: {
     component: <LoginForm />,
   },
-  register: {
-    component: <RegisterForm />,
+  "choose-verify": {
+    component: <ChooseVerifyForm />,
   },
-  "forget-password": {
-    component: <ForgetPasswordForm />,
-    hideLogo: true,
+  "input-email-or-phone": {
+    component: <EmailOrPhoneForm />,
   },
 };
 
@@ -65,10 +66,11 @@ const loginStore = store(
     await request.post("/logout");
     store.user.assign(null);
   },
-  dialogJumpTo: (pageName: DialogStatusName) => {
+  dialogJumpTo: (pageName: DialogStatusName, additionalContext?: Partial<Omit<DialogPageContext, "pageName">>) => {
     const ctx: DialogPageContext = {
       pageName,
       ...DialogStatusMap[pageName],
+      ...(additionalContext ?? {}),
     };
     store.set((draft) => {
       draft.dialogContextStack.push(ctx);
@@ -92,18 +94,6 @@ const loginStore = store(
     const stack = store.dialogContextStack.get();
     if (stack.length <= 1) return null;
     return stack[stack.length - 2];
-  },
-  setContext: (key: string, value: any) => {
-    const stack = store.dialogContextStack.get();
-    if (!stack.length) return;
-    store.set((draft) => {
-      const cur = draft.dialogContextStack.pop();
-      if (!cur) {
-        throw new Error("You cannot set an empty dialog context");
-      }
-      cur[key] = value;
-      draft.dialogContextStack.push(cur);
-    });
   },
 }));
 

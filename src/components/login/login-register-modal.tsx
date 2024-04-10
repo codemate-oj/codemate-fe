@@ -5,16 +5,13 @@ import Image from "next/image";
 import { DialogHeader, DialogTitle } from "../ui/dialog";
 import store from "@/store/login";
 
-interface IProps {
-  hideLogo?: boolean;
-}
-
-const LoginRegisterModal: React.FC<React.PropsWithChildren<IProps>> = ({ hideLogo, children }) => {
+const LoginRegisterModal: React.FC<React.PropsWithChildren> = ({ children }) => {
   const shouldShowGoBack = store.dialogContextStack.use().length > 1;
+  const shouldHideLogo = store.useCurrentContext()?.hideLogo;
 
   return (
-    <>
-      {!hideLogo && (
+    <div>
+      {!shouldHideLogo && (
         <DialogHeader className="flex flex-col items-center mb-10">
           <Image src="/img/logo.png" alt="website-logo" width={120} height={120} />
           <DialogTitle>AI推题，高效有趣玩OJ</DialogTitle>
@@ -27,7 +24,7 @@ const LoginRegisterModal: React.FC<React.PropsWithChildren<IProps>> = ({ hideLog
         </button>
       )}
       {children}
-    </>
+    </div>
   );
 };
 

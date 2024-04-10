@@ -1,15 +1,17 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
-import { Button } from "../ui/button";
+import React from "react";
+
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import UserPopup from "../user/user-popup";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
-import LoginRegisterModal from "./login-register-modal";
 import { userCenterRoutes } from "@/constants/routes";
 import store from "@/store/login";
+
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import UserPopup from "../user/user-popup";
+import LoginRegisterModal from "./login-register-modal";
 
 const UserLogin = () => {
   const isDialogShow = store.isDialogShow.use();
@@ -31,13 +33,20 @@ const UserLogin = () => {
             <Button onClick={() => store.dialogJumpTo("login")}>登录</Button>
           </DialogTrigger>
           <DialogTrigger asChild>
-            <Button variant="outline" onClick={() => store.dialogJumpTo("register")}>
+            <Button
+              variant="outline"
+              onClick={() =>
+                store.dialogJumpTo("choose-verify", {
+                  title: "请选择注册方式",
+                })
+              }
+            >
               注册
             </Button>
           </DialogTrigger>
         </div>
         <DialogContent className="max-w-[400px]">
-          <LoginRegisterModal hideLogo={currentDialogPage?.hideLogo}>{currentDialogPage?.component}</LoginRegisterModal>
+          <LoginRegisterModal>{currentDialogPage?.component}</LoginRegisterModal>
         </DialogContent>
       </Dialog>
     );

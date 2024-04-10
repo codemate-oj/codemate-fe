@@ -17,6 +17,14 @@ export interface AlovaResponse<T = HydroResponse> {
   data: T;
 }
 
+export const tryParseHydroError = (data: any) => {
+  if (data?.error) {
+    const msgTemplate = data.error?.message ?? "Unexpected error";
+    const placeholders = data.error?.params ?? [];
+    throw new Error(parseTemplate(msgTemplate, placeholders));
+  }
+};
+
 export const alovaInstance = createAlova({
   baseURL: BASE_URL,
   statesHook: ReactHook,
@@ -31,17 +39,22 @@ export const alovaInstance = createAlova({
   },
   async responded(resp) {
     // 添加全局响应劫持器 处理响应并抛出错误（使其可以正常与缓存机制运作）
+    const data = await resp.json();
+
     if (!resp.ok || resp.status !== 200) {
+      tryParseHydroError(data);
       throw new Error(resp.statusText);
     }
-    const data = await resp.json();
-    if (data?.error) {
-      const msgTemplate = data.error?.message ?? "Unexpected error";
-      const placeholders = data.error?.params ?? [];
-      throw new Error(parseTemplate(msgTemplate, placeholders));
-    }
+    tryParseHydroError(data); // 200也可能有错误
+
+    // 尝试解析UserContext
     if (data?.UserContext) {
-      data.UserContext = JSON.parse(data.UserContext);
+      try {
+        data.UserContext = JSON.parse(data.UserContext);
+      } catch (e) {
+        console.error(e);
+        data.UserContext = null;
+      }
     }
     const _resp: AlovaResponse = {
       status: resp.status,
