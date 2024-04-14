@@ -8,7 +8,7 @@ import { useRequest } from "alova";
 import { Switch, Table, TableColumnsType, Tag } from "antd";
 import Image from "next/image";
 import { Suspense } from "react";
-import Loading from "./loading";
+
 interface DataType {
   key: string;
   pid: number;
@@ -97,7 +97,7 @@ const columns: TableColumnsType<DataType> = [
 ];
 
 const HomePage = () => {
-  const { data: sideTabsData } = useRequest(request.get<FixedSelectOptions[]>("/home/tabs"));
+  const { data: sideTabsData, send } = useRequest(request.get<FixedSelectOptions[]>("/home/tabs"));
   const { data: questionBankTabsData } = useRequest(request.get<FilerTabsTreeData>("/home/filter"));
   const { data: tableDataData, loading: isTableLoading } = useRequest(request.get<DataType[]>("/home/table"));
   const { queryParams, updateQueryParams } = useUrl();
