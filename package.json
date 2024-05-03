@@ -74,7 +74,8 @@
     "tailwindcss": "^3.3.0",
     "tsc-files": "^1.1.4",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "yaml-loader": "^0.8.1"
   },
   "packageManager": "pnpm@8.15.5",
   "engines": {
