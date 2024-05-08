@@ -18,7 +18,9 @@ const sendCode = async (payload: string, type: "phone" | "mail") => {
       : {
           mail: payload,
         };
-  const { data } = await request.post<Hydro.RedirectResponse>("/register", _body);
+  // FIXME: 还没有添加该类型
+  // @ts-ignore
+  const { data } = await request.post("/register", _body);
   const _slices = data.url.split("/");
   return _slices[_slices.length - 1] ?? "";
 };

@@ -1,9 +1,11 @@
-import { createAlova } from "alova";
+import { RequestBody, createAlova } from "alova";
 import ReactHook from "alova/react";
 import GlobalFetch from "alova/GlobalFetch";
 import mockAdapter from "@/mock";
 import qs from "qs";
 import { tryParseHydroResponse } from "./error";
+import { paths } from "@/types/schema";
+import { objectToFormData } from "./form";
 
 const IS_DEV = process.env.NODE_ENV === "development";
 
@@ -13,8 +15,6 @@ const DISABLE_CACHE = IS_DEV || process.env.DISABLE_CACHE === "true"; // 用于�
 const LOCAL_MOCK = IS_DEV || process.env.LOCAL_MOCK === "true"; // 是否使用alova内置的本地mock服务（DEV环境下默认启用）
 
 export interface AlovaResponse<T = Hydro.HydroResponse> {
-  status: number;
-  statusText: string;
   header: Headers;
   data: T;
 }
@@ -52,21 +52,54 @@ export const alovaInstance = createAlova({
         data.UserContext = null;
       }
     }
-    const _resp: AlovaResponse = {
-      status: resp.status,
-      statusText: resp.statusText,
+
+    const ret: AlovaResponse = {
       header: resp.headers,
       data,
     };
-    return _resp;
+
+    return ret;
   },
 });
 
+type AllowedHTTPMethods = "get" | "post";
+
+type PathsHavingMethod<M extends AllowedHTTPMethods> = {
+  [K in keyof paths]: M extends keyof paths[K] ? K : never;
+}[keyof paths];
+
+type MethodParameters<M extends AllowedHTTPMethods, T extends keyof paths> = M extends keyof paths[T]
+  ? paths[T][M] extends { parameters: { query?: infer Q } }
+    ? Q
+    : never
+  : never;
+
+type MethodRequestBody<M extends AllowedHTTPMethods, T extends keyof paths> = M extends keyof paths[T]
+  ? paths[T][M] extends { requestBody?: { content: infer C } }
+    ? C extends { "application/json": infer J }
+      ? J
+      : C extends { "application/x-www-form-urlencoded": infer F }
+        ? F
+        : never
+    : never
+  : never;
+
+type MethodResponse<M extends AllowedHTTPMethods, T extends keyof paths> = M extends keyof paths[T]
+  ? paths[T][M] extends { responses: { 200: { content: { "application/json": infer S } } } }
+    ? S
+    : never
+  : never;
+
 export const request = {
-  get: <T = Hydro.HydroResponse>(...args: Parameters<typeof alovaInstance.Get<AlovaResponse<T>>>) => {
-    const [url, config = {}] = args;
+  get: <P extends PathsHavingMethod<"get">, R = any>(
+    url: P,
+    config: Parameters<typeof alovaInstance.Get<R, AlovaResponse<MethodResponse<"get", P>>>>[1] & {
+      params?: MethodParameters<"get", P>;
+    } = {}
+  ) => {
+    const { params, ...rest } = config;
     return alovaInstance.Get(url, {
-      ...config,
+      ...rest,
       headers: {
         Accept: "application/json",
         ...(config.headers ?? {}),
@@ -74,14 +107,31 @@ export const request = {
       mode: "cors",
     });
   },
-  post: <T = Hydro.HydroResponse>(...args: Parameters<typeof alovaInstance.Post<AlovaResponse<T>>>) => {
-    let [url, data, config = {}] = args;
-    let contentType = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
-    if (data instanceof FormData) contentType = "multipart/form-data";
-    if (contentType === "application/x-www-form-urlencoded") {
-      data = qs.stringify(data);
+  post: <P extends PathsHavingMethod<"post">, R = any>(
+    url: P,
+    data?: MethodRequestBody<"post", P>,
+    config: Parameters<typeof alovaInstance.Post<R, AlovaResponse<MethodResponse<"post", P>>>>[2] & {
+      params?: MethodParameters<"post", P>;
+    } = {}
+  ) => {
+    let payload: RequestBody | undefined = data;
+    let contentType: string = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
+
+    if (data) {
+      // 处理自动序列化逻辑
+      switch (contentType) {
+        case "application/x-www-form-urlencoded":
+          payload = qs.stringify(data);
+          break;
+        case "multipart/form-data":
+          payload = objectToFormData(data);
+          break;
+        default:
+          break;
+      }
     }
-    return alovaInstance.Post(url, data, {
+
+    return alovaInstance.Post(url, payload, {
       ...config,
       headers: {
         Accept: "application/json",

@@ -101,7 +101,12 @@ const HomePage = () => {
 
   const { data: homeFilterData } = useRequest(
     async () => {
-      const { data } = await request.get("/p-list");
+      const { data } = await request.get("/p-list", {
+        transformData: (data) => {
+          console.log(data);
+          return data;
+        },
+      });
       const parsePlistItem = (item: any) => {
         const _ret: TreeItem = {
           key: item.docId,

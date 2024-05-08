@@ -63,6 +63,8 @@ const loginStore = store(
 ).extend((store) => ({
   login: async (uname: string, password: string) => {
     await request.post("/login", { uname, password });
+    // FIXME: 当前后端不能在登陆时更新UserContext 需要重复请求
+    // @ts-ignore
     const { data } = await request.get("/login");
     // 登录失败：访客 _id=0 也算失败
     if (!data || !data.UserContext || data.UserContext._id === 0) {
