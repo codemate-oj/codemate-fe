@@ -5,10 +5,12 @@ import mockAdapter from "@/mock";
 import qs from "qs";
 import { tryParseHydroResponse } from "./error";
 
-const BASE_URL = process.env.API_BASE_URL ?? "/api";
-const DISABLE_CACHE = process.env.DISABLE_CACHE === "true";
 const IS_DEV = process.env.NODE_ENV === "development";
-const NEED_MOCK = IS_DEV || process.env.NEED_MOCK === "true"; // DEV环境下默认启用Mock，或者也可以手动启用（用于Vercel）
+
+const BASE_URL = "/api";
+const APIFOX_TOKEN = process.env.NEXT_PUBLIC_APIFOX_TOKEN; // 用于云端mock鉴权
+const DISABLE_CACHE = IS_DEV || process.env.DISABLE_CACHE === "true"; // 用于停用请求库内建的缓存，对next缓存无效
+const LOCAL_MOCK = IS_DEV || process.env.LOCAL_MOCK === "true"; // 是否使用alova内置的本地mock服务（DEV环境下默认启用）
 
 export interface AlovaResponse<T = Hydro.HydroResponse> {
   status: number;
@@ -22,19 +24,21 @@ export const alovaInstance = createAlova({
   statesHook: ReactHook,
   timeout: 1000,
   localCache: DISABLE_CACHE ? null : { GET: 60000 },
-  requestAdapter: NEED_MOCK ? mockAdapter : GlobalFetch(),
+  requestAdapter: LOCAL_MOCK ? mockAdapter : GlobalFetch(),
   // requestAdapter: mockAdapter, // FIXME： 由于跨域没有配置好 先全部使用mock
   beforeRequest(method) {
     // 缺省状态下默认添加 Accept: application/json
-    const acc = method.config.headers["Accept"];
-    if (!acc) method.config.headers["Accept"] = "application/json";
+    const _acc = method.config.headers["Accept"];
+    if (!_acc) method.config.headers["Accept"] = "application/json";
+    // 若有apifoxToken则添加到Header
+    if (APIFOX_TOKEN) method.config.headers["apifoxToken"] = APIFOX_TOKEN;
   },
   async responded(resp) {
     // 添加全局响应劫持器 处理响应并抛出错误（使其可以正常与缓存机制运作）
     const data = await tryParseHydroResponse(resp);
 
     // 尝试解析UserContext
-    if (data?.UserContext) {
+    if (data?.UserContext && typeof data.UserContext === "string") {
       try {
         data.UserContext = JSON.parse(data.UserContext);
       } catch (e) {

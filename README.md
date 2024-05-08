@@ -37,17 +37,25 @@ $ pnpm dev
 
 Next使用`dot-env`库读取环境变量，推荐使用`.env*.local`命名规范定义本地环境变量（不会被上传到git）。
 
-以下环境变量可能在编译时/运行时影响程序的行为（所有`process.env`环境变量都会被Next自动注入）：
+以下环境变量可能在编译时/运行时影响程序的行为（所有`process.env`环境变量都会被Next自动注入，前缀含有`NEXT_PUBLIC_*`的表示可以在运行时/浏览器环境中注入宏）：
 
 - `BASE_URL`，影响API的baseUrl，默认为`/api`
+- `API_URL`，影响反向代理的目标值，默认为`https://www.aioj.net/`
 - `DISABLE_CACHE`，当值为`true`时会禁用alova的缓存机制（但暂时不会禁用Next的缓存机制）
-- `NEED_MOCK`，当值为`true`时会无视prod环境限制强制启用mock（基于alova）
+- `LOCAL_MOCK`，当值为`true`时会无视prod环境限制强制启用mock（基于alova）
+- `NEXT_PUBLIC_APIFOX_TOKEN`，APIFOX云端Mock的鉴权Token
 
 ### 真实 API 说明
 
 Next的Node服务在生产环境中将与[codemate-core(hydro)](https://github.com/codemateDao/codemate-core)在同一主机运行，通过Caddy将后端反代到`/api`这个route下。
 
 因此，Alova中设置的baseUrl为`/api`，如果你的本地调试中想要修改这一行为，可以通过**环境变量**修改。
+
+### 测试环境说明
+
+我们有一个临时的测试服务器，用于提供后端环境，IP = http://42.193.125.14/
+
+将`API_URL`设置为`http://42.193.125.14/`即可。
 
 ### 本地 API 调试方法
 
@@ -100,9 +108,21 @@ $ yarn user setSuperAdmin 2
 
 #### 3. 数据mock
 
-前后端分离架构难免具有一定的滞后性，当UI没有对应的后端API时，mock is all u need
+前后端分离架构难免具有一定的滞后性，当UI没有对应的后端API时，mock is all u need。
 
-接口Mock在DEV模式下默认开启，其基于alova的接口Adapter，因此**使用`fetch()`或其他请求库发起请求无法调用项目中的mock数据**。
+##### 接口未Ready时前端接口占位
+
+我们团队使用APIFox描述API文档，可以使用其自带的本地或云端Mock功能，基于APIFox的智能Mock数据生成功能来填补数据。
+
+> 如果你本地安装了APIFox，也可以使用本地Mock链接
+
+APIFox云端Mock链接：https://mock.apifox.com/m1/4316065-3958911-default ；APIKey已写入环境文件（`.env`）中。
+
+##### 本地自定义数据Mock
+
+前端可能需要对特定数据或特定情况进行模拟和复现，这个时候就可以使用**基于请求库的本地mock功能**，其基于`alovajs-mock-adapter`，可以使用`mockjs`作为数据提供方。
+
+本地Mock在DEV模式下默认开启，需要注意的是**使用`fetch()`或其他请求库发起请求无法调用项目中的mock数据**，必须使用项目中封装的`request`才能访问mock数据。
 
 所有mock数据都存放在`src/mock`目录下，其中`index.ts`是adapter的配置，其他文件是不同scope的mock data slice，你可以简单地使用mock API来提供自定义Response和数据，也可以使用[mockjs](http://mockjs.com/)作为数据提供方。详见[alova-mock文档](https://alova.js.org/zh-CN/tutorial/request-adapter/alova-mock)。
 

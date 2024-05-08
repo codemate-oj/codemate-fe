@@ -62,11 +62,12 @@ const loginStore = store(
   }
 ).extend((store) => ({
   login: async (uname: string, password: string) => {
-    const { data } = await request.post("/login", { uname, password });
+    await request.post("/login", { uname, password });
+    const { data } = await request.get("/login");
     // 登录失败：访客 _id=0 也算失败
     if (!data || !data.UserContext || data.UserContext._id === 0) {
       store.user.assign(null);
-      throw new Error("登录失败");
+      throw new Error("登录请求失败");
     }
     if (store.user.get() === null) store.user.set(data.UserContext);
     else store.user.assign(data.UserContext);

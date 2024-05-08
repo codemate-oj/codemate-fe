@@ -1,7 +1,7 @@
 import { Method } from "alova";
 import { parseTemplate } from "./utils";
 import ErrCodeMap from "@/constants/error.yml";
-import CnTranslate from "@/constants/cn.yml";
+import { ERROR_MAP, ERROR_TYPE } from "@/constants/error-enum";
 
 export class HydroError extends Error implements Hydro.HydroError {
   reqMethod?: Method;
@@ -9,16 +9,19 @@ export class HydroError extends Error implements Hydro.HydroError {
   code: number;
 
   constructor(respErr: Hydro.HydroError, status: { code: number; text: string }, req?: Method) {
+    let errCode: ERROR_TYPE = -1;
     if (!respErr) super(status.text);
     else {
-      const msgTemplate = CnTranslate[respErr.message] ?? respErr.message ?? "Unexpected error";
-      const placeholders = respErr.params ?? [];
-      const msg = parseTemplate(msgTemplate, placeholders);
+      if (ErrCodeMap[respErr.message]) errCode = ErrCodeMap[respErr.message];
+      const errInfo = ERROR_MAP[errCode];
+      // 若为已知错误则调用现有翻译
+      const msgTemplate = errCode === ERROR_TYPE.UNKNOWN_SERVER_ERROR ? respErr.message : errInfo.text;
+      const msg = parseTemplate(msgTemplate, respErr.params ?? []);
       super(msg);
     }
     this.remoteErr = respErr;
     this.reqMethod = req;
-    this.code = ErrCodeMap[respErr.message] ?? -1;
+    this.code = errCode;
     if (respErr.stack) this.stack = respErr.stack;
   }
 }
