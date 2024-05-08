@@ -75,8 +75,8 @@ namespace Hydro {
   }
 
   export interface HydroResponse {
-    UiContext: HydroUiContext;
-    UserContext?: HydroUserContext;
+    UiContext: UiContext;
+    UserContext?: UserContext;
     [key: string]: any;
   }
 
