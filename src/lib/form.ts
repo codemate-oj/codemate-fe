@@ -1,8 +1,8 @@
 export function objectToFormData(obj: Record<string, any>) {
   const formData = new FormData();
   for (const key in obj) {
-    let value = "";
-    if (typeof obj[key] === "string") {
+    let value: string | Blob = "";
+    if (typeof obj[key] === "string" || obj[key] instanceof File) {
       value = obj[key];
     } else {
       try {

@@ -1,18 +1,20 @@
-import { createAlova } from "alova";
+import { RequestBody, createAlova } from "alova";
 import ReactHook from "alova/react";
 import GlobalFetch from "alova/GlobalFetch";
 import mockAdapter from "@/mock";
-import { parseTemplate } from "./utils";
 import qs from "qs";
+import { tryParseHydroResponse } from "./error";
+import { paths } from "@/types/schema";
+import { objectToFormData } from "./form";
 
-const BASE_URL = process.env.API_BASE_URL ?? "/api";
-const DISABLE_CACHE = process.env.DISABLE_CACHE === "true";
 const IS_DEV = process.env.NODE_ENV === "development";
-const NEED_MOCK = IS_DEV || process.env.NEED_MOCK === "true"; // DEV环境下默认启用Mock，或者也可以手动启用（用于Vercel）
 
-export interface WrappedResponse<T = any> {
-  status: number;
-  statusText: string;
+const BASE_URL = "/api";
+const APIFOX_TOKEN = process.env.NEXT_PUBLIC_APIFOX_TOKEN; // 用于云端mock鉴权
+const DISABLE_CACHE = IS_DEV || process.env.DISABLE_CACHE === "true"; // 用于停用请求库内建的缓存，对next缓存无效
+const LOCAL_MOCK = IS_DEV || process.env.LOCAL_MOCK === "true"; // 是否使用alova内置的本地mock服务（DEV环境下默认启用）
+
+export interface AlovaResponse<T = Hydro.HydroResponse> {
   header: Headers;
   data: T;
 }
@@ -22,41 +24,82 @@ export const alovaInstance = createAlova({
   statesHook: ReactHook,
   timeout: 1000,
   localCache: DISABLE_CACHE ? null : { GET: 60000 },
-  requestAdapter: NEED_MOCK ? mockAdapter : GlobalFetch(),
+  requestAdapter: LOCAL_MOCK ? mockAdapter : GlobalFetch(),
   // requestAdapter: mockAdapter, // FIXME： 由于跨域没有配置好 先全部使用mock
   beforeRequest(method) {
     // 缺省状态下默认添加 Accept: application/json
-    const acc = method.config.headers["Accept"];
-    if (!acc) method.config.headers["Accept"] = "application/json";
+    const _acc = method.config.headers["Accept"];
+    if (!_acc) method.config.headers["Accept"] = "application/json";
+    // 若有apifoxToken则添加到Header
+    if (APIFOX_TOKEN) method.config.headers["apifoxToken"] = APIFOX_TOKEN;
+    // 去除config.params中的空值
+    if (method.config.params) {
+      Object.keys(method.config.params).forEach((key) => {
+        if (!method.config.params[key]) delete method.config.params[key];
+      });
+    }
   },
   async responded(resp) {
     // 添加全局响应劫持器 处理响应并抛出错误（使其可以正常与缓存机制运作）
-    if (!resp.ok || resp.status !== 200) {
-      throw new Error(resp.statusText);
+    const data = await tryParseHydroResponse(resp);
+
+    // 尝试解析UserContext
+    if (data?.UserContext && typeof data.UserContext === "string") {
+      try {
+        data.UserContext = JSON.parse(data.UserContext);
+      } catch (e) {
+        console.error(e);
+        data.UserContext = null;
+      }
     }
-    const data = await resp.json();
-    if (data?.error) {
-      const msgTemplate = data.error?.message ?? "Unexpected error";
-      const placeholders = data.error?.params ?? [];
-      throw new Error(parseTemplate(msgTemplate, placeholders));
-    }
-    const _resp: WrappedResponse = {
-      status: resp.status,
-      statusText: resp.statusText,
+
+    const ret: AlovaResponse = {
       header: resp.headers,
       data,
     };
-    return _resp;
+
+    return ret;
   },
 });
 
-type AlovaResponse<T = any> = WrappedResponse<T> | undefined;
+type AllowedHTTPMethods = "get" | "post";
+
+type PathsHavingMethod<M extends AllowedHTTPMethods> = {
+  [K in keyof paths]: M extends keyof paths[K] ? K : never;
+}[keyof paths];
+
+type MethodParameters<M extends AllowedHTTPMethods, T extends keyof paths> = M extends keyof paths[T]
+  ? paths[T][M] extends { parameters: { query?: infer Q } }
+    ? Q
+    : never
+  : never;
+
+type MethodRequestBody<M extends AllowedHTTPMethods, T extends keyof paths> = M extends keyof paths[T]
+  ? paths[T][M] extends { requestBody?: { content: infer C } }
+    ? C extends { "application/json": infer J }
+      ? J
+      : C extends { "application/x-www-form-urlencoded": infer F }
+        ? F
+        : never
+    : never
+  : never;
+
+type MethodResponse<M extends AllowedHTTPMethods, T extends keyof paths> = M extends keyof paths[T]
+  ? paths[T][M] extends { responses: { 200: { content: { "application/json": infer S } } } }
+    ? S
+    : never
+  : never;
 
 export const request = {
-  get: <T>(...args: Parameters<typeof alovaInstance.Get<AlovaResponse<T>>>) => {
-    const [url, config = {}] = args;
+  get: <P extends PathsHavingMethod<"get">, R = any>(
+    url: P,
+    config: Parameters<typeof alovaInstance.Get<R, AlovaResponse<MethodResponse<"get", P>>>>[1] & {
+      params?: MethodParameters<"get", P>;
+    } = {}
+  ) => {
+    const { params, ...rest } = config;
     return alovaInstance.Get(url, {
-      ...config,
+      ...rest,
       headers: {
         Accept: "application/json",
         ...(config.headers ?? {}),
@@ -64,14 +107,31 @@ export const request = {
       mode: "cors",
     });
   },
-  post: <T>(...args: Parameters<typeof alovaInstance.Post<AlovaResponse<T>>>) => {
-    let [url, data, config = {}] = args;
-    let contentType = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
-    if (data instanceof FormData) contentType = "multipart/form-data";
-    if (contentType === "application/x-www-form-urlencoded") {
-      data = qs.stringify(data);
+  post: <P extends PathsHavingMethod<"post">, R = any>(
+    url: P,
+    data?: MethodRequestBody<"post", P>,
+    config: Parameters<typeof alovaInstance.Post<R, AlovaResponse<MethodResponse<"post", P>>>>[2] & {
+      params?: MethodParameters<"post", P>;
+    } = {}
+  ) => {
+    let payload: RequestBody | undefined = data;
+    let contentType: string = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
+
+    if (data) {
+      // 处理自动序列化逻辑
+      switch (contentType) {
+        case "application/x-www-form-urlencoded":
+          payload = qs.stringify(data);
+          break;
+        case "multipart/form-data":
+          payload = objectToFormData(data);
+          break;
+        default:
+          break;
+      }
     }
-    return alovaInstance.Post(url, data, {
+
+    return alovaInstance.Post(url, payload, {
       ...config,
       headers: {
         Accept: "application/json",
