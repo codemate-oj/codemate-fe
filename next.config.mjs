@@ -5,7 +5,7 @@ const nextConfig = {
       return [
         {
           source: "/api/:path*",
-          destination: "http://localhost:8888/:path*",
+          destination: `${process.env.API_URL ?? "https://www.aioj.net/"}:path*`,
         },
       ];
     }
