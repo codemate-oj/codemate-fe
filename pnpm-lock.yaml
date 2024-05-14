@@ -11,12 +11,18 @@ dependencies:
   '@ant-design/nextjs-registry':
     specifier: ^1.0.0
     version: 1.0.0(@ant-design/cssinjs@1.19.1)(antd@5.16.0)(next@14.1.4)(react-dom@18.2.0)(react@18.2.0)
+  '@codingame/monaco-vscode-cpp-default-extension':
+    specifier: ^4.4.1
+    version: 4.4.1
   '@codingame/monaco-vscode-keybindings-service-override':
     specifier: ^4.2.1
     version: 4.2.1
   '@codingame/monaco-vscode-python-default-extension':
     specifier: ^4.2.1
     version: 4.2.1
+  '@codingame/monaco-vscode-standalone-languages':
+    specifier: ^4.4.1
+    version: 4.4.1
   '@hookform/resolvers':
     specifier: ^3.3.4
     version: 3.3.4(react-hook-form@7.51.2)
@@ -71,6 +77,9 @@ dependencies:
   monaco-editor:
     specifier: npm:@codingame/monaco-vscode-editor-api@~4.2.1
     version: /@codingame/monaco-vscode-editor-api@4.2.1
+  monaco-editor-core:
+    specifier: ^0.47.0
+    version: 0.47.0
   monaco-editor-wrapper:
     specifier: ^4.2.0
     version: 4.2.0(@codingame/monaco-vscode-api@4.2.1)(@codingame/monaco-vscode-editor-api@4.2.1)(monaco-languageclient@8.3.0)
@@ -98,6 +107,9 @@ dependencies:
   server-only:
     specifier: ^0.0.1
     version: 0.0.1
+  shiki:
+    specifier: ^1.3.0
+    version: 1.3.0
   tailwind-merge:
     specifier: ^2.2.2
     version: 2.2.2
@@ -124,6 +136,9 @@ devDependencies:
   '@commitlint/config-conventional':
     specifier: ^19.1.0
     version: 19.1.0
+  '@shikijs/monaco':
+    specifier: ^1.3.0
+    version: 1.3.0
   '@storybook/addon-essentials':
     specifier: ^8.0.5
     version: 8.0.5(@types/react@18.2.73)(react-dom@18.2.0)(react@18.2.0)
@@ -1686,10 +1701,28 @@ packages:
       '@codingame/monaco-vscode-quickaccess-service-override': 4.2.1
     dev: false
 
+  /@codingame/monaco-vscode-api@4.4.1:
+    resolution: {integrity: sha512-sJGYmr9+lKVRTf6DGTbvaKHo7MHaR3BzKHzjX0rrwm+vZZdwtkHwYEPv1qEjJ+RoLqiFGEyUyMYoWWpTaECyZQ==}
+    dependencies:
+      '@codingame/monaco-vscode-base-service-override': 4.4.1
+      '@codingame/monaco-vscode-environment-service-override': 4.4.1
+      '@codingame/monaco-vscode-extensions-service-override': 4.4.1
+      '@codingame/monaco-vscode-files-service-override': 4.4.1
+      '@codingame/monaco-vscode-host-service-override': 4.4.1
+      '@codingame/monaco-vscode-layout-service-override': 4.4.1
+      '@codingame/monaco-vscode-quickaccess-service-override': 4.4.1
+    dev: false
+
   /@codingame/monaco-vscode-base-service-override@4.2.1:
     resolution: {integrity: sha512-ONGr7nCs9/kc8znXgczCDXzhtLWDaZlX7qlUQQptwfCgVxUeKAg4ykxWPAoDxickudeG4Qe8jswnPrLFeqF8vQ==}
     dependencies:
       vscode: /@codingame/monaco-vscode-api@4.2.1
+    dev: false
+
+  /@codingame/monaco-vscode-base-service-override@4.4.1:
+    resolution: {integrity: sha512-QbQQcxKRLEOjvKvvoBXelHGQGHKavukHsO7gzYd8pHoWHfnP6vJxgU0cr4Oxl/KXcMOl/p2TT+WE6ig+15XR/Q==}
+    dependencies:
+      vscode: /@codingame/monaco-vscode-api@4.4.1
     dev: false
 
   /@codingame/monaco-vscode-configuration-service-override@4.2.1:
@@ -1705,10 +1738,22 @@ packages:
       vscode: /@codingame/monaco-vscode-api@4.2.1
     dev: false
 
+  /@codingame/monaco-vscode-cpp-default-extension@4.4.1:
+    resolution: {integrity: sha512-RIvg9zh9NJc9FBlXasFk8m6zBI0URIUMJhkUo26leu+5IwKIlT9Oy8voTKnKNjOBETYvdwdhG7J9HmOLvQGJ4Q==}
+    dependencies:
+      vscode: /@codingame/monaco-vscode-api@4.4.1
+    dev: false
+
   /@codingame/monaco-vscode-editor-api@4.2.1:
     resolution: {integrity: sha512-x5E1xqfxq+QyhafqbReZ1U7O0d5lwlzKbEBErBnEuU7Fguxb7/7fs7RkFVyB5hDClGh/+uJuRrjit5N3q1sH9w==}
     dependencies:
       vscode: /@codingame/monaco-vscode-api@4.2.1
+    dev: false
+
+  /@codingame/monaco-vscode-editor-api@4.4.1:
+    resolution: {integrity: sha512-0QZH4KRx/SL6FNhXjyH4INAKI7GZg4GCzC5fmlOjhiWlyylV1FwA2ZaXMsGL9Kw9drghtFY8lshdRHLvzS3vjg==}
+    dependencies:
+      vscode: /@codingame/monaco-vscode-api@4.4.1
     dev: false
 
   /@codingame/monaco-vscode-editor-service-override@4.2.1:
@@ -1723,11 +1768,24 @@ packages:
       vscode: /@codingame/monaco-vscode-api@4.2.1
     dev: false
 
+  /@codingame/monaco-vscode-environment-service-override@4.4.1:
+    resolution: {integrity: sha512-slh0+a0z58VJBaozEs77yZUq4eNdbmYdgFvTH6u0W39zQ8IbG09pf7l3ms+b+wRPfZ0YvZhhgwEhpDjqL2FPPA==}
+    dependencies:
+      vscode: /@codingame/monaco-vscode-api@4.4.1
+    dev: false
+
   /@codingame/monaco-vscode-extensions-service-override@4.2.1:
     resolution: {integrity: sha512-KKyoGKQvz0EeDe2RRJh8fA9W3KNS9S02i9efhTbVDFt1A/MvC9DPDyiLSmXI5x7Pu5n3V99q+/o+Jiqn4tLOsQ==}
     dependencies:
       '@codingame/monaco-vscode-files-service-override': 4.2.1
       vscode: /@codingame/monaco-vscode-api@4.2.1
+    dev: false
+
+  /@codingame/monaco-vscode-extensions-service-override@4.4.1:
+    resolution: {integrity: sha512-c/+XOl2MzBtZXXhxywN6l26dyOtjBA+QdmmNZ5yhqvGtovE7slsNYkJsfskOI4NNc83/Z8J0P14e12DtVQTfyw==}
+    dependencies:
+      '@codingame/monaco-vscode-files-service-override': 4.4.1
+      vscode: /@codingame/monaco-vscode-api@4.4.1
     dev: false
 
   /@codingame/monaco-vscode-files-service-override@4.2.1:
@@ -1736,10 +1794,22 @@ packages:
       vscode: /@codingame/monaco-vscode-api@4.2.1
     dev: false
 
+  /@codingame/monaco-vscode-files-service-override@4.4.1:
+    resolution: {integrity: sha512-LVd4CcU4yrPLROe6yGmqWVkFkRaj8bhtcmufRSxKFkXgUyP5BmVrMTXAFKvY02raQeB2dxzlsnF6EaqGiae82Q==}
+    dependencies:
+      vscode: /@codingame/monaco-vscode-api@4.4.1
+    dev: false
+
   /@codingame/monaco-vscode-host-service-override@4.2.1:
     resolution: {integrity: sha512-tJpS2TB+wsWZBw+xNrOT5qVV32Be0IyCtCqUsJO0Ln6atVNJD5dgUVJJ/WD5eBcei37+rNus7N60TeDWmxyZyg==}
     dependencies:
       vscode: /@codingame/monaco-vscode-api@4.2.1
+    dev: false
+
+  /@codingame/monaco-vscode-host-service-override@4.4.1:
+    resolution: {integrity: sha512-O70Ff29AGo9ijGrp/Dgq7Ev7I/teXjfeqXJ7JfSzEBE285bdbjSG6doue9ZK+HMTrS77hKcd/tXOk5pPsxBrtA==}
+    dependencies:
+      vscode: /@codingame/monaco-vscode-api@4.4.1
     dev: false
 
   /@codingame/monaco-vscode-keybindings-service-override@4.2.1:
@@ -1768,6 +1838,12 @@ packages:
       vscode: /@codingame/monaco-vscode-api@4.2.1
     dev: false
 
+  /@codingame/monaco-vscode-layout-service-override@4.4.1:
+    resolution: {integrity: sha512-o+jYk8/U/Yq9om17aCm9UxzM+9gn/0363ZGx4OeuJWJfQZ7+/fCRES+YT6c5q+SY2UxI16sbe+daVWPwoMnKvg==}
+    dependencies:
+      vscode: /@codingame/monaco-vscode-api@4.4.1
+    dev: false
+
   /@codingame/monaco-vscode-localization-service-override@4.2.1:
     resolution: {integrity: sha512-KH3mZTFsZtu7HeEgfMxelMV4CMxe/cGBYZcVKxrvkTa8QVxmf9sgAr0stvlGudb3EzKJU4KJA08zPNxT8rzZ5A==}
     dependencies:
@@ -1790,6 +1866,18 @@ packages:
     resolution: {integrity: sha512-YRpbw7eLV+qoy0EZf4RD9BA0yn+c533n7DQUYn/KeVo8IiLwtxeMn3j1dhhzPORYiaR1KsdIfeicCYJ6YnK/LA==}
     dependencies:
       vscode: /@codingame/monaco-vscode-api@4.2.1
+    dev: false
+
+  /@codingame/monaco-vscode-quickaccess-service-override@4.4.1:
+    resolution: {integrity: sha512-2smHUAoH+ImnG+CcvExMN89uXis2+LS7FZAfxw/qVS8zGiMrKKapFXePENaW5H1j86wwRSDhU8wVle+My4pXmg==}
+    dependencies:
+      vscode: /@codingame/monaco-vscode-api@4.4.1
+    dev: false
+
+  /@codingame/monaco-vscode-standalone-languages@4.4.1:
+    resolution: {integrity: sha512-g6RUHg6CoFuL+SmPF7vUBqGsj6ozDDXANHeCE9T63HtLU21tGXzp2dXWrHHr2AtSklOEFPhm4uhqa0v/PgmPhw==}
+    dependencies:
+      monaco-editor: /@codingame/monaco-vscode-editor-api@4.4.1
     dev: false
 
   /@codingame/monaco-vscode-textmate-service-override@4.2.1:
@@ -3110,6 +3198,15 @@ packages:
 
   /@rushstack/eslint-patch@1.10.1:
     resolution: {integrity: sha512-S3Kq8e7LqxkA9s7HKLqXGTGck1uwis5vAXan3FnU5yw1Ec5hsSGnq4s/UCaSqABPOnOTg7zASLyst7+ohgWexg==}
+    dev: true
+
+  /@shikijs/core@1.3.0:
+    resolution: {integrity: sha512-7fedsBfuILDTBmrYZNFI8B6ATTxhQAasUHllHmjvSZPnoq4bULWoTpHwmuQvZ8Aq03/tAa2IGo6RXqWtHdWaCA==}
+
+  /@shikijs/monaco@1.3.0:
+    resolution: {integrity: sha512-wLpfTx67psxoZSxUjGEMgsLfaQ7owds6wBWnfOSDcqe13Z2BUO3oCvKaRGFgNB8O2Nt3XxE9dW3TqnfYzvXyeg==}
+    dependencies:
+      '@shikijs/core': 1.3.0
     dev: true
 
   /@sinclair/typebox@0.27.8:
@@ -8920,6 +9017,10 @@ packages:
       commander: 11.1.0
     dev: true
 
+  /monaco-editor-core@0.47.0:
+    resolution: {integrity: sha512-xho7dsmSYOIek6bkMKQApWHVyoOBQ1eaBIE6CIlER40paTN0r0efrig6Q9QkCacfzIuNNxNjyb1uMVoMpi8gcA==}
+    dev: false
+
   /monaco-editor-wrapper@4.2.0(@codingame/monaco-vscode-api@4.2.1)(@codingame/monaco-vscode-editor-api@4.2.1)(monaco-languageclient@8.3.0):
     resolution: {integrity: sha512-Avv/RUxV2tyX/GcjrOmFZYHdUSJBzNnvycm2EjBqAPIseD3ry7i0CAF9jUhgB4/IPOsAy4wps896U2omKf32Vw==}
     peerDependencies:
@@ -11141,6 +11242,12 @@ packages:
   /shebang-regex@3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
+
+  /shiki@1.3.0:
+    resolution: {integrity: sha512-9aNdQy/etMXctnPzsje1h1XIGm9YfRcSksKOGqZWXA/qP9G18/8fpz5Bjpma8bOgz3tqIpjERAd6/lLjFyzoww==}
+    dependencies:
+      '@shikijs/core': 1.3.0
+    dev: false
 
   /side-channel@1.0.6:
     resolution: {integrity: sha512-fDW/EZ6Q9RiO8eFG8Hj+7u/oW+XrPTIChwCOM2+th2A6OblDtYYIpve9m+KvI9Z4C9qSEXlaGR6bTEYHReuglA==}

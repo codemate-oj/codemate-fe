@@ -1,19 +1,27 @@
 "use client";
 
-import Editor, { useMonaco } from "@monaco-editor/react";
+import { useMonaco } from "@monaco-editor/react";
 import { Button, Select } from "antd";
 import clsx from "clsx";
-import { useState } from "react";
-import { MonacoEditorReactComp } from "@typefox/monaco-editor-react";
+import { useEffect, useState } from "react";
 import * as vscode from "vscode";
 import getKeybindingsServiceOverride from "@codingame/monaco-vscode-keybindings-service-override";
 import { UserConfig } from "monaco-editor-wrapper";
 import { MonacoLanguageClient } from "monaco-languageclient";
-
-// this is required syntax highlighting
-import "@codingame/monaco-vscode-python-default-extension";
 import { MonacoEditorLanguageClientWrapper } from "monaco-editor-wrapper";
+import * as monaco from "monaco-editor";
+const wrapperCpp = new MonacoEditorLanguageClientWrapper();
+const wrapperPython = new MonacoEditorLanguageClientWrapper();
 
+const monacoEditorConfig = {
+  glyphMargin: true,
+  guides: {
+    bracketPairs: true,
+  },
+  lightbulb: {
+    enabled: monaco.editor.ShowLightbulbIconMode.On,
+  },
+};
 export const createPythonConfig = (code: string): UserConfig => {
   return {
     languageClientConfig: {
@@ -85,6 +93,7 @@ export const createPythonConfig = (code: string): UserConfig => {
         userConfiguration: {},
         useDiffEditor: false,
         code,
+        editorOptions: monacoEditorConfig,
       },
     },
     loggerConfig: {
@@ -151,6 +160,7 @@ export const createCppConfig = (code: string): UserConfig => {
         userConfiguration: {},
         useDiffEditor: false,
         code,
+        editorOptions: monacoEditorConfig,
       },
     },
     loggerConfig: {
@@ -160,12 +170,21 @@ export const createCppConfig = (code: string): UserConfig => {
   };
 };
 
+const ConfigMap = {
+  python: createPythonConfig,
+  cpp: createCppConfig,
+};
+
 const clientLang = ["Python", "Cpp"];
 
 const Page = () => {
   const editorInstance = useMonaco();
-  const [selectedLanguage, setSelectedLanguage] = useState("typescript");
+  const [selectedLanguage, setSelectedLanguage] = useState("python");
   const [code, setCode] = useState("");
+  const t = async () => {};
+  useEffect(() => {
+    t();
+  }, []);
 
   const onlineEditorHeader: {
     label?: string;
@@ -184,12 +203,20 @@ const Page = () => {
     },
     {
       type: "select",
-      options: ["TypeScript", ...clientLang],
-      onSelectedChange: (value) => {
+      options: [...clientLang],
+      onSelectedChange: async (value) => {
         if (!editorInstance) return;
         const lang = value?.toLocaleLowerCase();
         console.log(`Selected language: ${lang}`);
         setSelectedLanguage(lang);
+        if (lang === "python") {
+          wrapperCpp.dispose();
+          await wrapperPython.initAndStart(createPythonConfig(code), document.getElementById("editor"));
+        } else if (lang === "cpp") {
+          wrapperPython.dispose();
+          await wrapperCpp.initAndStart(createCppConfig(code), document.getElementById("editor"));
+        }
+
         setCode("");
       },
     },
@@ -203,38 +230,13 @@ const Page = () => {
 
   const renderLspEditor = () => (
     <>
-      <MonacoEditorReactComp
+      <div
+        id="editor"
         style={{
           width: "100%",
           height: "90vh",
-          display: selectedLanguage === "cpp" ? "block" : "none",
         }}
-        value={code}
-        onTextChanged={onTextChanged}
-        onLoad={(wrapper: MonacoEditorLanguageClientWrapper) => {
-          console.log(`Loaded ${wrapper.reportStatus().join("\n").toString()}`);
-        }}
-        onError={(e) => {
-          console.error(e);
-        }}
-        userConfig={createCppConfig(code)}
-      />
-      <MonacoEditorReactComp
-        style={{
-          width: "100%",
-          height: "90vh",
-          display: selectedLanguage === "python" ? "block" : "none",
-        }}
-        value={code}
-        onTextChanged={onTextChanged}
-        onLoad={(wrapper: MonacoEditorLanguageClientWrapper) => {
-          console.log(`Loaded ${wrapper.reportStatus().join("\n").toString()}`);
-        }}
-        onError={(e) => {
-          console.error(e);
-        }}
-        userConfig={createPythonConfig(code)}
-      />
+      ></div>
     </>
   );
   const onTextChanged = (text: string, isDirty: boolean) => {
@@ -271,20 +273,6 @@ const Page = () => {
             }
           })}
           {renderLspEditor()}
-          <div
-            style={{
-              display: selectedLanguage === "typescript" ? "block" : "none",
-            }}
-          >
-            <Editor
-              height="90vh"
-              defaultLanguage={"typescript"}
-              value={code}
-              onMount={(editor) => {
-                editor.focus();
-              }}
-            />
-          </div>
         </div>
       </div>
     </>
