@@ -10,14 +10,17 @@
   - CSS Module
 - 组件库
   - shadcn/ui (Recommended)
-  - daisy-ui
-  - Ant Design
+  - ~~daisy-ui~~ (deprecated, use shadcn&tailwind instead)
+  - Ant Design + ahooks
+  - iconify/react: 按需加载、多来源图标组件
 - 脚手架
   - EditorConfig
   - ESLint
   - Prettier
   - Husky & CommitLint & lint-staged
-- 请求库: [alovajs](https://alova.js.org/zh-CN/tutorial/getting-started/)
+- 请求相关:
+  - [alovajs](https://alova.js.org/zh-CN/tutorial/getting-started/)
+  - openapi-typescript：使用OpenAPI文档自动生成dts类型声明
 - 测试库
   - storybook
 
@@ -37,17 +40,36 @@ $ pnpm dev
 
 Next使用`dot-env`库读取环境变量，推荐使用`.env*.local`命名规范定义本地环境变量（不会被上传到git）。
 
-以下环境变量可能在编译时/运行时影响程序的行为（所有`process.env`环境变量都会被Next自动注入）：
+```
+# .env.local 会覆写 .env 中的环境变量，且不会添加到Git中，用于本地调试
+
+# DISABLE_CACHE: 禁用alova的缓存功能
+DISABLE_CACHE=true
+
+# API_URL: 用于反向代理 /api，默认为线上链接，指向APIFox时可以使用其mock功能
+API_URL=http://localhost:8888/
+
+```
+
+以下环境变量可能在编译时/运行时影响程序的行为（所有`process.env`环境变量都会被Next自动注入，前缀含有`NEXT_PUBLIC_*`的表示可以在运行时/浏览器环境中注入宏）：
 
 - `BASE_URL`，影响API的baseUrl，默认为`/api`
+- `API_URL`，影响反向代理的目标值，默认为`https://www.aioj.net/`
 - `DISABLE_CACHE`，当值为`true`时会禁用alova的缓存机制（但暂时不会禁用Next的缓存机制）
-- `NEED_MOCK`，当值为`true`时会无视prod环境限制强制启用mock（基于alova）
+- `LOCAL_MOCK`，当值为`true`时会无视prod环境限制强制启用mock（基于alova）
+- `NEXT_PUBLIC_APIFOX_TOKEN`，APIFOX云端Mock的鉴权Token
 
 ### 真实 API 说明
 
 Next的Node服务在生产环境中将与[codemate-core(hydro)](https://github.com/codemateDao/codemate-core)在同一主机运行，通过Caddy将后端反代到`/api`这个route下。
 
 因此，Alova中设置的baseUrl为`/api`，如果你的本地调试中想要修改这一行为，可以通过**环境变量**修改。
+
+### 测试环境说明
+
+我们有一个临时的测试服务器，用于提供后端环境，IP = http://42.193.125.14/
+
+将`API_URL`设置为`http://42.193.125.14/`即可。
 
 ### 本地 API 调试方法
 
@@ -100,9 +122,21 @@ $ yarn user setSuperAdmin 2
 
 #### 3. 数据mock
 
-前后端分离架构难免具有一定的滞后性，当UI没有对应的后端API时，mock is all u need
+前后端分离架构难免具有一定的滞后性，当UI没有对应的后端API时，mock is all u need。
 
-接口Mock在DEV模式下默认开启，其基于alova的接口Adapter，因此**使用`fetch()`或其他请求库发起请求无法调用项目中的mock数据**。
+##### 接口未Ready时前端接口占位
+
+我们团队使用APIFox描述API文档，可以使用其自带的本地或云端Mock功能，基于APIFox的智能Mock数据生成功能来填补数据。
+
+> 如果你本地安装了APIFox，也可以使用本地Mock链接
+
+APIFox云端Mock链接：https://mock.apifox.com/m1/4316065-3958911-default ；APIKey已写入环境文件（`.env`）中。
+
+##### 本地自定义数据Mock
+
+前端可能需要对特定数据或特定情况进行模拟和复现，这个时候就可以使用**基于请求库的本地mock功能**，其基于`alovajs-mock-adapter`，可以使用`mockjs`作为数据提供方。
+
+本地Mock在DEV模式下默认开启，需要注意的是**使用`fetch()`或其他请求库发起请求无法调用项目中的mock数据**，必须使用项目中封装的`request`才能访问mock数据。
 
 所有mock数据都存放在`src/mock`目录下，其中`index.ts`是adapter的配置，其他文件是不同scope的mock data slice，你可以简单地使用mock API来提供自定义Response和数据，也可以使用[mockjs](http://mockjs.com/)作为数据提供方。详见[alova-mock文档](https://alova.js.org/zh-CN/tutorial/request-adapter/alova-mock)。
 
@@ -115,6 +149,24 @@ $ yarn user setSuperAdmin 2
     - 全局通用的组件就添加到 `common` 这个 scope 中
     - 其他的页面内复用的组件就放在对应页面的 scope 中，如 `nav`, `user-center` 等
 - `/src/app/*` 是 NextJS 的 App Router 文件夹
+
+## 前后端API同步
+
+本项目后端使用APIFox描述API文档和进行自动化测试，前端开发可以阅读APIFox文档，并基于其导出的OpenAPI描述文件来生成类型声明文件。
+
+### 更新类型声明
+
+WIP：本项目通过Github Action自动更新类型声明，如果你发现滞后了，也可以手动更新。
+
+1. 在APIFox中导出OpenAPI格式的描述文件
+2. 在项目根目录运行 `npx openapi-typescript <your-openapi-file> -o src/types/schema.d.ts`
+3. 工具会自动生成新的`schema.d.ts`，然后TS LSP会自动更新类型
+
+## 最佳实践指南
+
+### 请求篇：alova-hooks与业务封装
+
+wip
 
 ## FAQ
 
@@ -145,3 +197,11 @@ $ yarn user setSuperAdmin 2
 1. 以管理员身份访问 http://localhost:8888/manage/setting （Hydro系统管理页面）
 2. 搜索 server.cors，找到跨域白名单
 3. 将 localhost:3000 添加到里面，滑动到底部保存更改，在Docker中重启镜像
+
+### Q：不是说强类型吗，为什么我的`request`得到的`data`都是`any`呢？
+
+> 如果你深谙TS体操之道，你也可以看看源码直接通过加泛型参数来解决
+
+为了鼓励前端对自己的数据来源负责（不信任后端数据），我们的类型加在了`transformData()`的源数据上，以鼓励开发每次调用请求时都手动处理数据。
+
+在使用`transformData(rawData)`处理后，类型推断就会自动加上对应数据类型了。

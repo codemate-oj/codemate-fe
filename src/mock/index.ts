@@ -1,9 +1,11 @@
 import GlobalFetch from "alova/GlobalFetch";
 import { createAlovaMockAdapter } from "@alova/mock";
 
-import homeMock from "./home";
+import htyV1 from "./hty-v1";
 
-const mockAdapter = createAlovaMockAdapter([homeMock], {
+const mockList = [htyV1];
+
+const mockAdapter = createAlovaMockAdapter(mockList, {
   // 非模拟请求适配器，用于未匹配mock接口时发送请求
   httpAdapter: GlobalFetch(),
   // mock接口响应延迟，单位毫秒

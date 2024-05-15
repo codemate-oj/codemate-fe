@@ -39,6 +39,7 @@ export const createPythonConfig = (code: string): UserConfig => {
           onCall: (languageClient?: MonacoLanguageClient) => {
             setTimeout(() => {
               ["pyright.restartserver", "pyright.organizeimports"].forEach((cmdName) => {
+                //@ts-ignore
                 vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
                   languageClient?.sendRequest("workspace/executeCommand", { command: cmdName, arguments: args });
                 });
@@ -53,6 +54,7 @@ export const createPythonConfig = (code: string): UserConfig => {
         workspaceFolder: {
           index: 0,
           name: "workspace",
+          //@ts-ignore
           uri: vscode.Uri.parse("/workspace/"),
         },
       },
@@ -122,6 +124,7 @@ export const createCppConfig = (code: string): UserConfig => {
         workspaceFolder: {
           index: 0,
           name: "workspace",
+          //@ts-ignore
           uri: vscode.Uri.parse("/workspace/"),
         },
       },
@@ -229,7 +232,12 @@ const Page = () => {
   ];
 
   const renderLspEditor = () => (
-    <>
+    <div
+      style={{
+        width: "100%",
+        height: "90vh",
+      }}
+    >
       <div
         id="editor"
         style={{
@@ -237,7 +245,7 @@ const Page = () => {
           height: "90vh",
         }}
       ></div>
-    </>
+    </div>
   );
   const onTextChanged = (text: string, isDirty: boolean) => {
     console.log(`Dirty? ${isDirty} Content: ${text}`);
@@ -246,7 +254,7 @@ const Page = () => {
     <>
       <div className="w-full flex">
         <div className="w-[50%] h-32"></div>
-        <div className="flex-1 h-32">
+        <div className="flex-1">
           {onlineEditorHeader.map((item, index) => {
             const className = "mr-2 mb-2";
             switch (item.type) {
