@@ -112,7 +112,7 @@ const FilerTabsTree = ({ filerTabsTreeData, onChange, defaultActiveKey }: FilerT
 
   const maxDeep = useMemo(() => {
     return initTree(filerTabsTreeData);
-  }, [filerTabsTreeData]);
+  }, [filerTabsTreeData, defaultActiveKey]);
 
   return (
     <>
