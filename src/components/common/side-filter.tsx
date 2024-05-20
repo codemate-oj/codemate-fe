@@ -39,6 +39,11 @@ const FilterItem = ({
   };
   const handleClick = () => {
     if (isTitle) return;
+    if (isSelected) {
+      setSelected && setSelected("");
+      onSelect && onSelect("");
+      return;
+    }
     setSelected && setSelected(i.value);
     onSelect && onSelect(i.value);
   };
@@ -60,10 +65,9 @@ const SideFilter = (props: SideFilterProps) => {
   useEffect(() => {
     if (props.defaultSelectedValue && props.onSelect) {
       setSelected(props.defaultSelectedValue);
-    } else {
-      setSelected(props?.options?.[0]?.value);
+      props.onSelect(props.defaultSelectedValue);
     }
-  }, [props]);
+  }, [props.defaultSelectedValue]);
   return (
     <div className="flex flex-col">
       {props.title ? <FilterItem isTitle={true} i={{ label: props.title, value: "title" }} /> : null}

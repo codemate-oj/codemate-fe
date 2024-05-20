@@ -3,6 +3,13 @@ import { type FilerTabsTreeData } from "@/components/common/filter-tabs-tree";
 
 export type CONTEST_STATUS_VAL = "incoming" | "ready" | "ongoing" | "done";
 
+export enum CONTEST_STATUS_TAG {
+  IN_COMING = 0,
+  READY = 1,
+  ON_GOING = 2,
+  DONE = 3,
+}
+
 export const CONTEST_STATUS: SideFilterOptions[] = [
   {
     label: "预告中",
