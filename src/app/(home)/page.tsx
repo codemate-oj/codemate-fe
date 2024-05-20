@@ -9,6 +9,7 @@ import { Switch, Table, TableColumnsType, Tag } from "antd";
 import Image from "next/image";
 import { Suspense } from "react";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
+import BulltinBoard from "@/components/common/bulletin-board/index";
 interface DataType {
   key: string;
   pid: number;
@@ -160,65 +161,115 @@ const HomePage = () => {
     }
   );
 
+  const result = useRequest(async () => {
+    const res = await request.get("/bulletin/list", {});
+  });
+
+  const bulletinCardData = [
+    {
+      key: "12412",
+      label: "赛事资讯",
+      children: [
+        {
+          text: "可以折叠/展开的内容区域，用于对复杂区域进行分组和隐藏，保持页面的整洁2。",
+          date: "2023-1-10",
+          time: "20:09",
+          href: "",
+        },
+        {
+          text: "可以折叠/展开的内容区域，用于对复杂区域进行分组和隐藏，保持页面的整洁4。",
+          date: "2023-1-10",
+          time: "20:09",
+          href: "",
+        },
+      ],
+    },
+    {
+      key: "1241223",
+      label: "赛事资讯2",
+      children: [
+        {
+          text: "可以折叠/展开的内容区域，用于对复杂区域进行分组和隐藏，保持页面的整洁2。",
+          date: "2023-1-10",
+          time: "20:09",
+          href: "",
+        },
+        {
+          text: "可以折叠/展开的内容区域，用于对复杂区域进行分组和隐藏，保持页面的整洁4。",
+          date: "2023-1-10",
+          time: "20:09",
+          href: "",
+        },
+      ],
+    },
+  ];
+
   return (
     <Suspense>
-      <FixedSelect
-        options={homeFilterData?.sideTabs ?? []}
-        onSelect={(i) => updateQueryParams("lang", i)}
-        defaultSelectedValue={queryParams["lang"]}
-      />
-      <FilerTabsTree
-        filerTabsTreeData={homeFilterData?.filterTree ?? []}
-        onChange={(key) => {
-          updateQueryParams("tid", key);
-        }}
-        defaultActiveKey={queryParams["tid"]}
-      />
-      <Table
-        {...tableProps}
-        columns={columns}
-        rowKey="pid"
-        expandable={{
-          expandedRowRender: (record) => (
-            <div
-              style={{
-                color: "#797979",
-                paddingBottom: "1rem",
-                borderBottom: "0.1rem dashed #F1F1F1",
-              }}
-            >
-              {record?.titleDescription}
-            </div>
-          ),
-          expandedRowClassName: () => "!text-grey",
-          expandedRowKeys: tableData?.list?.map((item) => item.key),
-          expandIcon: () => <></>,
-        }}
-        pagination={{
-          ...pagination,
-          position: ["bottomCenter"],
-          showSizeChanger: false,
-          itemRender(_, type, element) {
-            if (type === "prev") {
-              return (
-                <>
-                  <LinkBtn>首页</LinkBtn>
-                  <LinkBtn>上一页</LinkBtn>
-                </>
-              );
-            }
-            if (type === "next") {
-              return (
-                <>
-                  <LinkBtn>下一页</LinkBtn>
-                  <LinkBtn>末页</LinkBtn>
-                </>
-              );
-            }
-            return element;
-          },
-        }}
-      />
+      <div className="w-full flex">
+        <div className=" 4xl:max-w-7xl xl:max-w-[949px]">
+          <FixedSelect
+            options={homeFilterData?.sideTabs ?? []}
+            onSelect={(i) => updateQueryParams("lang", i)}
+            defaultSelectedValue={queryParams["lang"]}
+          />
+          <FilerTabsTree
+            filerTabsTreeData={homeFilterData?.filterTree ?? []}
+            onChange={(key) => {
+              updateQueryParams("tid", key);
+            }}
+            defaultActiveKey={queryParams["tid"]}
+          />
+          <Table
+            {...tableProps}
+            columns={columns}
+            rowKey="pid"
+            expandable={{
+              expandedRowRender: (record) => (
+                <div
+                  style={{
+                    color: "#797979",
+                    paddingBottom: "1rem",
+                    borderBottom: "0.1rem dashed #F1F1F1",
+                  }}
+                >
+                  {record?.titleDescription}
+                </div>
+              ),
+              expandedRowClassName: () => "!text-grey",
+              expandedRowKeys: tableData?.list?.map((item) => item.key),
+              expandIcon: () => <></>,
+            }}
+            pagination={{
+              ...pagination,
+              position: ["bottomCenter"],
+              showSizeChanger: false,
+              itemRender(_, type, element) {
+                if (type === "prev") {
+                  return (
+                    <>
+                      <LinkBtn>首页</LinkBtn>
+                      <LinkBtn>上一页</LinkBtn>
+                    </>
+                  );
+                }
+                if (type === "next") {
+                  return (
+                    <>
+                      <LinkBtn>下一页</LinkBtn>
+                      <LinkBtn>末页</LinkBtn>
+                    </>
+                  );
+                }
+                return element;
+              },
+            }}
+          />
+        </div>
+        <div className="md:w-[0px] lg:w-[400px] overflow-hidden ml-[14px]">
+          <BulltinBoard data={bulletinCardData}></BulltinBoard>
+        </div>
+      </div>
     </Suspense>
   );
 };

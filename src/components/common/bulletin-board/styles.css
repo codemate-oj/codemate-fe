@@ -1,0 +1,17 @@
+.ant-collapse-header-text{
+  border: 0px solid transparent;
+  border-left: 4px solid #FF7D37;
+  padding-left: 8px;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.ant-collapse-header{
+  width: 211px;
+  padding-left: 0; 
+  border: 0px solid transparent;
+  border-bottom: 1px solid #F1F1F1;
+}
+
+
+
