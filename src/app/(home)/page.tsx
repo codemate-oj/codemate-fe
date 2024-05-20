@@ -9,6 +9,8 @@ import { Switch, Table, TableColumnsType, Tag } from "antd";
 import Image from "next/image";
 import { Suspense } from "react";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
+import ProblemListMask from "@/components/home/problem-list-mask";
+
 interface DataType {
   key: string;
   pid: number;
@@ -160,6 +162,22 @@ const HomePage = () => {
     }
   );
 
+  const { data: tdocData } = useRequest(
+    async () => {
+      const tid = queryParams["tid"];
+      const { data } = await request.get(`/p-list/${tid}` as "/p-list/{tid}", {
+        transformData: (data) => {
+          return data;
+        },
+      });
+      return { tid: tid, content: data.tdoc.content, ishasPermission: data.hasPermission };
+    },
+    {
+      cacheKey: "/home/filter-data/hasPermission",
+      refreshDeps: [queryParams["tid"]],
+    }
+  );
+
   return (
     <Suspense>
       <FixedSelect
@@ -174,51 +192,57 @@ const HomePage = () => {
         }}
         defaultActiveKey={queryParams["tid"]}
       />
-      <Table
-        {...tableProps}
-        columns={columns}
-        rowKey="pid"
-        expandable={{
-          expandedRowRender: (record) => (
-            <div
-              style={{
-                color: "#797979",
-                paddingBottom: "1rem",
-                borderBottom: "0.1rem dashed #F1F1F1",
-              }}
-            >
-              {record?.titleDescription}
-            </div>
-          ),
-          expandedRowClassName: () => "!text-grey",
-          expandedRowKeys: tableData?.list?.map((item) => item.key),
-          expandIcon: () => <></>,
-        }}
-        pagination={{
-          ...pagination,
-          position: ["bottomCenter"],
-          showSizeChanger: false,
-          itemRender(_, type, element) {
-            if (type === "prev") {
-              return (
-                <>
-                  <LinkBtn>首页</LinkBtn>
-                  <LinkBtn>上一页</LinkBtn>
-                </>
-              );
-            }
-            if (type === "next") {
-              return (
-                <>
-                  <LinkBtn>下一页</LinkBtn>
-                  <LinkBtn>末页</LinkBtn>
-                </>
-              );
-            }
-            return element;
-          },
-        }}
-      />
+      <ProblemListMask
+        tid={tdocData?.tid ?? ""}
+        content={tdocData?.content ?? ""}
+        ishasPermission={tdocData?.ishasPermission ?? true}
+      >
+        <Table
+          {...tableProps}
+          columns={columns}
+          rowKey="pid"
+          expandable={{
+            expandedRowRender: (record) => (
+              <div
+                style={{
+                  color: "#797979",
+                  paddingBottom: "1rem",
+                  borderBottom: "0.1rem dashed #F1F1F1",
+                }}
+              >
+                {record?.titleDescription}
+              </div>
+            ),
+            expandedRowClassName: () => "!text-grey",
+            expandedRowKeys: tableData?.list?.map((item) => item.key),
+            expandIcon: () => <></>,
+          }}
+          pagination={{
+            ...pagination,
+            position: ["bottomCenter"],
+            showSizeChanger: false,
+            itemRender(_, type, element) {
+              if (type === "prev") {
+                return (
+                  <>
+                    <LinkBtn>首页</LinkBtn>
+                    <LinkBtn>上一页</LinkBtn>
+                  </>
+                );
+              }
+              if (type === "next") {
+                return (
+                  <>
+                    <LinkBtn>下一页</LinkBtn>
+                    <LinkBtn>末页</LinkBtn>
+                  </>
+                );
+              }
+              return element;
+            },
+          }}
+        />
+      </ProblemListMask>
     </Suspense>
   );
 };
