@@ -57,7 +57,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
   }
 
   let pType = determineQuestionType();
-  console.log(pType);
+  console.log(pType, "type");
 
   // 解析Markdown内容，提取问题和选项
   function parseMarkdownContent(markdown: string): Question[] {
@@ -130,7 +130,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
   }
 
   // 防止为空
-  const content = pDetailData?.data.pdoc?.content ? JSON.parse(pDetailData.data.pdoc.content) : { zh: "", en: "" };
+  const content = pDetailData?.data.pdoc?.content ? JSON.parse(pDetailData.data.pdoc?.content) : { zh: "", en: "" };
   const markdownContent = content.zh || content.en || "";
 
   const parsedQuestions = parseMarkdownContent(markdownContent);
@@ -164,7 +164,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
       <div className="max-w-screen-xl mx-auto p-4">
         <PageTitle>修炼场 编程题</PageTitle>
         {pDetailData ? (
-          <PTop title={pDetailData.data.pdoc.title} pid={pDetailData.data.pdoc.pid} />
+          <PTop title={pDetailData.data.pdoc?.title} pid={pDetailData.data.pdoc?.pid} />
         ) : (
           <p>No data available</p>
         )}
@@ -205,7 +205,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
             <PRight />
           </div>
         </div>
-        {pType === "objective" ?? <PBottom type={pType!} />}
+        {pType !== "objective" ? <PBottom type={pType!} /> : null}
       </div>
     </div>
   );
