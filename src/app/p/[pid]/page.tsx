@@ -48,7 +48,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
     const config = pDetailData?.data.pdoc?.config;
     if (typeof config === "object") {
       if (config.type === "default") {
-        return config.langs?.includes("scratch") ? "scratch" : "default";
+        return Array.isArray(config.langs) && config.langs.includes("scratch") ? "scratch" : "default";
       } else if (config.type === "objective") {
         return "objective";
       }
@@ -102,7 +102,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
           type: "string",
           title: content.trim(),
           enum: options,
-          "x-component": "CustomInput",
+          "x-component": "CustomSelect",
         };
       } else if (type === "multiselect") {
         formilySchema.properties[basePath] = {
@@ -129,7 +129,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
     return formilySchema;
   }
 
-  //防止为空
+  // 防止为空
   const content = pDetailData?.data.pdoc?.content ? JSON.parse(pDetailData.data.pdoc.content) : { zh: "", en: "" };
   const markdownContent = content.zh || content.en || "";
 
@@ -137,20 +137,25 @@ const Page = ({ params }: { params: { pid: string } }) => {
   const formilySchema = generateFormilySchema(parsedQuestions);
   console.log(JSON.stringify(formilySchema, null, 2));
 
-  //编程题选择器
-  const availableLangs = {
+  // 编程题选择器
+  const availableLangs: Record<string, string> = {
     "cc.cc14o2": "C++",
     "py.py3": "Python",
   };
-  const [selectedLang, setSelectedLang] = useState(null);
+
+  const [selectedLang, setSelectedLang] = useState<string | null>(null);
   // 从 pdocConfigLangs 提取特定语言选项，如果没有则使用所有可用选项
-  let pdocConfigLangs = pDetailData?.data.pdoc.config?.langs;
+  let pdocConfigLangs =
+    typeof pDetailData?.data.pdoc?.config === "object" && Array.isArray(pDetailData?.data.pdoc.config.langs)
+      ? pDetailData.data.pdoc.config.langs
+      : null;
+
   console.log(pdocConfigLangs);
   const langs = pdocConfigLangs
-    ? pdocConfigLangs.filter((lang) => availableLangs.hasOwnProperty(lang))
+    ? pdocConfigLangs.filter((lang) => lang in availableLangs)
     : Object.keys(availableLangs);
 
-  const handleButtonClick = (lang) => {
+  const handleButtonClick = (lang: string) => {
     setSelectedLang(lang);
   };
 
@@ -167,7 +172,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
           <div className="w-4/5 border-r-2 pr-4">
             <div>
               <div className="mb-4">
-                {pType == "objective" ? (
+                {pType === "objective" ? (
                   <FormilySchema schema={formilySchema}></FormilySchema>
                 ) : (
                   <MarkdownRenderer markdown={markdownContent} />
@@ -188,7 +193,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
                       className="mr-2 mb-2 justify-start"
                       onClick={() => handleButtonClick(lang)}
                     >
-                      {availableLangs[lang]}
+                      {availableLangs[lang as keyof typeof availableLangs]} {/* 使用类型断言 */}
                     </Button>
                   ))}
                 </div>
@@ -200,7 +205,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
             <PRight />
           </div>
         </div>
-        {pType == "objective" ?? <PBottom type={pType!} />}
+        {pType === "objective" ?? <PBottom type={pType!} />}
       </div>
     </div>
   );

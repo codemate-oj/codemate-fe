@@ -9,7 +9,7 @@ interface Option {
 interface ObjectiveInputProps {
   options: Option[];
 }
-export const ObjectiveInput = (props: CustomMultiInputProps) => {
+export const ObjectiveInput = (props: ObjectiveInputProps) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const handleButtonClick = (index: number) => {
