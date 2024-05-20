@@ -197,7 +197,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
                     </Button>
                   ))}
                 </div>
-                <CodeEditor value={code} onChange={handleCodeChange} />
+                {/*<CodeEditor value={code} onChange={handleCodeChange} />*/}
               </div>
             )}
           </div>

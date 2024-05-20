@@ -9,7 +9,7 @@ const PBottom: React.FC<PBottomProps> = (props) => {
 
   return (
     <div>
-      <Button className="mr-2">{type == "scratch " ? "开始答题" : "提交答案"}</Button>
+      <Button className="mr-2">{type == "scratch" ? "开始答题" : "提交答案"}</Button>
       <Button variant={"outline"} className="border-primary mr-2">
         上一题
       </Button>
