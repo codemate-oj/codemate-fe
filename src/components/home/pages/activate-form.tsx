@@ -17,7 +17,7 @@ const formSchema = z.object({
     .string({
       required_error: "请输入激活码",
     })
-    .max(6, {
+    .length(6, {
       message: "激活码为6位",
     }),
 });
