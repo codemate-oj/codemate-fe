@@ -8,7 +8,7 @@ interface SectionProps {
 
 export const FooterSection: React.FC<React.PropsWithChildren<SectionProps>> = ({ icon, title, children }) => (
   <section className="flex flex-col items-center">
-    {icon}
+    <div className="h-[40px] flex items-center">{icon}</div>
     <h4 className="text-[#3D3D3D] text-lg mt-3">{title}</h4>
     <ul className="grid grid-cols-2 mt-5 gap-x-2 gap-y-3 text-center">{children}</ul>
   </section>

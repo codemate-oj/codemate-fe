@@ -1,7 +1,7 @@
 import PageTitle from "@/components/common/page-title";
-import PTop from "@/components/common/p-top";
-import PRight from "@/components/common/p-right";
-import PBottom from "@/components/common/p-bottom";
+import PTop from "@/components/p/p-top";
+import PRight from "@/components/p/p-right";
+import PBottom from "@/components/p/p-bottom";
 import MarkdownRenderer from "@/components/p/markdownRenderer";
 import CodeEditor from "@/components/p/codeEditor";
 import { request } from "@/lib/request";

@@ -3,7 +3,7 @@
 import PageTitle from "@/components/common/page-title";
 import PTop from "@/components/common/p-top";
 import PRight from "@/components/common/p-right";
-import PBottom from "@/components/common/p-bottom";
+import PBottom from "@/components/p/p-bottom";
 import MarkdownRenderer from "@/components/p/markdownRenderer";
 import { Button } from "@/components/ui/button";
 import CodeEditor from "@/components/p/codeEditor";
