@@ -8,7 +8,7 @@ const PRight: React.FC<PRightProps> = (props) => {
     <div>
       {list.map((item) => {
         return (
-          <div className="py-2" key={item}>
+          <div className="py-2 font-yahei" key={item}>
             {item}
           </div>
         );
