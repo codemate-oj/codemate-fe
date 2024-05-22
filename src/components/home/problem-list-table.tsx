@@ -99,7 +99,8 @@ const ProblemListTable = () => {
         return data.data;
       },
     }),
-    [queryParams["tid"], queryParams["lang"], queryParams["page"]]
+    [queryParams["tid"], queryParams["lang"], queryParams["page"]],
+    { immediate: true }
   );
 
   return (
