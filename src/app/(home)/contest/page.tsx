@@ -27,7 +27,7 @@ const ContestPage = () => {
       const { data } = await request.get("/contest", {
         params: {
           page: 1,
-          source: queryParams["tid"],
+          tags: queryParams["tags"],
           category: queryParams["category"] as "incoming" | "ready" | "ongoing" | "done" | undefined,
         },
         transformData: (data) => {
@@ -42,7 +42,7 @@ const ContestPage = () => {
       };
     },
     {
-      refreshDeps: [queryParams["tid"], queryParams["category"]],
+      refreshDeps: [queryParams["tags"], queryParams["category"]],
     }
   );
 
@@ -59,11 +59,12 @@ const ContestPage = () => {
         defaultSelectedValue={queryParams["category"]}
       />
       <FilerTabsTree
-        filerTabsTreeData={TOPFILTER}
-        onChange={(key) => {
-          updateQueryParams("tid", key);
+        data={TOPFILTER}
+        onChange={(value) => {
+          const key = value.join("-");
+          updateQueryParams("tags", key);
         }}
-        defaultActiveKey={queryParams["tid"]}
+        // defaultActiveKey={queryParams["tid"]}
       />
       {itemListData ? (
         itemListData?.itemList?.map((item) => {

@@ -7,7 +7,7 @@ import { request } from "@/lib/request";
 import { useAntdTable, useRequest } from "ahooks";
 import { Switch, Table, TableColumnsType, Tag } from "antd";
 import Image from "next/image";
-import { Suspense } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
 interface DataType {
   key: string;
@@ -98,6 +98,7 @@ const columns: TableColumnsType<DataType> = [
 
 const HomePage = () => {
   const { queryParams, updateQueryParams } = useUrl();
+  const [selectedTreePath, setSelectedTreePath] = useState<string[]>([]);
 
   const { data: homeFilterData } = useRequest(
     async () => {
@@ -160,6 +161,36 @@ const HomePage = () => {
     }
   );
 
+  useEffect(() => {
+    const tid = queryParams["tid"];
+    if (!homeFilterData?.filterTree || !tid) return;
+    const getInfoByKey = (key: string) => {
+      let isLastNode = false;
+      let currentSelectedKeysPath: string[] = [];
+
+      const traverse = (node: TreeItem[], path: string[]) => {
+        for (const item of node) {
+          const newPath = [...path, item.key];
+          if (item.key === key) {
+            if (!item.children || item.children.length === 0) {
+              isLastNode = true;
+            }
+            currentSelectedKeysPath = newPath;
+            return;
+          }
+          if (item.children) {
+            traverse(item.children, newPath);
+          }
+        }
+      };
+
+      traverse(homeFilterData.filterTree, []);
+      return { isLastNode, currentSelectedKeysPath };
+    };
+    const info = getInfoByKey(tid);
+    setSelectedTreePath(info.currentSelectedKeysPath);
+  }, [homeFilterData?.filterTree]);
+
   return (
     <Suspense>
       <FixedSelect
@@ -168,11 +199,12 @@ const HomePage = () => {
         defaultSelectedValue={queryParams["lang"]}
       />
       <FilerTabsTree
-        filerTabsTreeData={homeFilterData?.filterTree ?? []}
-        onChange={(key) => {
-          updateQueryParams("tid", key);
+        data={homeFilterData?.filterTree ?? []}
+        selectedPath={selectedTreePath}
+        onChange={(treePath) => {
+          setSelectedTreePath(treePath);
+          updateQueryParams("tid", treePath[treePath.length - 1]);
         }}
-        defaultActiveKey={queryParams["tid"]}
       />
       <Table
         {...tableProps}

@@ -41,7 +41,6 @@ export default function RootLayout({
               </div>
             </header>
             <main className="max-w-full">{children}</main>
-            <PageFooter />
           </AntdThemeConfigProvider>
         </AntdRegistry>
       </body>
