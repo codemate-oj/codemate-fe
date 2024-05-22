@@ -3,12 +3,8 @@ import PTop from "@/components/common/p-top";
 import PRight from "@/components/common/p-right";
 import PBottom from "@/components/common/p-bottom";
 import MarkdownRenderer from "@/components/p/markdownRenderer";
-import { Button } from "@/components/ui/button";
 import CodeEditor from "@/components/p/codeEditor";
-import { headers } from "next/headers";
-import { useRequest } from "ahooks";
 import { request } from "@/lib/requestServer";
-import { useRouter } from "next/navigation";
 
 import type { Metadata, ResolvingMetadata } from "next";
 
@@ -18,49 +14,63 @@ type Props = {
   };
 };
 
-export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
-  const { data: pDetailData } = await request.get(`/p/${params.pid!}` as "/p/{pid}", {
+type ProblemType = "objective" | "scratch" | "default";
+
+interface Question {
+  type: string;
+  index: number;
+  options: string[];
+  content: string;
+}
+
+const AVAILABLE_LANG_MAP = {
+  "cc.cc14o2": "C++",
+  "py.py3": "Python",
+};
+
+async function getProblemDetail(pid: string) {
+  return request.get(`/p/${pid}` as "/p/{pid}", {
     transformData: (data) => {
       console.log(data);
       return data;
     },
   });
+}
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  if (!params.pid) throw new Error("No pid provided");
+  const { data: pDetailData } = await getProblemDetail(params.pid);
   return {
     title: `题目详情- ${pDetailData.title}`,
   };
 }
 
-const Page = async ({ params }: { params: { pid: string } }) => {
-  // const pDetailData = await fetch(`http://43.139.233.159/p/${params.pid!}`, {
-  //   method: "GET",
-  //   headers: { Accept: "application/json" },
-  // }).then((response) => response.text());
-  let pType: "default" | "objective" | "scratch" = "objective";
+function determineQuestionType(pdoc: Awaited<ReturnType<typeof getProblemDetail>>["data"]["pdoc"]): ProblemType {
+  if (typeof pdoc?.config !== "object") return "default";
+  if (pdoc.config.type === "objective") return "objective";
+  if (pdoc.config.langs?.includes("scratch")) return "scratch";
+  return "default";
+}
 
-  //是``不是”“
-  const { data: pDetailData } = await request.get(`/p/${params.pid!}` as "/p/{pid}", {
-    transformData: (data) => {
-      // console.log(data);
-      return data;
-    },
-  });
-
-  if (typeof pDetailData.pdoc?.config == "object") {
-    if (pDetailData.pdoc.config.type == "default") {
-      if (pDetailData.pdoc.config.langs?.includes("scratch")) pType = "scratch";
-      else pType = "default";
-    }
+function determineAvailableLangs(pdoc: Awaited<ReturnType<typeof getProblemDetail>>["data"]["pdoc"]): string[] {
+  // 默认返回所有可用语言
+  if (typeof pdoc?.config !== "object" || !Array.isArray(pdoc?.config?.langs)) {
+    return Object.keys(AVAILABLE_LANG_MAP);
   }
-  console.log(pType, "类型");
+  // 若有配置则返回配置中的语言
+  return pdoc.config.langs.filter((lang) => lang in AVAILABLE_LANG_MAP);
+}
 
-  //解析markdown
-  interface Question {
-    type: string;
-    index: number;
-    options: string[];
-    content: string;
-  }
+const Page = async ({ params }: Props) => {
+  if (!params.pid) throw new Error("No pid provided");
+
+  const { data: pDetailData } = await getProblemDetail(params.pid!);
+
+  const pType = determineQuestionType(pDetailData?.pdoc);
+  const langs = determineAvailableLangs(pDetailData?.pdoc);
+  const content = pDetailData?.pdoc?.content ? JSON.parse(pDetailData.pdoc?.content) : { zh: "", en: "" };
+  const markdownContent = content.zh || content.en || "";
+
   function parseMarkdownContent(markdown: string): Question[] {
     const lines = markdown.split("\n");
     const questions: Question[] = [];
@@ -88,22 +98,6 @@ const Page = async ({ params }: { params: { pid: string } }) => {
     return questions;
   }
 
-  const content = pDetailData?.pdoc?.content ? JSON.parse(pDetailData.pdoc?.content) : { zh: "", en: "" };
-  const markdownContent = content.zh || content.en || "";
-
-  //关于langs
-  const pdocConfigLangs =
-    typeof pDetailData?.pdoc?.config === "object" && Array.isArray(pDetailData?.pdoc.config.langs)
-      ? pDetailData.pdoc.config.langs
-      : null;
-  const availableLangs: Record<string, string> = {
-    "cc.cc14o2": "C++",
-    "py.py3": "Python",
-  };
-  const langs = pdocConfigLangs
-    ? pdocConfigLangs.filter((lang) => lang in availableLangs)
-    : Object.keys(availableLangs);
-
   return (
     <div>
       <div className="max-w-screen-xl mx-auto p-4">
@@ -113,18 +107,17 @@ const Page = async ({ params }: { params: { pid: string } }) => {
           <div className="w-4/5 border-r-2 border-dashed pr-4">
             <div>
               <div className="mb-4">
-                {" "}
                 <MarkdownRenderer markdown={markdownContent} />
               </div>
             </div>
             {/*<CodeEditor langs={langs!} />*/}
-            {pType === "default" ? <CodeEditor langs={langs!} /> : <></>}
+            {pType === "default" ? <CodeEditor langs={langs} /> : null}
           </div>
           <div className="w-1/5 pl-5">
             <PRight />
           </div>
         </div>
-        <PBottom type={pType!} />
+        <PBottom type={pType} />
       </div>
     </div>
   );
