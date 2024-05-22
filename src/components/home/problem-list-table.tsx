@@ -1,24 +1,14 @@
 "use client";
 import { Switch, Table, TableColumnsType, Tag } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import useUrl from "@/hooks/useUrl";
 import { useAntdTable } from "ahooks";
 import { request } from "@/lib/request";
 import LinkBtn from "../common/link-btn";
+import { useRequest, useWatcher } from "alova";
 
-interface DataType {
-  key: string;
-  pid: number;
-  title: string;
-  brief: string;
-  difficulty: number;
-  nSubmit: number;
-  nAccept: number;
-  tag: string[];
-}
-
-const columns: TableColumnsType<DataType> = [
+const columns: TableColumnsType = [
   {
     title: "编号",
     dataIndex: "pid",
@@ -42,9 +32,9 @@ const columns: TableColumnsType<DataType> = [
     key: "tag",
     dataIndex: "tag",
     width: "40%",
-    render: (_, { tag }) => (
+    render: (_, record) => (
       <>
-        {tag?.map((tag) => {
+        {record.tag?.map((tag: string) => {
           return (
             <Tag color={"volcano"} key={tag} className="!text-primary !bg-orange-50 !leading-4">
               {tag.toUpperCase()}
@@ -97,33 +87,25 @@ const columns: TableColumnsType<DataType> = [
 const ProblemListTable = () => {
   const { queryParams, updateQueryParams } = useUrl();
 
-  const {
-    data: tableData,
-    tableProps: { pagination, ...tableProps },
-  } = useAntdTable(
-    async ({ current, pageSize }) => {
-      const { data } = await request.get("/p", {
-        params: {
-          page: current,
-          limit: pageSize,
-          source: queryParams["tid"],
-          lang: queryParams["lang"],
-        },
-      });
-      updateQueryParams("page", String(current));
-      return { total: data.pcount, list: data.pdocs as any[] };
-    },
-    {
-      cacheKey: "/home/p/table-data",
-      defaultCurrent: Number(queryParams["page"]) || 1,
-      defaultPageSize: 15,
-      refreshDeps: [queryParams["tid"], queryParams["lang"]],
-    }
+  const { data, loading = true } = useWatcher(
+    request.get("/p", {
+      params: {
+        page: Number(queryParams["page"]) || 1,
+        limit: 15,
+        source: queryParams["tid"],
+        lang: queryParams["lang"],
+      },
+      transformData: (data) => {
+        return data.data;
+      },
+    }),
+    [queryParams["tid"], queryParams["lang"], queryParams["page"]]
   );
 
   return (
     <Table
-      {...tableProps}
+      loading={loading}
+      dataSource={data?.pdocs}
       columns={columns}
       rowKey="pid"
       rowClassName="!cursor-pointer"
@@ -135,7 +117,7 @@ const ProblemListTable = () => {
         };
       }}
       expandable={{
-        expandedRowRender: (record?: DataType) => (
+        expandedRowRender: (record) => (
           <div
             style={{
               color: "#797979",
@@ -147,12 +129,17 @@ const ProblemListTable = () => {
           </div>
         ),
         expandedRowClassName: () => "!text-grey",
-        expandedRowKeys: tableData?.list?.map((item) => item.key),
+        expandedRowKeys: data?.pdocs?.map((item) => item.pid),
         expandIcon: () => <></>,
       }}
       pagination={{
-        ...pagination,
         position: ["bottomCenter"],
+        current: Number(queryParams["page"]) || 1,
+        total: data?.pcount,
+        pageSize: 15,
+        onChange: (page) => {
+          updateQueryParams("page", String(page));
+        },
         showSizeChanger: false,
         itemRender(_, type, element) {
           if (type === "prev") {
