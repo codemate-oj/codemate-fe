@@ -1,5 +1,5 @@
 "use client";
-import FilerTabsTree, { TreeItem, type FilerTabsTreeData } from "@/components/common/filter-tabs-tree";
+import FilterTabsTree, { TreeItem, type FilterTabsTreeData } from "@/components/common/filter-tabs-tree";
 import FixedSelect, { type FixedSelectOptions } from "@/components/common/fixed-select";
 import LinkBtn from "@/components/common/link-btn";
 import useUrl from "@/hooks/useUrl";
@@ -63,9 +63,9 @@ const columns: TableColumnsType<DataType> = [
     width: "12%",
     render: (_, record) => (
       <div className="flex gap-1">
-        {new Array(Number(record?.difficulty))
-          .fill(0)
-          ?.map((_, index) => <Image src="/svg/star.svg" alt="" key={index} width={15} height={15}></Image>)}
+        {new Array(Number(record?.difficulty ?? 0)).map((_, index) => (
+          <Image src="/svg/star.svg" alt="" key={index} width={15} height={15} />
+        ))}
       </div>
     ),
   },
@@ -88,9 +88,9 @@ const columns: TableColumnsType<DataType> = [
     width: "15%",
     render: (_, record) => (
       <div className="flex gap-1">
-        {new Array(Number(record?.difficulty))
-          .fill(0)
-          ?.map((_, index) => <Image src="/img/fire.png" alt="" key={index} width={15} height={15}></Image>)}
+        {new Array(Number(record?.difficulty ?? 0)).map((_, index) => (
+          <Image src="/img/fire.png" alt="" key={index} width={15} height={15}></Image>
+        ))}
       </div>
     ),
   },
@@ -128,7 +128,7 @@ const HomePage = () => {
         } as FixedSelectOptions;
       });
       return {
-        filterTree: [{ label: "全部", key: "" }, ...data.roots?.map(parsePlistItem)] as FilerTabsTreeData,
+        filterTree: [{ label: "全部", key: "" }, ...data.roots?.map(parsePlistItem)] as FilterTabsTreeData,
         sideTabs: [{ label: "全部", value: "" }, ...permittedLangs],
       };
     },
@@ -198,7 +198,7 @@ const HomePage = () => {
         onSelect={(i) => updateQueryParams("lang", i)}
         defaultSelectedValue={queryParams["lang"]}
       />
-      <FilerTabsTree
+      <FilterTabsTree
         data={homeFilterData?.filterTree ?? []}
         selectedPath={selectedTreePath}
         onChange={(treePath) => {
