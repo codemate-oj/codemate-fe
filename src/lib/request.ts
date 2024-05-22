@@ -100,6 +100,7 @@ export const request = {
     const { params, ...rest } = config;
     return alovaInstance.Get(url, {
       ...rest,
+      params,
       headers: {
         Accept: "application/json",
         ...(config.headers ?? {}),

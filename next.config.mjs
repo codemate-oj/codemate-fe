@@ -7,6 +7,10 @@ const nextConfig = {
           source: "/api/:path*",
           destination: `${process.env.API_URL ?? "https://www.aioj.net/"}:path*`,
         },
+        {
+          source: "/file/:path*",
+          destination: `${process.env.API_URL ?? "https://www.aioj.net/file/"}:path*`,
+        },
       ];
     }
     return [];
