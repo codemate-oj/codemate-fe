@@ -48,3 +48,7 @@ export function parseTemplate(template: string, values: string[]) {
     return values[index] !== undefined ? values[index] : match;
   });
 }
+
+export function isBrowser() {
+  return typeof window !== "undefined";
+}

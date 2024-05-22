@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import FixedSelect, { FixedSelectOptions } from "../common/fixed-select";
 import { useUrlParam } from "@/hooks/useUrl";

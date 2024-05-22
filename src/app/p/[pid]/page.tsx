@@ -4,9 +4,9 @@ import PRight from "@/components/common/p-right";
 import PBottom from "@/components/common/p-bottom";
 import MarkdownRenderer from "@/components/p/markdownRenderer";
 import CodeEditor from "@/components/p/codeEditor";
-import { request } from "@/lib/requestServer";
+import { request } from "@/lib/request";
 
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 
 type Props = {
   params: {
@@ -31,7 +31,6 @@ const AVAILABLE_LANG_MAP = {
 async function getProblemDetail(pid: string) {
   return request.get(`/p/${pid}` as "/p/{pid}", {
     transformData: (data) => {
-      console.log(data);
       return data;
     },
   });
@@ -54,7 +53,7 @@ function determineQuestionType(pdoc: Awaited<ReturnType<typeof getProblemDetail>
 
 function determineAvailableLangs(pdoc: Awaited<ReturnType<typeof getProblemDetail>>["data"]["pdoc"]): string[] {
   // 默认返回所有可用语言
-  if (typeof pdoc?.config !== "object" || !Array.isArray(pdoc?.config?.langs)) {
+  if (typeof pdoc?.config !== "object" || !Array.isArray(pdoc?.config?.langs) || pdoc.config.langs.length === 0) {
     return Object.keys(AVAILABLE_LANG_MAP);
   }
   // 若有配置则返回配置中的语言
