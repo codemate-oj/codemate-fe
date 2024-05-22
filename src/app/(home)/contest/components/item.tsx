@@ -72,7 +72,7 @@ const Item: React.FC<any> = (props) => {
         {getState(tsdict[_id], beginAt, endAt, checkinBeginAt, checkinEndAt)}
         {/* <img src={`https://www.aioj.net${imageURL}`} alt="123" /> */}
         {/* file/2/sKI-ZU-No83ClIBleJqSq.png */}
-        <Image src={imageURL} alt="loading" width={320} height={160} />
+        <Image src={`https://www.aioj.net${imageURL}`} alt="loading" width={320} height={160} />
         {/* <div className="w-full h-full bg-black"></div> */}
       </div>
       <div className="flex-1 relative">
