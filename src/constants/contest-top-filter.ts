@@ -32,7 +32,7 @@ const labelValueMap: LabelValueMapTYPE = [
   {
     label: "诸侯赛",
     key: String(labelValueKeyValue["诸侯赛"]),
-    children: [{ label: "全部", key: String(labelValueKeyValue["诸侯赛"] + "-" + labelValueKeyValue["全部"]) }],
+    children: [{ label: "全部", key: String(labelValueKeyValue["全部"]) }],
   },
   {
     label: "模拟测试",
@@ -40,19 +40,19 @@ const labelValueMap: LabelValueMapTYPE = [
     children: [
       {
         label: "全部",
-        key: String(labelValueKeyValue["模拟测试"] + "-" + labelValueKeyValue["全部"]),
+        key: String(labelValueKeyValue["全部"]),
       },
       {
         label: "月赛",
-        key: String(labelValueKeyValue["模拟测试"] + "-" + labelValueKeyValue["月赛"]),
+        key: String(labelValueKeyValue["月赛"]),
       },
       {
         label: "季赛",
-        key: String(labelValueKeyValue["模拟测试"] + "-" + labelValueKeyValue["季赛"]),
+        key: String(labelValueKeyValue["季赛"]),
       },
       {
         label: "年赛",
-        key: String(labelValueKeyValue["模拟测试"] + "-" + labelValueKeyValue["年赛"]),
+        key: String(labelValueKeyValue["年赛"]),
       },
     ],
   },
