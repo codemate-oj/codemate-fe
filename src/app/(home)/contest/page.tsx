@@ -1,4 +1,5 @@
 "use client";
+"use client";
 import type { Metadata } from "next";
 import FilerTabsTree from "@/components/common/filter-tabs-tree";
 import FixedSelect from "@/components/common/fixed-select";
