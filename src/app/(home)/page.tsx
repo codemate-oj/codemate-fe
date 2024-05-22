@@ -63,7 +63,7 @@ const columns: TableColumnsType<DataType> = [
     width: "12%",
     render: (_, record) => (
       <div className="flex gap-1">
-        {new Array(Number(record?.difficulty))
+        {new Array(Number(record?.difficulty ?? 0))
           .fill(0)
           ?.map((_, index) => <Image src="/svg/star.svg" alt="" key={index} width={15} height={15}></Image>)}
       </div>
@@ -88,7 +88,7 @@ const columns: TableColumnsType<DataType> = [
     width: "15%",
     render: (_, record) => (
       <div className="flex gap-1">
-        {new Array(Number(record?.difficulty))
+        {new Array(Number(record?.difficulty ?? 0))
           .fill(0)
           ?.map((_, index) => <Image src="/img/fire.png" alt="" key={index} width={15} height={15}></Image>)}
       </div>
