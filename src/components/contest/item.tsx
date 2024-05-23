@@ -11,26 +11,39 @@ function calculateTimeDifference(time1: string, time2: string): number {
   const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
   return differenceInHours;
 }
-interface NavItemType {
-  name: string;
-  href: Parameters<(str: string) => [string]>[0];
-  isActive?: boolean;
-  disabled?: boolean;
+interface contestItemProps {
+  title: string;
+  rule: string;
+  beginAt: string;
+  endAt: string;
+  attend: number;
+  tag?: string[];
+  _id: string;
+  checkinBeginAt?: string;
+  checkinEndAt?: string;
+  imageURL?: string;
+  [key: string]: any;
 }
-const Item: React.FC<any> = (props) => {
+interface ItemProps {
+  item: contestItemProps;
+  tsdict: {
+    [key: string]: Record<string, never>;
+  };
+}
+const Item: React.FC<ItemProps> = (props) => {
   const { item, tsdict } = props;
   const { title, rule, beginAt, endAt, attend, tag, _id, checkinBeginAt, checkinEndAt, imageURL } = item;
   return (
     <div className="flex h-48">
-      <div className="w-80 h-40 mr-8 relative">
+      <div className="w-80 h-40 mr-8 relative overflow-hidden">
         <ContestState
-          isApply={tsdict[_id]}
+          isApply={Boolean(tsdict[_id])}
           beginAt={beginAt}
           endAt={endAt}
           checkinBeginAt={checkinBeginAt}
           checkinEndAt={checkinEndAt}
         />
-        <Image src={imageURL} alt="loading" width={320} height={160} />
+        <Image src={`https://www.aioj.net${imageURL}`} alt="loading" width={320} height={160} />
       </div>
       <div className="flex-1 relative">
         <div className="title">
@@ -52,14 +65,15 @@ const Item: React.FC<any> = (props) => {
           </div>
           <div className="lang flex-1">
             <p className="font-normal text-lg text-[#FF7D37]">
-              {tag.length !== 1 ? "多种语言" : PROGRAMMING_LANGS[tag[0]] || "多种语言"}
+              {tag ? (tag.length !== 1 ? "多种语言" : PROGRAMMING_LANGS[tag[0]] || "多种语言") : "多种语言"}
             </p>
             <span className="font-normal text-sm text-[#797979]">语言</span>
           </div>
         </div>
         <footer className="relative mt-6">
           <p className="font-normal text-sm text-[#3D3D3D]">
-            报名时间：{checkinBeginAt.slice(0, 16).replace("T", " ")} -- {checkinEndAt.slice(0, 16).replace("T", " ")}
+            报名时间：{!checkinBeginAt ? "---" : checkinBeginAt.slice(0, 16).replace("T", " ")} --{" "}
+            {!checkinEndAt ? "---" : checkinEndAt.slice(0, 16).replace("T", " ")}
           </p>
           <p className="font-normal text-sm text-[#3D3D3D]">
             比赛时间：{beginAt.slice(0, 16).replace("T", " ")} -- {endAt.slice(0, 16).replace("T", " ")}

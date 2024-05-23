@@ -2,15 +2,15 @@ const ContestState: React.FC<{
   isApply: boolean;
   beginAt: string;
   endAt: string;
-  checkinBeginAt: string;
-  checkinEndAt: string;
+  checkinBeginAt?: string;
+  checkinEndAt?: string;
 }> = (props) => {
   const { isApply, beginAt, endAt, checkinBeginAt, checkinEndAt } = props;
   const nowDate = new Date();
   const beginDate = new Date(beginAt);
   const endDate = new Date(endAt);
-  const checkinBeginDate = new Date(checkinBeginAt);
-  const checkinEndDate = new Date(checkinEndAt);
+  const checkinBeginDate = new Date(checkinBeginAt as string);
+  const checkinEndDate = new Date(checkinEndAt as string);
   if (nowDate < checkinBeginDate)
     return (
       <span className="absolute top-2 right-2 text-[#FF7D37] border border-[#FF7D37] rounded-lg py-2 px-4 text-sm font-normal">

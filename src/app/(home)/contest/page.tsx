@@ -22,7 +22,7 @@ type CATEGORYTYPE = "all" | "incoming" | "ready" | "ongoing" | "done";
 // };
 const ContestPage = () => {
   const { queryParams, updateQueryParams } = useUrl();
-  const { data: itemListData } = useRequest(
+  const { data: itemListData, loading } = useRequest(
     async () => {
       const { data } = await request.get("/contest", {
         params: {
@@ -47,7 +47,7 @@ const ContestPage = () => {
   );
 
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense>
       <FixedSelect
         options={Object.keys(CATEGORY).map((item) => {
           return {
@@ -66,13 +66,15 @@ const ContestPage = () => {
         }}
         // defaultActiveKey={queryParams["tid"]}
       />
-      {itemListData ? (
-        itemListData?.itemList?.map((item) => {
-          return <Item key={item._id} item={item} tsdict={itemListData.tsdict} />;
-        })
-      ) : (
-        <Loading />
-      )}
+      <div className={"pt-3"}>
+        {loading ? (
+          <Loading />
+        ) : (
+          itemListData?.itemList?.map((item) => {
+            return <Item key={item._id} item={item} tsdict={itemListData.tsdict} />;
+          })
+        )}
+      </div>
     </Suspense>
   );
 };
