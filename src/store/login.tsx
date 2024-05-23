@@ -6,6 +6,8 @@ import LoginForm from "@/components/login/pages/login-form";
 import EmailOrPhoneForm from "@/components/login/pages/email-or-phone-form";
 import ChooseVerifyForm from "@/components/login/pages/choose-verify-form";
 import UserInfoForm from "@/components/login/pages/user-info-form";
+import { toast } from "sonner";
+import { headers } from "next/headers";
 
 export type DialogStatusName = "login" | "choose-verify" | "input-email-or-phone" | "user-info";
 
@@ -37,6 +39,7 @@ export const DialogStatusMap: Record<DialogStatusName, DialogPage> = {
 
 const loginStore = store(
   {
+    sid: null as string | null,
     user: null as Hydro.UserContext | null,
     lastSendCode: null as Date | null,
     isDialogShow: false,
@@ -61,24 +64,53 @@ const loginStore = store(
     },
   }
 ).extend((store) => ({
-  login: async (uname: string, password: string) => {
-    await request.post("/login", { uname, password });
-    // FIXME: 当前后端不能在登陆时更新UserContext 需要重复请求
-    // @ts-ignore
-    const { data } = await request.get("/login");
-    // 登录失败：访客 _id=0 也算失败
+  /**
+   * 无感刷新登录状态
+   */
+  renew: async () => {
+    const sid = store.sid.get();
+    if (!sid) return;
+    //@ts-ignore
+    const { data } = await request.get(`/login?sid=${sid}`, {
+      headers: {
+        Authorization: `Bearer ${sid}`,
+      },
+      transformData: (data, headers) => {
+        return { sid: headers.get("X-Hydro-Sid") as string | null, ...data };
+      },
+    });
     if (!data || !data.UserContext || data.UserContext._id === 0) {
-      store.user.assign(null);
-      throw new Error("登录请求失败");
+      if (store.user.get()) {
+        // 若此前已登录，则提示失效
+        toast.warning("登录已失效，请重新登录");
+      }
+      store.user.set(null);
+      store.sid.set(null);
+    } else {
+      store.user.set(data.UserContext);
+      store.sid.set(data.sid);
     }
-    if (store.user.get() === null) store.user.set(data.UserContext);
-    else store.user.assign(data.UserContext);
+  },
+  login: async (uname: string, password: string) => {
+    const sid = await request.post(
+      "/login",
+      { uname, password },
+      {
+        transformData: (data, headers) => {
+          return ((data as any).sid ?? headers.get("X-Hydro-Sid")) as string | null;
+        },
+      }
+    );
+    store.sid.set(sid);
     store.isDialogShow.set(false);
     store.dialogContextStack.set([]);
+    // 登陆成功后刷新整个页面
+    window.location.reload();
   },
   logout: async () => {
     await request.post("/logout");
     store.user.assign(null);
+    window.location.reload();
   },
   dialogJumpTo: (pageName: DialogStatusName, additionalContext?: Partial<Omit<DialogPageContext, "pageName">>) => {
     const ctx: DialogPageContext = {

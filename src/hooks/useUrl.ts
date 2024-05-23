@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import queryString from "query-string";
+import { useState, useEffect, useCallback } from "react";
+import qs from "query-string";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const useUrl = () => {
@@ -17,21 +17,47 @@ const useUrl = () => {
     setOriginUrlQueryParams(parsed);
   }, [searchParams]);
 
-  const updateQueryParams = (key: string, value: string) => {
-    if (searchParams.get(key) === value) return;
-    const updatedParams = {
-      ...originUrlQueryParams,
-      [key]: value,
-    };
-    const newUrl = queryString.stringifyUrl({
-      url: window.location.pathname,
-      query: updatedParams,
-    });
-    //@ts-ignore
-    router.push(newUrl);
-  };
+  const updateQueryParams = useCallback(
+    (key: string, value: string) => {
+      if (searchParams.get(key) === value) return;
+      const updatedParams = {
+        ...originUrlQueryParams,
+        [key]: value,
+      };
+      const newUrl = qs.stringifyUrl({
+        url: window.location.pathname,
+        query: updatedParams,
+      });
+      //@ts-ignore
+      router.push(newUrl);
+    },
+    [originUrlQueryParams, router, searchParams]
+  );
 
   return { queryParams: originUrlQueryParams, updateQueryParams };
+};
+
+interface UseUrlParamOption {
+  defaultValue?: string;
+  validator?: (value?: string) => boolean;
+}
+
+export const useUrlParam = <T extends string = string>(key: string, options?: UseUrlParamOption) => {
+  const { validator = () => true, defaultValue } = options || {};
+  const { queryParams, updateQueryParams } = useUrl();
+
+  const value = (queryParams[key] ?? defaultValue ?? "") as T;
+  const setValue = useCallback(
+    (value: string) => {
+      if (!validator(value)) {
+        throw new Error("Invalid url param value");
+      }
+      updateQueryParams(key, value);
+    },
+    [key, updateQueryParams]
+  );
+
+  return [value, setValue] as const;
 };
 
 export default useUrl;

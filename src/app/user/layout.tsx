@@ -22,7 +22,7 @@ const UserCenterLayout = ({
       <PageTitle>我的空间</PageTitle>
       <div className="flex gap-x-8">
         <NavigationTabs items={navItems} />
-        <div>
+        <div className="flex-1">
           <h3 className="text-[#3D3D3D] text-lg font-bold mb-5">
             {navItems.find((r) => r.isActive)?.name ?? "我的中心"}
           </h3>

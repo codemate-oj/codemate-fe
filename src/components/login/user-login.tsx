@@ -28,7 +28,10 @@ const UserLogin = () => {
 
   useEffect(() => {
     // 登录是纯客户端行为 为防止闪动 在服务端屏蔽渲染
-    setIsLoaded(true);
+    store.renew().then(() => {
+      // 进入时先刷新登录态，再显示组件
+      setIsLoaded(true);
+    });
   }, []);
 
   if (!isLoaded) {
