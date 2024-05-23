@@ -1,14 +1,16 @@
 "use client";
 import { Switch, Table, TableColumnsType, Tag } from "antd";
-import React, { useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import useUrl from "@/hooks/useUrl";
-import { useAntdTable } from "ahooks";
 import { request } from "@/lib/request";
 import LinkBtn from "../common/link-btn";
-import { useRequest, useWatcher } from "alova";
+import { useWatcher } from "alova";
+import { paths } from "@/types/schema";
 
-const columns: TableColumnsType = [
+type DataType = paths["/p"]["get"]["responses"]["200"]["content"]["application/json"]["pdocs"][number];
+
+const columns: TableColumnsType<DataType> = [
   {
     title: "编号",
     dataIndex: "pid",
@@ -126,7 +128,7 @@ const ProblemListTable = () => {
               borderBottom: "0.1rem dashed #F1F1F1",
             }}
           >
-            {record?.brief}
+            {record?.title}
           </div>
         ),
         expandedRowClassName: () => "!text-grey",

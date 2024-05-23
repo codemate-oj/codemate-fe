@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import FilerTabsTree from "@/components/common/filter-tabs-tree";
 import FixedSelect from "@/components/common/fixed-select";
 import React, { Suspense } from "react";
-import Loading from "../loading";
 import { useRequest } from "ahooks";
 import { request } from "@/lib/request";
 import useUrl from "@/hooks/useUrl";
@@ -47,7 +46,7 @@ const ContestPage = () => {
   );
 
   return (
-    <Suspense fallback={<Loading />}>
+    <>
       <FixedSelect
         options={Object.keys(CATEGORY).map((item) => {
           return {
@@ -66,14 +65,12 @@ const ContestPage = () => {
         }}
         // defaultActiveKey={queryParams["tid"]}
       />
-      {itemListData ? (
-        itemListData?.itemList?.map((item) => {
-          return <Item key={item._id} item={item} tsdict={itemListData.tsdict} />;
-        })
-      ) : (
-        <Loading />
-      )}
-    </Suspense>
+      {itemListData
+        ? itemListData?.itemList?.map((item) => {
+            return <Item key={item._id} item={item} tsdict={itemListData.tsdict} />;
+          })
+        : null}
+    </>
   );
 };
 

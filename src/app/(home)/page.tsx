@@ -5,6 +5,11 @@ import { PROGRAMMING_LANGS } from "@/constants/misc";
 import AsideLangSelector from "@/components/home/aside-lang-selector";
 import TreeSelector from "@/components/home/tree-selector";
 import ProblemListTable from "@/components/home/problem-list-table";
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "题库 - CODEMATE",
+};
 
 function getFilterInfo() {
   const parsePlistItem = (item: any) => {
