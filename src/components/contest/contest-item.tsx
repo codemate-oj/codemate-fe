@@ -52,8 +52,10 @@ const Item: React.FC<ItemProps> = (props) => {
         <Image src={`https://www.aioj.net${imageURL}`} alt="loading" width={320} height={160} />
       </div>
       <div className="flex-1 relative">
-        <div onClick={() => toDetail(_id)} className="title cursor-pointer">
-          <span className="font-bold text-lg">{title}</span>
+        <div className="title">
+          <span onClick={() => toDetail(_id)} className="font-bold text-lg cursor-pointer">
+            {title}
+          </span>
           <span className="absolute right-0 bg-[#F1F1F1] py-1 px-4 rounded-l-3xl text-sm">专项赛</span>
         </div>
         <div className="tags flex mt-2">
