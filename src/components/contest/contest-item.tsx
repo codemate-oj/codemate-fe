@@ -1,9 +1,10 @@
 import { Button } from "antd";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
-import React from "react";
+import React, { useCallback } from "react";
 import Link from "next/link";
 import ContestState from "./contest-state";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 function calculateTimeDifference(time1: string, time2: string): number {
   const date1 = new Date(time1);
   const date2 = new Date(time2);
@@ -25,17 +26,22 @@ interface contestItemProps {
   [key: string]: any;
 }
 interface ItemProps {
+  toDetail: (id: string) => void;
   item: contestItemProps;
   tsdict: {
     [key: string]: Record<string, never>;
   };
 }
 const Item: React.FC<ItemProps> = (props) => {
-  const { item, tsdict } = props;
+  const { item, tsdict, toDetail } = props;
   const { title, rule, beginAt, endAt, attend, tag, _id, checkinBeginAt, checkinEndAt, imageURL } = item;
+  // const router = useRouter();
+  // const toDetial = useCallback(() => {
+  //   router.push(`/contest/${_id}`);
+  // }, [_id, router]);
   return (
     <div className="flex h-48">
-      <div className="w-80 h-40 mr-8 relative overflow-hidden">
+      <div onClick={() => toDetail(_id)} className="w-80 h-40 mr-8 relative overflow-hidden cursor-pointer">
         <ContestState
           isApply={Boolean(tsdict[_id])}
           beginAt={beginAt}
@@ -46,7 +52,7 @@ const Item: React.FC<ItemProps> = (props) => {
         <Image src={`https://www.aioj.net${imageURL}`} alt="loading" width={320} height={160} />
       </div>
       <div className="flex-1 relative">
-        <div className="title">
+        <div onClick={() => toDetail(_id)} className="title cursor-pointer">
           <span className="font-bold text-lg">{title}</span>
           <span className="absolute right-0 bg-[#F1F1F1] py-1 px-4 rounded-l-3xl text-sm">专项赛</span>
         </div>
