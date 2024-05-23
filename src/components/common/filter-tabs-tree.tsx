@@ -125,6 +125,7 @@ const FilerTabsTree: React.FC<FilerTabsTreeProps> = ({
           selectedPath={selectedPath?.slice(1)}
           depth={depth + 1}
           onChange={handleChildrenChange}
+          renderers={renderers}
         />
       )}
     </>
