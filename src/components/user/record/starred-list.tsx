@@ -6,14 +6,11 @@ import { STATUS_ACCEPTED } from "@/constants/judge-status";
 import { Button, List } from "antd";
 import Item from "./item";
 
-const FaultList = () => {
+const StarredList = () => {
   const { data, loadingMore, loading, loadMore, noMore } = useInfiniteScroll(
     async (d) => {
       const current = d?.currentPage ?? 1;
-      let rdocs = await getRecords(undefined, current, true);
-      rdocs = rdocs
-        .filter((i) => i.result !== STATUS_ACCEPTED)
-        .sort((a, b) => b.submitAt.getTime() - a.submitAt.getTime());
+      const rdocs: any[] = [];
       if (rdocs.length === 0) {
         return {
           list: [],
@@ -38,7 +35,7 @@ const FaultList = () => {
         dataSource={data?.list ?? []}
         renderItem={(item) => (
           <List.Item>
-            <Item {...item} isFault timePrefix={"上次尝试时间："} time={item.submitAt} />
+            <Item {...item} />
           </List.Item>
         )}
       />
@@ -53,4 +50,4 @@ const FaultList = () => {
   );
 };
 
-export default FaultList;
+export default StarredList;
