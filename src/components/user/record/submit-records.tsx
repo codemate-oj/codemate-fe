@@ -65,6 +65,35 @@ const tableColumns: TableProps["columns"] = [
   },
 ];
 
+export const getRecords = (lang?: string, page = 1, full = false, uid = loginStore.user.get()?._id ?? 0) => {
+  return request.get("/record", {
+    params: {
+      uidOrName: String(uid),
+      page,
+      lang: lang as any,
+      full,
+    },
+    transformData: ({ data }) => {
+      return data.rdocs.map((record) => {
+        const question = data.pdict[record.pid];
+        return {
+          pid: record.pid,
+          name: question.title,
+          tags: question.tag,
+          result: record.status,
+          score: record.score,
+          lang: record.lang,
+          acPercentage: question.nAccept / question.nSubmit,
+          duration: record.time,
+          rid: record._id,
+          submitAt: new Date(record.judgeAt),
+          difficulty: question.difficulty,
+        };
+      });
+    },
+  });
+};
+
 const SubmitRecords = () => {
   const [activeKey, setActiveKey] = useUrlParam("category", {
     defaultValue: "objective",
@@ -73,37 +102,12 @@ const SubmitRecords = () => {
   const { data, loadingMore, loading, loadMore, noMore } = useInfiniteScroll(
     async (_data) => {
       const current = _data?.currentPage ?? 1;
-      const rdocs = await request.get("/record", {
-        params: {
-          uidOrName: String(loginStore.user.get()?._id ?? 0),
-          page: current,
-          lang: activeKey === "objective" ? ("_" as any) : undefined,
-          full: true,
-        },
-        transformData: ({ data }) => {
-          return data.rdocs
-            .filter((r) => {
-              if (activeKey === "objective") return true;
-              return r.lang !== "_";
-            })
-            .map((record) => {
-              const question = data.pdict[record.pid];
-              return {
-                pid: record.pid,
-                name: question.title,
-                tags: question.tag,
-                result: record.status,
-                score: record.score,
-                lang: record.lang,
-                acPercentage: question.nAccept / question.nSubmit,
-                duration: record.time,
-                rid: record._id,
-                submitAt: new Date(record.judgeAt),
-                difficulty: question.difficulty,
-              };
-            });
-        },
-      });
+      const rdocs = (await getRecords(activeKey === "objective" ? ("_" as any) : undefined, current, true)).filter(
+        (r) => {
+          if (activeKey === "objective") return true;
+          return r.lang !== "_";
+        }
+      );
       if (rdocs.length === 0) {
         return {
           list: [],

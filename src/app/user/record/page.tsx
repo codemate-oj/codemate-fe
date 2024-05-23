@@ -1,5 +1,6 @@
 "use client";
 
+import FaultList from "@/components/user/record/fault-list";
 import SubmitRecords from "@/components/user/record/submit-records";
 import { useUrlParam } from "@/hooks/useUrl";
 import { Tabs, type TabsProps } from "antd";
@@ -14,7 +15,7 @@ const tabItems: TabsProps["items"] = [
   {
     key: "faults",
     label: "错题",
-    children: null,
+    children: <FaultList />,
   },
   {
     key: "purchases",
