@@ -2,7 +2,7 @@ import { Button } from "antd";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
 import React from "react";
 import Link from "next/link";
-import ContestState from "./contestState";
+import ContestState from "./contest-state";
 import Image from "next/image";
 function calculateTimeDifference(time1: string, time2: string): number {
   const date1 = new Date(time1);
