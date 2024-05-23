@@ -7,13 +7,13 @@ import Loading from "../loading";
 export const metadata: Metadata = {
   title: "竞技场 - CODEMATE",
 };
-const ContestPage = async () => {
+const ContestPage = () => {
   return (
-    <Suspense fallback={<Loading />}>
+    <>
       <AsideCategorySelector />
       <TreeSelector />
       <ContestItemList />
-    </Suspense>
+    </>
   );
 };
 

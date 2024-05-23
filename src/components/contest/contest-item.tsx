@@ -29,16 +29,12 @@ interface ItemProps {
   toDetail: (id: string) => void;
   item: contestItemProps;
   tsdict: {
-    [key: string]: Record<string, never>;
+    [key: string]: Record<string, string>;
   };
 }
 const Item: React.FC<ItemProps> = (props) => {
   const { item, tsdict, toDetail } = props;
   const { title, rule, beginAt, endAt, attend, tag, _id, checkinBeginAt, checkinEndAt, imageURL } = item;
-  // const router = useRouter();
-  // const toDetial = useCallback(() => {
-  //   router.push(`/contest/${_id}`);
-  // }, [_id, router]);
   return (
     <div className="flex h-48">
       <div onClick={() => toDetail(_id)} className="w-80 h-40 mr-8 relative overflow-hidden cursor-pointer">
