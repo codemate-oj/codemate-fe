@@ -7,10 +7,6 @@ const nextConfig = {
           source: "/api/:path*",
           destination: `${process.env.API_URL ?? "https://www.aioj.net/"}:path*`,
         },
-        {
-          source: "/file/:path*",
-          destination: `${process.env.API_URL ?? "https://www.aioj.net/file/"}:path*`,
-        },
       ];
     }
     return [];
@@ -19,6 +15,14 @@ const nextConfig = {
     dangerouslyAllowSVG: true, // 允许Image提供SVG而非img
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "www.aioj.net",
+        port: "",
+        pathname: "/file/**",
+      },
+    ],
   },
   experimental: {
     typedRoutes: true, // 为<Link />添加基于Routes的强类型
