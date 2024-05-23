@@ -7,6 +7,7 @@ import CodeEditor from "@/components/problem/codeEditor";
 import { request } from "@/lib/request";
 
 import type { Metadata } from "next";
+import { forwardAuthHeader } from "@/lib/forward-auth";
 
 type Props = {
   params: {
@@ -33,6 +34,7 @@ async function getProblemDetail(pid: string) {
     transformData: (data) => {
       return data;
     },
+    ...forwardAuthHeader(),
   });
 }
 
@@ -40,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!params.pid) throw new Error("No pid provided");
   const { data: pDetailData } = await getProblemDetail(params.pid);
   return {
-    title: `题目详情- ${pDetailData.title}`,
+    title: `题目详情 - ${pDetailData.title}`,
   };
 }
 
@@ -60,6 +62,20 @@ function determineAvailableLangs(pdoc: Awaited<ReturnType<typeof getProblemDetai
   return pdoc.config.langs.filter((lang) => lang in AVAILABLE_LANG_MAP);
 }
 
+function extractMarkdownContent(pdoc: Awaited<ReturnType<typeof getProblemDetail>>["data"]["pdoc"]) {
+  if (!pdoc) return "";
+  if (typeof pdoc?.content !== "string") return "";
+  let _content = pdoc.content;
+  try {
+    // 部分题目可能没有使用多语言模式
+    const { zh, en } = JSON.parse(pdoc.content) as { zh: string; en: string };
+    _content = zh || en;
+  } catch (error) {
+    console.error(error);
+  }
+  return _content;
+}
+
 const Page = async ({ params }: Props) => {
   if (!params.pid) throw new Error("No pid provided");
 
@@ -67,8 +83,7 @@ const Page = async ({ params }: Props) => {
 
   const pType = determineQuestionType(pDetailData?.pdoc);
   const langs = determineAvailableLangs(pDetailData?.pdoc);
-  const content = pDetailData?.pdoc?.content ? JSON.parse(pDetailData.pdoc?.content) : { zh: "", en: "" };
-  const markdownContent = content.zh || content.en || "";
+  const markdownContent = extractMarkdownContent(pDetailData?.pdoc);
 
   function parseMarkdownContent(markdown: string): Question[] {
     const lines = markdown.split("\n");
