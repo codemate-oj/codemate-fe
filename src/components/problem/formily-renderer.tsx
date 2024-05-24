@@ -1,16 +1,14 @@
 "use client";
-import React, { useMemo } from "react";
+import React from "react";
 import { createForm } from "@formily/core";
-import { FormProvider, createSchemaField, ISchema, Schema } from "@formily/react";
+import { FormProvider, createSchemaField, ISchema } from "@formily/react";
 import { Form } from "antd";
 import { CustomInput, CustomMutiSelect, CustomSelect, CustomTextarea } from "@/components/problem/formily-items"; // 导入自定义组件
 import * as unified from "unified";
 import * as markdown from "remark-parse";
 import ObjectiveBottom from "@/components/problem/objective-bottom";
-import { extractQuestionsFromAst } from "@/lib/problem-parse";
 import useClientOnly from "@/hooks/useClientOnly";
-
-const AstProcessor = unified.unified().use(markdown.default);
+import Loading from "../ui/loading";
 
 const form = createForm();
 
@@ -61,7 +59,7 @@ const FormilyRenderer: React.FC<FormilySchemaProps> = ({ schema }) => {
     }
   };
 
-  if (!loaded) return null;
+  if (!loaded) return <Loading />;
 
   return (
     <FormProvider form={form}>

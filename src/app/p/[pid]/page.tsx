@@ -2,15 +2,15 @@ import PageTitle from "@/components/common/page-title";
 import PTop from "@/components/problem/p-top";
 import PRight from "@/components/problem/p-right";
 import PBottom from "@/components/problem/p-bottom";
-import MarkdownRenderer from "@/components/common/markdown-renderer";
 import CodeInput from "@/components/problem/code-input";
 import { request } from "@/lib/request";
 
 import type { Metadata } from "next";
 import { forwardAuthHeader } from "@/lib/forward-auth";
 import CodeLangProvider from "@/providers/code-lang-provider";
-import FormilySchema from "@/components/problem/formily-renderer";
 import { extractQuestionsFromMarkdown } from "@/lib/problem-parse";
+import React, { Suspense } from "react";
+import Loading from "@/components/ui/loading";
 
 type Props = {
   params: {
@@ -19,6 +19,9 @@ type Props = {
 };
 
 type ProblemType = "objective" | "scratch" | "default";
+
+const MarkdownRenderer = React.lazy(() => import("@/components/common/markdown-renderer"));
+const FormilyRenderer = React.lazy(() => import("@/components/problem/formily-renderer"));
 
 async function getProblemDetail(pid: string) {
   return request.get(`/p/${pid}` as "/p/{pid}", {
@@ -95,21 +98,27 @@ const Page = async ({ params }: Props) => {
           <div className="flex mt-10">
             <div className="w-4/5 border-r-2 border-dashed pr-4">
               <div>
-                <div className="mb-4">
-                  {pType == "objective" ? (
-                    <FormilySchema schema={extractQuestionsFromMarkdown(markdownContent)} />
-                  ) : (
-                    <MarkdownRenderer markdown={markdownContent} />
-                  )}
-                </div>
+                <Suspense fallback={<Loading />}>
+                  <div className="mb-4">
+                    {pType == "objective" ? (
+                      <FormilyRenderer schema={extractQuestionsFromMarkdown(markdownContent)} />
+                    ) : (
+                      <MarkdownRenderer markdown={markdownContent} />
+                    )}
+                  </div>
+                </Suspense>
               </div>
-              {pType === "default" ? <CodeInput langs={langs} /> : null}
+              {pType === "default" && (
+                <>
+                  <CodeInput langs={langs} />
+                  <PBottom type={pType} />
+                </>
+              )}
             </div>
             <div className="w-1/5 pl-5">
               <PRight />
             </div>
           </div>
-          {pType === "objective" ? null : <PBottom type={pType} />}
         </div>
       </div>
     </CodeLangProvider>
