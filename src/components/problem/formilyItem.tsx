@@ -1,11 +1,7 @@
 "use client";
 import { connect, mapProps } from "@formily/react";
-import { Select, Input, Checkbox, InputProps, Radio } from "antd";
+import { Input } from "antd";
 
-import { SelectProps } from "antd/lib/select";
-import { CheckboxGroupProps } from "antd/lib/checkbox";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { ObjectiveSelect } from "@/components/problem/objective-select";
 import ObjectiveInput from "@/components/problem/objective-input";
 import { ObjectiveMutiSelect } from "@/components/problem/objective-mutiselect";
@@ -15,7 +11,6 @@ import { ObjectiveMutiSelect } from "@/components/problem/objective-mutiselect";
 const CustomSelect = connect(
   ObjectiveSelect,
   mapProps((props: any, field: any) => {
-    console.log(field.title, field.dataSource, 0); // 日志输出数据源以便调试
     return {
       ...props,
       options: field.dataSource, // 映射 dataSource 作为 options
@@ -27,7 +22,6 @@ const CustomSelect = connect(
 const CustomMutiSelect = connect(
   ObjectiveMutiSelect,
   mapProps((props: any, field: any) => {
-    console.log(field.title, field.dataSource, 0); // 日志输出数据源以便调试
     return {
       ...props,
       options: field.dataSource, // 映射 dataSource 作为 options

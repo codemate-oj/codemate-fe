@@ -29,7 +29,6 @@ interface Question {
 async function getProblemDetail(pid: string) {
   return request.get(`/p/${pid}` as "/p/{pid}", {
     transformData: (data) => {
-      console.log(data, "查看");
       return data;
     },
     ...forwardAuthHeader(),
@@ -90,7 +89,6 @@ const Page = async ({ params }: Props) => {
   const { data: pDetailData } = await getProblemDetail(params.pid!);
 
   const pType = determineQuestionType(pDetailData?.pdoc);
-  console.log(pType);
   const langs = determineAvailableLangs(pDetailData?.pdoc);
   const markdownContent = extractMarkdownContent(pDetailData?.pdoc);
 
@@ -105,7 +103,7 @@ const Page = async ({ params }: Props) => {
               <div>
                 <div className="mb-4">
                   {pType == "objective" ? (
-                    <FormilySchema schema={markdownContent} />
+                    <FormilySchema rawSchema={markdownContent} />
                   ) : (
                     <MarkdownRenderer markdown={markdownContent} />
                   )}
