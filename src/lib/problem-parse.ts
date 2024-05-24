@@ -67,12 +67,14 @@ export const extractQuestionsFromAst = (ast: Parent) => {
           }
           case "select":
           case "multiselect": {
+            // 寻找后方第一个列表节点
             let i = nodeIndex + 1,
               listNode = ast.children[i];
             while (i < ast.children.length && listNode.type !== "list") {
               listNode = ast.children[i++];
             }
-            const options = listNode.type === "list" ? extractOptions(listNode) : [];
+            if (listNode.type !== "list") break;
+            const options = extractOptions(listNode);
             const obj: Property = {
               type: "string",
               title: titleText,
