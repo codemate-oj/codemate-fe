@@ -1,5 +1,6 @@
 "use client";
 import { TagRenderer } from "@/components/common/filter-tabs-tree";
+import Tag from "@/components/ui/tag";
 import { STATUS_ACCEPTED } from "@/constants/judge-status";
 import { useUrlParam } from "@/hooks/useUrl";
 import { request } from "@/lib/request";
@@ -25,12 +26,7 @@ const tableColumns: TableProps["columns"] = [
       return (
         <div className="flex gap-1 flex-wrap">
           {value.map((tag: string) => (
-            <span
-              key={tag}
-              className="block px-3 py-1 text-primary rounded-sm border border-[#ff7d37] text-xs text-center leading-none"
-            >
-              {tag}
-            </span>
+            <Tag key={tag}>{tag.toUpperCase()}</Tag>
           ))}
         </div>
       );

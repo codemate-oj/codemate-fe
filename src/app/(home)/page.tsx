@@ -5,10 +5,11 @@ import LinkBtn from "@/components/common/link-btn";
 import useUrl from "@/hooks/useUrl";
 import { request } from "@/lib/request";
 import { useAntdTable, useRequest } from "ahooks";
-import { Switch, Table, TableColumnsType, Tag } from "antd";
+import { Switch, Table, TableColumnsType } from "antd";
 import Image from "next/image";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
+import Tag from "@/components/ui/tag";
 interface DataType {
   key: string;
   pid: number;
@@ -47,11 +48,7 @@ const columns: TableColumnsType<DataType> = [
     render: (_, { tag }) => (
       <>
         {tag?.map((tag) => {
-          return (
-            <Tag color={"volcano"} key={tag} className="!text-primary !bg-orange-50 !leading-4">
-              {tag.toUpperCase()}
-            </Tag>
-          );
+          return <Tag key={tag}>{tag.toUpperCase()}</Tag>;
         })}
       </>
     ),
