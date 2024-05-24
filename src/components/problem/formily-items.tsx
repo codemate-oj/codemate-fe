@@ -33,7 +33,6 @@ const CustomMutiSelect = connect(
 const CustomInput = connect(
   ObjectiveInput,
   mapProps((props: any, field: any) => {
-    console.log(field.title, field.dataSource, 1212); // 日志输出数据源以便调试
     return {
       ...props,
       title: field.title,

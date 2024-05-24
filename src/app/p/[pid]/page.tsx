@@ -2,14 +2,15 @@ import PageTitle from "@/components/common/page-title";
 import PTop from "@/components/problem/p-top";
 import PRight from "@/components/problem/p-right";
 import PBottom from "@/components/problem/p-bottom";
-import MarkdownRenderer from "@/components/problem/markdownRenderer";
+import MarkdownRenderer from "@/components/common/markdown-renderer";
 import CodeInput from "@/components/problem/code-input";
 import { request } from "@/lib/request";
 
 import type { Metadata } from "next";
 import { forwardAuthHeader } from "@/lib/forward-auth";
 import CodeLangProvider from "@/providers/code-lang-provider";
-import FormilySchema from "@/components/problem/formilySchema";
+import FormilySchema from "@/components/problem/formily-renderer";
+import { extractQuestionsFromMarkdown } from "@/lib/problem-parse";
 
 type Props = {
   params: {
@@ -18,13 +19,6 @@ type Props = {
 };
 
 type ProblemType = "objective" | "scratch" | "default";
-
-interface Question {
-  type: string;
-  index: number;
-  options: string[];
-  content: string;
-}
 
 async function getProblemDetail(pid: string) {
   return request.get(`/p/${pid}` as "/p/{pid}", {
@@ -103,7 +97,7 @@ const Page = async ({ params }: Props) => {
               <div>
                 <div className="mb-4">
                   {pType == "objective" ? (
-                    <FormilySchema rawSchema={markdownContent} />
+                    <FormilySchema schema={extractQuestionsFromMarkdown(markdownContent)} />
                   ) : (
                     <MarkdownRenderer markdown={markdownContent} />
                   )}

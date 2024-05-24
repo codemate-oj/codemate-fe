@@ -1,5 +1,9 @@
-import type { FormilySchema, OptionType, Property } from "@/components/problem/formilySchema";
+import type { OptionType, Property, FormilySchema } from "@/components/problem/formily-renderer";
 import type { Parent, Node, List } from "mdast";
+import * as unified from "unified";
+import * as markdown from "remark-parse";
+
+const astProcessor = unified.unified().use(markdown.default);
 
 const regex = /{{\s*(\w+)\s*\(\s*(\d+)\s*\)\s*}}/g;
 
@@ -28,7 +32,6 @@ const extractOptions = (node: List): OptionType[] =>
     .map((item, index) => {
       if (item.children && item.children.length > 0) {
         const text = getNodeText(item);
-        console.log(text);
         return { label: text, value: String.fromCharCode("A".charCodeAt(0) + index) };
       }
       return null;
@@ -36,7 +39,6 @@ const extractOptions = (node: List): OptionType[] =>
     .filter(Boolean) as OptionType[]; // 过滤null值
 
 export const extractQuestionsFromAst = (ast: Parent) => {
-  console.log(ast);
   const schema: FormilySchema = {
     type: "object",
     properties: {},
@@ -89,4 +91,9 @@ export const extractQuestionsFromAst = (ast: Parent) => {
   });
 
   return schema;
+};
+
+export const extractQuestionsFromMarkdown = (raw: string) => {
+  const ast = astProcessor.parse(raw);
+  return extractQuestionsFromAst(ast);
 };
