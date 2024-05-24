@@ -12,7 +12,9 @@ const ActivateSuccess: React.FC = () => {
   const { queryParams, updateQueryParams } = useUrl();
 
   const handleSubmit = useLockFn(async () => {
-    updateQueryParams("tid", currentContext.tid);
+    if (currentContext.from === "activate") {
+      updateQueryParams("tid", currentContext.tid);
+    }
     store.isModalShow.set(false);
   });
 

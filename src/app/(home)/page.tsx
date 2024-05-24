@@ -7,9 +7,11 @@ import { request } from "@/lib/request";
 import { useAntdTable, useRequest } from "ahooks";
 import { Switch, Table, TableColumnsType, Tag } from "antd";
 import Image from "next/image";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
 import ProblemListMask from "@/components/home/problem-list-mask";
+import store from "@/store/modal";
+import CommonModal from "@/components/common/common-modal";
 
 interface DataType {
   key: string;
@@ -209,6 +211,32 @@ const HomePage = () => {
     }
   );
 
+  const { run: runPdocData } = useRequest(
+    async (pid) => {
+      const { data } = await request.post(
+        // @ts-ignore
+        `/p/${pid}` as "/p/{pid}",
+        { operation: "check" },
+        {
+          transformData: (data) => {
+            return data;
+          },
+        }
+      );
+      if (!data.hasPerm) {
+        store.modalJumpTo("activate-question", {
+          pid,
+          group: data.pdoc.group,
+        });
+        store.isModalShow.set(true);
+      }
+    },
+    {
+      cacheKey: "/home/filter-data/hasPerm",
+      manual: true,
+    }
+  );
+
   return (
     <Suspense>
       <FixedSelect
@@ -229,10 +257,17 @@ const HomePage = () => {
         content={tdocData?.content ?? ""}
         ishasPermission={tdocData?.ishasPermission ?? true}
       >
+        <CommonModal />
         <Table
           {...tableProps}
           columns={columns}
           rowKey="pid"
+          onRow={(record) => ({
+            onClick: () => {
+              runPdocData(record.pid);
+            },
+          })}
+          rowClassName="cursor-pointer"
           expandable={{
             expandedRowRender: (record) => (
               <div

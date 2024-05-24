@@ -10,10 +10,17 @@ const ActivateError: React.FC = () => {
   const currentContext = store.currentContext.use();
 
   const reInput = useLockFn(async () => {
-    store.modalJumpTo("activate", {
-      tid: currentContext?.tid,
-      content: currentContext?.content,
-    });
+    if (currentContext.from === "activate") {
+      store.modalJumpTo("activate", {
+        tid: currentContext?.tid,
+        content: currentContext?.content,
+      });
+    } else if (currentContext.from === "activate-question") {
+      store.modalJumpTo("activate-question", {
+        tid: currentContext?.tid,
+        group: currentContext?.group,
+      });
+    }
   });
   const knowCompetition = useLockFn(async () => {});
 

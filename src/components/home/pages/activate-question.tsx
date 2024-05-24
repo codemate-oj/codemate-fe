@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Button } from "../../ui/button";
 import { Form } from "../../ui/form";
@@ -22,7 +20,7 @@ const formSchema = z.object({
     }),
 });
 
-const ActivateForm: React.FC = () => {
+const ActivateQuestion: React.FC = () => {
   const currentContext = store.currentContext.use();
 
   const form = useForm<z.infer<typeof formSchema>>({ resolver: zodResolver(formSchema) });
@@ -41,16 +39,16 @@ const ActivateForm: React.FC = () => {
     );
     if (data.success) {
       store.modalJumpTo("activate-success", {
-        from: "activate",
+        from: "activate-question",
         tid: currentContext?.tid,
-        content: currentContext?.content,
+        content: data.group,
       });
     } else {
       setErrorText("激活码错误");
       store.modalJumpTo("activate-error", {
-        from: "activate",
+        from: "activate-question",
         tid: currentContext?.tid,
-        content: currentContext?.content,
+        group: currentContext?.group,
       });
     }
   });
@@ -77,10 +75,14 @@ const ActivateForm: React.FC = () => {
           <form onSubmit={form.handleSubmit(handleSubmit)}>
             <div className="space-y-3 my-3">
               <p>亲爱的用户：</p>
-              <article className="indent-7 space-y-3">
-                <p>{transformContent(currentContext.content)}专属题库内容需要使用【激活码】激活后才能开始练习。</p>
-                <p>如果您已获得激活码，请直接输入。如果希望获得激活码，请联系客服。</p>
+              <p>该题目属于专属题库内容：</p>
+              <article className="indent-3 space-y-3">
+                {currentContext.group.map((item: string) => (
+                  <p key={item}>{transformContent(item)}</p>
+                ))}
               </article>
+              <p>专属题库内容需要使用 以上任一【激活码】 激活后才能开始 练习。</p>
+              <p>如果您已获得激活码，请直接输入。如果希望获得激活码，请联系客服。</p>
             </div>
             <div className="flex justify-between">
               <div className="flex flex-col w-7/12">
@@ -111,4 +113,4 @@ const ActivateForm: React.FC = () => {
   );
 };
 
-export default ActivateForm;
+export default ActivateQuestion;

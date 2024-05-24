@@ -6,8 +6,14 @@ import React from "react";
 import ActivateSuccess from "@/components/home/pages/activate-success";
 import ActivateError from "@/components/home/pages/activate-error";
 import CustomerService from "@/components/home/pages/customer-service";
+import ActivateQuestion from "@/components/home/pages/activate-question";
 
-export type ModalStatusName = "activate" | "activate-success" | "activate-error" | "customer-service";
+export type ModalStatusName =
+  | "activate"
+  | "activate-success"
+  | "activate-error"
+  | "customer-service"
+  | "activate-question";
 
 export interface ModalPage {
   component: React.ReactNode;
@@ -31,6 +37,9 @@ export const ModalStatusMap: Record<ModalStatusName, ModalPage> = {
   },
   "customer-service": {
     component: <CustomerService />,
+  },
+  "activate-question": {
+    component: <ActivateQuestion />,
   },
 };
 
