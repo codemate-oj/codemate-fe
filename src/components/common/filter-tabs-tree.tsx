@@ -1,6 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 import { Tabs } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 export type TreeItem = {
   key: string;
@@ -10,129 +11,123 @@ export type TreeItem = {
 export type FilerTabsTreeData = TreeItem[];
 
 export interface FilerTabsTreeProps {
-  filerTabsTreeData: FilerTabsTreeData;
-  defaultActiveKey?: string;
-  onChange?: ((activeKey: string) => void) | undefined;
+  data: FilerTabsTreeData;
+  depth?: number;
+  selectedPath?: string[];
+  onChange?: (selectedPath: string[]) => void;
+  renderers?: React.FC<FilterTabsTreeRendererProps>[];
 }
-const FilerTabsTree = ({ filerTabsTreeData, onChange, defaultActiveKey }: FilerTabsTreeProps) => {
-  const [currentSelectedLevel, setCurrentSelectedLevel] = useState<number>(0);
-  const [selectedKeys, setSelectedKeys] = useState<string[]>([""]);
-  const [isCurrentSelectedEnd, setIsCurrentSelectedEnd] = useState<boolean>(false);
 
-  const handleOnChangeByLevel = (activeKey: string, level: number) => {
-    setCurrentSelectedLevel(level + 1);
-    const newSelectedKeys = [...selectedKeys].slice(0, level);
-    newSelectedKeys[level] = activeKey;
-    setSelectedKeys(newSelectedKeys);
-    getInfoByKey(activeKey).isLastNode && setIsCurrentSelectedEnd(true);
+export interface FilterTabsTreeRendererProps {
+  data: FilerTabsTreeData;
+  selectedKey?: string;
+  onChange?: (key: string) => void;
+}
+
+export const TabRenderer: React.FC<FilterTabsTreeRendererProps> = ({ data, selectedKey, onChange }) => {
+  return (
+    <Tabs
+      activeKey={selectedKey}
+      items={data.map((item) => ({
+        label: item.label,
+        key: item.key,
+      }))}
+      onChange={onChange}
+    />
+  );
+};
+
+export const TagRenderer: React.FC<FilterTabsTreeRendererProps> = ({ data, selectedKey, onChange }) => {
+  return (
+    <div className="flex gap-5 py-2">
+      {data.map(({ label, key }) => {
+        const isActive = key === selectedKey;
+        return (
+          <button
+            key={key}
+            className={cn("block text-sm rounded-[8px] px-[5px] py-[3px] text-[#797979]", {
+              "bg-primary text-white font-bold": isActive,
+            })}
+            onClick={() => {
+              onChange?.(key);
+            }}
+          >
+            {label}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+export const TextRenderer: React.FC<FilterTabsTreeRendererProps> = ({ data, selectedKey, onChange }) => {
+  return (
+    <div className="flex gap-5 py-2">
+      {data.map(({ label, key }) => {
+        const isActive = key === selectedKey;
+        return (
+          <button
+            key={key}
+            className={cn("block text-sm px-[5px] py-[3px] text-[#797979]", {
+              "text-primary": isActive,
+            })}
+            onClick={() => {
+              onChange?.(key);
+            }}
+          >
+            {label}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+const FilerTabsTree: React.FC<FilerTabsTreeProps> = ({
+  data,
+  depth = 0,
+  selectedPath,
+  onChange,
+  renderers = [TabRenderer, TagRenderer, TextRenderer],
+}) => {
+  const [activeKey, setActiveKey] = useState<string>("");
+  const handleChildrenChange: typeof onChange = (subPath) => {
+    onChange?.([activeKey, ...subPath]);
   };
+
+  const handleClickTab = (key: string) => {
+    setActiveKey(key);
+    onChange?.([key]);
+  };
+
+  const Renderer = useMemo<React.FC<FilterTabsTreeRendererProps>>(() => {
+    const index = Math.min(depth, renderers.length - 1);
+    return index < 0 ? TabRenderer : renderers[index];
+  }, [depth, renderers]);
+
+  const subData = useMemo(() => {
+    const subData = data.find((item) => item.key === activeKey);
+    return subData?.children ?? [];
+  }, [data, activeKey]);
 
   useEffect(() => {
-    if (isCurrentSelectedEnd) {
-      onChange?.(selectedKeys[selectedKeys.length - 1]);
-      setIsCurrentSelectedEnd(false);
+    if (selectedPath) {
+      setActiveKey(selectedPath[0] ?? "");
     }
-  }, [isCurrentSelectedEnd, selectedKeys, onChange]);
-
-  const getTabsByLevel = (level: string) => {
-    let nextTabs: TreeItem[] = filerTabsTreeData;
-    selectedKeys?.map((key, index) => {
-      if (index > parseInt(level)) return;
-      if (index < parseInt(level)) {
-        nextTabs =
-          nextTabs?.find((i) => {
-            return i.key === key;
-          })?.children ?? [];
-      }
-    });
-
-    return nextTabs?.length
-      ? nextTabs?.map((i) => ({ label: i.label, key: i.key }))
-      : parseInt(level) === 0
-        ? filerTabsTreeData?.map((i) => ({ label: i.label, key: i.key }))
-        : [];
-  };
-
-  const getInfoByKey = (key: string) => {
-    let isLastNode = false;
-    let currentSelectedKeysPath: string[] = [];
-
-    const traverse = (node: TreeItem[], path: string[]) => {
-      for (const item of node) {
-        const newPath = [...path, item.key];
-        if (item.key === key) {
-          if (!item.children || item.children.length === 0) {
-            isLastNode = true;
-          }
-          currentSelectedKeysPath = newPath;
-          return;
-        }
-        if (item.children) {
-          traverse(item.children, newPath);
-        }
-      }
-    };
-
-    traverse(filerTabsTreeData, []);
-    return { isLastNode, currentSelectedKeysPath };
-  };
-
-  const initTree = (filerTabsTreeData: FilerTabsTreeData) => {
-    const initByDefaultActiveKey = (defaultActiveKey: string) => {
-      const { isLastNode, currentSelectedKeysPath } = getInfoByKey(defaultActiveKey);
-      if (isLastNode) {
-        setCurrentSelectedLevel(currentSelectedKeysPath.length - 1);
-        setSelectedKeys(currentSelectedKeysPath);
-      }
-    };
-
-    const initWithoutDefaultActiveKey = (tmpSelectedKeys: string[]) => {
-      const initTab = nextTabs[0];
-      if (initTab) {
-        setCurrentSelectedLevel(maxDeep);
-        tmpSelectedKeys.push(initTab?.key);
-        setSelectedKeys(tmpSelectedKeys);
-      }
-    };
-
-    let maxDeep = 0;
-    let nextTabs: TreeItem[] = [...(filerTabsTreeData ?? [])];
-    const tmpSelectedKeys: string[] = [];
-    while (nextTabs.length > 0) {
-      if (defaultActiveKey) {
-        initByDefaultActiveKey(defaultActiveKey);
-      } else {
-        initWithoutDefaultActiveKey(tmpSelectedKeys);
-      }
-      maxDeep++;
-      nextTabs = nextTabs[0].children ?? [];
-    }
-    return maxDeep;
-  };
-
-  const maxDeep = useMemo(() => {
-    return initTree(filerTabsTreeData);
-  }, [filerTabsTreeData]);
+  }, [selectedPath]);
 
   return (
     <>
-      {Array(maxDeep + 1)
-        .fill(0)
-        ?.map((_, index) => {
-          const items = getTabsByLevel(index.toString());
-          return (
-            index <= currentSelectedLevel &&
-            items?.length !== 0 && (
-              <Tabs
-                activeKey={selectedKeys[index] ?? "3"}
-                defaultActiveKey={""}
-                key={index}
-                items={items}
-                onChange={(activeKey) => handleOnChangeByLevel(activeKey, index)}
-              />
-            )
-          );
-        })}
+      <Renderer data={data} selectedKey={activeKey} onChange={handleClickTab} />
+      {subData && subData.length > 0 && (
+        <FilerTabsTree
+          data={subData}
+          selectedPath={selectedPath?.slice(1)}
+          depth={depth + 1}
+          onChange={handleChildrenChange}
+          renderers={renderers}
+        />
+      )}
     </>
   );
 };

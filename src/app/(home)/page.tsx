@@ -7,7 +7,7 @@ import { request } from "@/lib/request";
 import { useAntdTable, useRequest } from "ahooks";
 import { Switch, Table, TableColumnsType, Tag } from "antd";
 import Image from "next/image";
-import { Suspense } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
 import ProblemListMask from "@/components/home/problem-list-mask";
 
@@ -65,7 +65,7 @@ const columns: TableColumnsType<DataType> = [
     width: "12%",
     render: (_, record) => (
       <div className="flex gap-1">
-        {new Array(Number(record?.difficulty))
+        {new Array(Number(record?.difficulty ?? 0))
           .fill(0)
           ?.map((_, index) => <Image src="/svg/star.svg" alt="" key={index} width={15} height={15}></Image>)}
       </div>
@@ -90,7 +90,7 @@ const columns: TableColumnsType<DataType> = [
     width: "15%",
     render: (_, record) => (
       <div className="flex gap-1">
-        {new Array(Number(record?.difficulty))
+        {new Array(Number(record?.difficulty ?? 0))
           .fill(0)
           ?.map((_, index) => <Image src="/img/fire.png" alt="" key={index} width={15} height={15}></Image>)}
       </div>
@@ -100,6 +100,7 @@ const columns: TableColumnsType<DataType> = [
 
 const HomePage = () => {
   const { queryParams, updateQueryParams } = useUrl();
+  const [selectedTreePath, setSelectedTreePath] = useState<string[]>([]);
 
   const { data: homeFilterData } = useRequest(
     async () => {
@@ -162,6 +163,36 @@ const HomePage = () => {
     }
   );
 
+  useEffect(() => {
+    const tid = queryParams["tid"];
+    if (!homeFilterData?.filterTree || !tid) return;
+    const getInfoByKey = (key: string) => {
+      let isLastNode = false;
+      let currentSelectedKeysPath: string[] = [];
+
+      const traverse = (node: TreeItem[], path: string[]) => {
+        for (const item of node) {
+          const newPath = [...path, item.key];
+          if (item.key === key) {
+            if (!item.children || item.children.length === 0) {
+              isLastNode = true;
+            }
+            currentSelectedKeysPath = newPath;
+            return;
+          }
+          if (item.children) {
+            traverse(item.children, newPath);
+          }
+        }
+      };
+
+      traverse(homeFilterData.filterTree, []);
+      return { isLastNode, currentSelectedKeysPath };
+    };
+    const info = getInfoByKey(tid);
+    setSelectedTreePath(info.currentSelectedKeysPath);
+  }, [homeFilterData?.filterTree]);
+
   const { data: tdocData } = useRequest(
     async () => {
       const tid = queryParams["tid"];
@@ -186,11 +217,12 @@ const HomePage = () => {
         defaultSelectedValue={queryParams["lang"]}
       />
       <FilerTabsTree
-        filerTabsTreeData={homeFilterData?.filterTree ?? []}
-        onChange={(key) => {
-          updateQueryParams("tid", key);
+        data={homeFilterData?.filterTree ?? []}
+        selectedPath={selectedTreePath}
+        onChange={(treePath) => {
+          setSelectedTreePath(treePath);
+          updateQueryParams("tid", treePath[treePath.length - 1]);
         }}
-        defaultActiveKey={queryParams["tid"]}
       />
       <ProblemListMask
         tid={tdocData?.tid ?? ""}

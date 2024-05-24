@@ -15,6 +15,14 @@ const nextConfig = {
     dangerouslyAllowSVG: true, // 允许Image提供SVG而非img
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "www.aioj.net",
+        port: "",
+        pathname: "/file/**",
+      },
+    ],
   },
   experimental: {
     typedRoutes: true, // 为<Link />添加基于Routes的强类型
