@@ -9,6 +9,7 @@ import { request } from "@/lib/request";
 import type { Metadata } from "next";
 import { forwardAuthHeader } from "@/lib/forward-auth";
 import CodeLangProvider from "@/providers/code-lang-provider";
+import FormilySchema from "@/components/problem/formilySchema";
 
 type Props = {
   params: {
@@ -28,6 +29,7 @@ interface Question {
 async function getProblemDetail(pid: string) {
   return request.get(`/p/${pid}` as "/p/{pid}", {
     transformData: (data) => {
+      console.log(data, "查看");
       return data;
     },
     ...forwardAuthHeader(),
@@ -92,33 +94,6 @@ const Page = async ({ params }: Props) => {
   const langs = determineAvailableLangs(pDetailData?.pdoc);
   const markdownContent = extractMarkdownContent(pDetailData?.pdoc);
 
-  function parseMarkdownContent(markdown: string): Question[] {
-    const lines = markdown.split("\n");
-    const questions: Question[] = [];
-    let currentQuestion: Question | null = null;
-
-    lines.forEach((line) => {
-      const match = line.match(/{{\s*(\w+)\((\d+)\)\s*}}/);
-      if (match) {
-        const [, type, index] = match;
-        if (currentQuestion) {
-          questions.push(currentQuestion);
-        }
-        currentQuestion = { type, index: parseInt(index, 10), options: [], content: "" };
-      } else if (currentQuestion && line.trim().startsWith("-")) {
-        currentQuestion.options.push(line.trim().substring(1).trim());
-      } else if (currentQuestion) {
-        currentQuestion.content += line + "\n";
-      }
-    });
-
-    if (currentQuestion) {
-      questions.push(currentQuestion);
-    }
-
-    return questions;
-  }
-
   return (
     <CodeLangProvider>
       <div>
@@ -129,7 +104,11 @@ const Page = async ({ params }: Props) => {
             <div className="w-4/5 border-r-2 border-dashed pr-4">
               <div>
                 <div className="mb-4">
-                  <MarkdownRenderer markdown={markdownContent} />
+                  {pType == "objective" ? (
+                    <FormilySchema schema={markdownContent} />
+                  ) : (
+                    <MarkdownRenderer markdown={markdownContent} />
+                  )}
                 </div>
               </div>
               {pType === "default" ? <CodeInput langs={langs} /> : null}
@@ -138,7 +117,7 @@ const Page = async ({ params }: Props) => {
               <PRight />
             </div>
           </div>
-          <PBottom type={pType} />
+          {pType === "objective" ? null : <PBottom type={pType} />}
         </div>
       </div>
     </CodeLangProvider>
