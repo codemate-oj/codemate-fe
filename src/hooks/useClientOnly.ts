@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 
-export default function useClientOnly(doThrow = false) {
+export default function useClientOnly() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     if (!isMounted) {
-      if (doThrow) throw new Promise<void>(() => {});
       setIsMounted(true);
     }
   }, [isMounted]);
