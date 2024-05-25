@@ -10,9 +10,10 @@ import Image from "next/image";
 import { Suspense, useEffect, useState } from "react";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
 import ProblemListMask from "@/components/home/problem-list-mask";
-import store from "@/store/modal";
+import storeModal from "@/store/modal";
 import CommonModal from "@/components/common/common-modal";
 import { useRouter } from "next/navigation";
+import storeLogin from "@/store/login";
 
 interface DataType {
   key: string;
@@ -105,6 +106,7 @@ const HomePage = () => {
   const router = useRouter();
   const { queryParams, updateQueryParams } = useUrl();
   const [selectedTreePath, setSelectedTreePath] = useState<string[]>([]);
+  const userContext = storeLogin.user.use();
 
   const { data: homeFilterData } = useRequest(
     async () => {
@@ -227,18 +229,23 @@ const HomePage = () => {
         }
       );
       if (!data.hasPerm) {
+        if (!userContext) {
+          storeLogin.dialogJumpTo("login");
+          storeLogin.isDialogShow.set(true);
+          return;
+        }
         if (data.activation.includes("group")) {
-          store.modalJumpTo("activate-question-group", {
+          storeModal.modalJumpTo("activate-question-group", {
             pid,
             group: assign,
           });
-          store.isModalShow.set(true);
+          storeModal.isModalShow.set(true);
         } else if (data.activation.includes("point")) {
-          store.modalJumpTo("activate-question-point", {
+          storeModal.modalJumpTo("activate-question-point", {
             pid,
             group: assign,
           });
-          store.isModalShow.set(true);
+          storeModal.isModalShow.set(true);
         }
       } else {
         router.push(`/p/${pid}`);
