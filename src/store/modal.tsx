@@ -7,13 +7,17 @@ import ActivateSuccess from "@/components/home/pages/activate-success";
 import ActivateError from "@/components/home/pages/activate-error";
 import CustomerService from "@/components/home/pages/customer-service";
 import ActivateQuestion from "@/components/home/pages/activate-question";
+import ActivateQuestionPoint from "@/components/home/pages/activate-question-point";
+import ActivateSuccessPoint from "@/components/home/pages/activate-success-point";
 
 export type ModalStatusName =
   | "activate"
   | "activate-success"
+  | "activate-success-point"
   | "activate-error"
   | "customer-service"
-  | "activate-question";
+  | "activate-question-group"
+  | "activate-question-point";
 
 export interface ModalPage {
   component: React.ReactNode;
@@ -32,14 +36,20 @@ export const ModalStatusMap: Record<ModalStatusName, ModalPage> = {
   "activate-success": {
     component: <ActivateSuccess />,
   },
+  "activate-success-point": {
+    component: <ActivateSuccessPoint />,
+  },
   "activate-error": {
     component: <ActivateError />,
   },
   "customer-service": {
     component: <CustomerService />,
   },
-  "activate-question": {
+  "activate-question-group": {
     component: <ActivateQuestion />,
+  },
+  "activate-question-point": {
+    component: <ActivateQuestionPoint />,
   },
 };
 

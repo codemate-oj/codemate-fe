@@ -35,7 +35,6 @@ const ProblemListMask: React.FC<React.PropsWithChildren<ProblemListMaskProps>> =
             <Icon icon="ic:outline-lock-open" className="mr-2" />
             激活
           </Button>
-          <CommonModal />
         </div>
       )}
       <div className={!ishasPermission ? "pointer-events-none" : ""}>{children}</div>

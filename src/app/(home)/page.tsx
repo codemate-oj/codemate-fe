@@ -12,6 +12,7 @@ import { PROGRAMMING_LANGS } from "@/constants/misc";
 import ProblemListMask from "@/components/home/problem-list-mask";
 import store from "@/store/modal";
 import CommonModal from "@/components/common/common-modal";
+import { useRouter } from "next/navigation";
 
 interface DataType {
   key: string;
@@ -101,6 +102,7 @@ const columns: TableColumnsType<DataType> = [
 ];
 
 const HomePage = () => {
+  const router = useRouter();
   const { queryParams, updateQueryParams } = useUrl();
   const [selectedTreePath, setSelectedTreePath] = useState<string[]>([]);
 
@@ -198,6 +200,7 @@ const HomePage = () => {
   const { data: tdocData } = useRequest(
     async () => {
       const tid = queryParams["tid"];
+      if (!tid) return { ishasPermission: true };
       const { data } = await request.get(`/p-list/${tid}` as "/p-list/{tid}", {
         transformData: (data) => {
           return data;
@@ -212,7 +215,7 @@ const HomePage = () => {
   );
 
   const { run: runPdocData } = useRequest(
-    async (pid) => {
+    async (pid, assign) => {
       const { data } = await request.post(
         // @ts-ignore
         `/p/${pid}` as "/p/{pid}",
@@ -224,11 +227,21 @@ const HomePage = () => {
         }
       );
       if (!data.hasPerm) {
-        store.modalJumpTo("activate-question", {
-          pid,
-          group: data.pdoc.group,
-        });
-        store.isModalShow.set(true);
+        if (data.activation.includes("group")) {
+          store.modalJumpTo("activate-question-group", {
+            pid,
+            group: assign,
+          });
+          store.isModalShow.set(true);
+        } else if (data.activation.includes("point")) {
+          store.modalJumpTo("activate-question-point", {
+            pid,
+            group: assign,
+          });
+          store.isModalShow.set(true);
+        }
+      } else {
+        router.push(`/p/${pid}`);
       }
     },
     {
@@ -264,7 +277,7 @@ const HomePage = () => {
           rowKey="pid"
           onRow={(record) => ({
             onClick: () => {
-              runPdocData(record.pid);
+              runPdocData(record.pid, record.assign);
             },
           })}
           rowClassName="cursor-pointer"

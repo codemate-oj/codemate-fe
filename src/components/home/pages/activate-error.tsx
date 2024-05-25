@@ -15,8 +15,8 @@ const ActivateError: React.FC = () => {
         tid: currentContext?.tid,
         content: currentContext?.content,
       });
-    } else if (currentContext.from === "activate-question") {
-      store.modalJumpTo("activate-question", {
+    } else if (currentContext.from === "activate-question-group") {
+      store.modalJumpTo("activate-question-group", {
         tid: currentContext?.tid,
         group: currentContext?.group,
       });

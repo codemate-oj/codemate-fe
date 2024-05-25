@@ -39,14 +39,14 @@ const ActivateQuestion: React.FC = () => {
     );
     if (data.success) {
       store.modalJumpTo("activate-success", {
-        from: "activate-question",
+        from: "activate-question-group",
         tid: currentContext?.tid,
         content: data.group,
       });
     } else {
       setErrorText("激活码错误");
       store.modalJumpTo("activate-error", {
-        from: "activate-question",
+        from: "activate-question-group",
         tid: currentContext?.tid,
         group: currentContext?.group,
       });
