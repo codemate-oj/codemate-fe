@@ -11,6 +11,7 @@ import CodeLangProvider from "@/providers/code-lang-provider";
 import { extractQuestionsFromMarkdown } from "@/lib/problem-parse";
 import React, { Suspense } from "react";
 import Loading from "@/components/ui/loading";
+import dynamic from "next/dynamic";
 
 type Props = {
   params: {
@@ -21,7 +22,10 @@ type Props = {
 type ProblemType = "objective" | "scratch" | "default";
 
 const MarkdownRenderer = React.lazy(() => import("@/components/common/markdown-renderer"));
-const FormilyRenderer = React.lazy(() => import("@/components/problem/formily-renderer"));
+const FormilyRenderer = dynamic(() => import("@/components/problem/formily-renderer"), {
+  ssr: false,
+  loading: () => <Loading></Loading>,
+});
 
 async function getProblemDetail(pid: string) {
   return request.get(`/p/${pid}` as "/p/{pid}", {

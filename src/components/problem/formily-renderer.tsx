@@ -48,7 +48,7 @@ interface FormilySchemaProps {
 }
 
 const FormilyRenderer: React.FC<FormilySchemaProps> = ({ schema }) => {
-  const loaded = useClientOnly();
+  // const loaded = useClientOnly();
 
   const handleSubmit = async () => {
     try {
@@ -59,7 +59,7 @@ const FormilyRenderer: React.FC<FormilySchemaProps> = ({ schema }) => {
     }
   };
 
-  if (!loaded) return <Loading />;
+  // if (!loaded) return <Loading />;
 
   return (
     <FormProvider form={form}>

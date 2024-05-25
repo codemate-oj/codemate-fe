@@ -1,5 +1,5 @@
 import type { OptionType, Property, FormilySchema } from "@/components/problem/formily-renderer";
-import type { Parent, Node, List } from "mdast";
+import type { Parent, Node, List, ListItem } from "mdast";
 import * as unified from "unified";
 import * as markdown from "remark-parse";
 
@@ -7,14 +7,14 @@ const astProcessor = unified.unified().use(markdown.default);
 
 const regex = /{{\s*(\w+)\s*\(\s*(\d+)\s*\)\s*}}/g;
 
-const getNodeText = (node: Node) => {
+const getNodeText = (node: Node): string => {
   let nodeText = "";
   if ("value" in node) nodeText = node.value as string;
   if ("children" in node) nodeText = (node.children as Node[]).map(getNodeText).join();
   return nodeText;
 };
 
-const extractTitle = (nodeIndex: number, ast: Parent) => {
+const extractTitle = (nodeIndex: number, ast: Parent): string => {
   const node = ast.children[nodeIndex];
   const nodeText = getNodeText(node);
   let title = nodeText.replace(regex, "").trim();
@@ -29,24 +29,26 @@ const extractTitle = (nodeIndex: number, ast: Parent) => {
 
 const extractOptions = (node: List): OptionType[] =>
   node.children
-    .map((item, index) => {
-      if (item.children && item.children.length > 0) {
-        const text = getNodeText(item);
+    .map((item: any, index: number) => {
+      const listItem = item as ListItem;
+      if (listItem.children && listItem.children.length > 0) {
+        const text = getNodeText(listItem);
         return { label: text, value: String.fromCharCode("A".charCodeAt(0) + index) };
       }
       return null;
     })
     .filter(Boolean) as OptionType[]; // 过滤null值
 
-export const extractQuestionsFromAst = (ast: Parent) => {
+export const extractQuestionsFromAst = (ast: Parent): FormilySchema => {
   const schema: FormilySchema = {
     type: "object",
     properties: {},
   };
 
-  ast.children.forEach((node, nodeIndex) => {
+  ast.children.forEach((node: { type: string }, nodeIndex: number) => {
     if (node.type === "paragraph") {
       const text = getNodeText(node);
+      console.log(text, 1);
       const infos = text.matchAll(regex);
       for (const info of infos) {
         if (!info) return;
@@ -74,7 +76,7 @@ export const extractQuestionsFromAst = (ast: Parent) => {
               listNode = ast.children[i++];
             }
             if (listNode.type !== "list") break;
-            const options = extractOptions(listNode);
+            const options = extractOptions(listNode as List);
             const obj: Property = {
               type: "string",
               title: titleText,
@@ -95,7 +97,7 @@ export const extractQuestionsFromAst = (ast: Parent) => {
   return schema;
 };
 
-export const extractQuestionsFromMarkdown = (raw: string) => {
-  const ast = astProcessor.parse(raw);
+export const extractQuestionsFromMarkdown = (raw: string): FormilySchema => {
+  const ast = astProcessor.parse(raw) as Parent;
   return extractQuestionsFromAst(ast);
 };
