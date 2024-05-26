@@ -12,6 +12,7 @@ import { extractQuestionsFromMarkdown } from "@/lib/problem-parse";
 import React, { Suspense } from "react";
 import Loading from "@/components/ui/loading";
 import dynamic from "next/dynamic";
+import code from "@/lib/unified/code";
 
 type Props = {
   params: {
@@ -115,7 +116,16 @@ const Page = async ({ params }: Props) => {
                     {pType == "objective" ? (
                       <FormilyRenderer schema={extractQuestionsFromMarkdown(markdownContent)} />
                     ) : (
-                      <MarkdownRenderer markdown={markdownContent} />
+                      <MarkdownRenderer
+                        markdown={markdownContent}
+                        plugins={[
+                          {
+                            hookIn: "pre-parse",
+                            plugin: code,
+                          },
+                        ]}
+                        className="prose-pdetail"
+                      />
                     )}
                   </div>
                 </Suspense>

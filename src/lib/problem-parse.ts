@@ -7,7 +7,7 @@ const astProcessor = unified.unified().use(markdown.default);
 
 const regex = /{{\s*(\w+)\s*\(\s*(\d+)\s*\)\s*}}/g;
 
-const getNodeText = (node: Node): string => {
+export const getNodeText = (node: Node): string => {
   let nodeText = "";
   if ("value" in node) nodeText = node.value as string;
   if ("children" in node) nodeText = (node.children as Node[]).map(getNodeText).join();
