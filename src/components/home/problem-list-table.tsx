@@ -2,11 +2,12 @@
 import { Switch, Table, TableColumnsType, Tag } from "antd";
 import React from "react";
 import Image from "next/image";
-import useUrl from "@/hooks/useUrl";
+import { useUrlParamState } from "@/hooks/useUrlParamState";
 import { request } from "@/lib/request";
 import LinkBtn from "../common/link-btn";
 import { useWatcher } from "alova";
 import { paths } from "@/types/schema";
+import { useSearchParams } from "next/navigation";
 
 type DataType = paths["/p"]["get"]["responses"]["200"]["content"]["application/json"]["pdocs"][number];
 
@@ -87,21 +88,22 @@ const columns: TableColumnsType<DataType> = [
 ];
 
 const ProblemListTable = () => {
-  const { queryParams, updateQueryParams } = useUrl();
+  const [page, setPage] = useUrlParamState("page", "1");
+  const queryParams = useSearchParams();
 
   const { data, loading = true } = useWatcher(
     request.get("/p", {
       params: {
-        page: Number(queryParams["page"]) || 1,
+        page: Number(page) || 1,
         limit: 15,
-        source: queryParams["tid"],
-        lang: queryParams["lang"],
+        source: queryParams.get("tid") || undefined,
+        lang: queryParams.get("lang") || undefined,
       },
       transformData: (data) => {
         return data.data;
       },
     }),
-    [queryParams["tid"], queryParams["lang"], queryParams["page"]],
+    [queryParams, page],
     { immediate: true }
   );
 
@@ -137,11 +139,11 @@ const ProblemListTable = () => {
       }}
       pagination={{
         position: ["bottomCenter"],
-        current: Number(queryParams["page"]) || 1,
+        current: Number(page) || 1,
         total: data?.pcount,
         pageSize: 15,
         onChange: (page) => {
-          updateQueryParams("page", String(page));
+          setPage(String(page));
         },
         showSizeChanger: false,
         itemRender(_, type, element) {
