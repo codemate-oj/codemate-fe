@@ -4,7 +4,7 @@ import { useUrlParamState } from "@/hooks/useUrlParamState";
 import { request } from "@/lib/request";
 import { useRequest } from "ahooks";
 import Item from "./contest-item";
-import Loading from "@/components/ui/skeleton";
+import Skeleton from "@/components/ui/skeleton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Pagination } from "antd";
 import LinkBtn from "../common/link-btn";
@@ -46,7 +46,7 @@ const ContestItemList: React.FC = () => {
   return (
     <div className={"pt-3"}>
       {loading ? (
-        <Loading />
+        <Skeleton />
       ) : (
         <>
           {itemListData?.itemList?.map((item) => {
