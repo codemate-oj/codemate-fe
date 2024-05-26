@@ -34,7 +34,6 @@ export const ObjectiveSelect = (props: ObjectiveInputProps) => {
   return (
     <div className="flex flex-col w-1/2">
       <div>
-        {" "}
         <span className="text-primary">【题目描述】</span>
         {props.title}
       </div>
@@ -43,7 +42,7 @@ export const ObjectiveSelect = (props: ObjectiveInputProps) => {
           key={index}
           value={option.label}
           variant={selectedIndex === index ? undefined : "outline"}
-          className="mb-2 justify-start text-wrap my-2"
+          className="my-2 justify-start text-wrap"
           onClick={() => handleButtonClick(index)}
         >
           {option.label}

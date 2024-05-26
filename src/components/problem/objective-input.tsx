@@ -19,8 +19,9 @@ const ObjectiveInput: React.FC<ObjectiveInputProps> = ({ title }) => {
 
   return (
     <div className="w-1/2">
-      <span>{title}</span>
-      <Input value={content} onChange={handleChange} />
+      <span className="text-primary">【题目描述】</span>
+      {title}
+      <Input className="my-2" value={content} onChange={handleChange} />
     </div>
   );
 };
