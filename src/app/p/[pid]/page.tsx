@@ -98,7 +98,15 @@ const Page = async ({ params }: Props) => {
       <div>
         <div className="max-w-screen-xl mx-auto p-4">
           <PageTitle>修炼场 {pType == "objective" ? "客观题" : "编程题"}</PageTitle>
-          <PTop title={pDetailData.pdoc?.title} pid={pDetailData.pdoc?.pid} />
+          <PTop
+            title={pDetailData.pdoc?.title}
+            pid={pDetailData.pdoc?.pid}
+            tag={pDetailData.pdoc?.tag}
+            difficulty={pDetailData.pdoc?.difficulty!}
+            uname={pDetailData.udoc.uname!}
+            nAccept={pDetailData.pdoc.nAccept!}
+            nSubmit={pDetailData.pdoc.nSubmit}
+          />
           <div className="flex mt-10">
             <div className="w-4/5 border-r-2 border-dashed pr-4">
               <div>

@@ -39,7 +39,7 @@ export const ObjectiveSelect = (props: ObjectiveInputProps) => {
           key={index}
           value={option.label}
           variant={selectedIndex === index ? undefined : "outline"}
-          className="mb-2 justify-start text-wrap"
+          className="mb-2 justify-start text-wrap my-2"
           onClick={() => handleButtonClick(index)}
         >
           {option.label}

@@ -18,7 +18,7 @@ const ObjectiveInput: React.FC<ObjectiveInputProps> = ({ title }) => {
   };
 
   return (
-    <div>
+    <div className="w-1/2">
       <span>{title}</span>
       <Input value={content} onChange={handleChange} />
     </div>

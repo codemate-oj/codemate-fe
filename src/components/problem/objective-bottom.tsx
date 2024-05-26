@@ -12,10 +12,10 @@ const ObjectiveBottom: React.FC<PBottomProps> = (props) => {
         {" "}
         确认提交
       </Button>
-      <Button variant={"outline"} className="border-primary mr-2 hover:bg-accent/20">
+      <Button variant={"outline"} className="border-primary  text-primary hover:text-primary  mr-2 hover:bg-accent/20">
         上一题
       </Button>
-      <Button variant={"outline"} className="border-primary mr-2 hover:bg-accent/30">
+      <Button variant={"outline"} className="border-primary  text-primary hover:text-primary  mr-2 hover:bg-accent/30">
         下一题
       </Button>
       <Button variant={"outline"} className="mr-2 hover:bg-accent/30">
