@@ -6,7 +6,7 @@ import store from "@/store/login";
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { passwordSchema } from "@/lib/validate";
+import { passwordSchema } from "@/lib/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput from "@/components/form/form-input";
 

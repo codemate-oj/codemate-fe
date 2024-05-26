@@ -1,10 +1,7 @@
 import PageTitle from "@/components/common/page-title";
-import SquareSideTabs from "@/components/common/square-side-tabs";
 import NavigationTabs from "@/components/user/navigation-tabs";
-import { userCenterRoutes } from "@/constants/routes";
 import { type Metadata } from "next";
-import { usePathname } from "next/navigation";
-import React, { useMemo } from "react";
+import React from "react";
 
 export const metadata: Metadata = {
   title: "我的空间 - CODEMATE",

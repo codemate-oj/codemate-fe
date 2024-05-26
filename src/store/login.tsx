@@ -7,7 +7,6 @@ import EmailOrPhoneForm from "@/components/login/pages/email-or-phone-form";
 import ChooseVerifyForm from "@/components/login/pages/choose-verify-form";
 import UserInfoForm from "@/components/login/pages/user-info-form";
 import { toast } from "sonner";
-import { headers } from "next/headers";
 
 export type DialogStatusName = "login" | "choose-verify" | "input-email-or-phone" | "user-info";
 
@@ -18,6 +17,7 @@ export interface DialogPage {
 
 export interface DialogPageContext extends DialogPage {
   pageName: DialogStatusName;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
@@ -70,7 +70,7 @@ const loginStore = store(
   renew: async () => {
     const sid = store.sid.get();
     if (!sid) return;
-    //@ts-ignore
+    //@ts-expect-error 后端还没有添加该类型
     const { data } = await request.get(`/login?sid=${sid}`, {
       headers: {
         Authorization: `Bearer ${sid}`,
@@ -97,6 +97,7 @@ const loginStore = store(
       { uname, password },
       {
         transformData: (data, headers) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return ((data as any).sid ?? headers.get("X-Hydro-Sid")) as string | null;
         },
       }

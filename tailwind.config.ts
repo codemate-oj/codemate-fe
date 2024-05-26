@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss";
+import { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
@@ -67,9 +67,93 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      fontFamily: {
+        yahei: ["Microsoft YaHei", "sans-serif"],
+      },
+      typography: {
+        DEFAULT: {
+          // 定义code样式
+          pre: {
+            background: "transparent",
+            border: "1px solid #e2e8f0", // gray.300
+            borderRadius: "0.25rem",
+          },
+          code: {
+            color: "#2d3748", // gray.800
+          },
+        },
+        // 定制题目详情页的prose样式
+        pdetail: {
+          css: {
+            // 定义code样式
+            pre: {
+              background: "transparent",
+              border: "1px solid #e2e8f0", // gray.300
+              borderRadius: "0.25rem",
+            },
+            code: {
+              color: "#2d3748", // gray.800
+            },
+            // 配合flexify插件使用
+            div: {
+              margin: "0.5rem 0",
+
+              // 内部标题的通用规则
+              h2: {
+                display: "inline-block",
+                fontWeight: "bold",
+                margin: "0",
+                "&::before": {
+                  content: '"【"',
+                  margin: "0",
+                },
+                "&::after": {
+                  content: '"】"',
+                  margin: "0",
+                },
+              },
+
+              p: {
+                display: "inline-block",
+                margin: 0,
+              },
+
+              // 首个标题的特殊规则
+              "&:first-of-type": {
+                alignItems: "flex-start",
+                flexDirection: "column",
+                gap: "0.5rem",
+                marginBottom: "1rem",
+                h2: {
+                  display: "block",
+                  color: "#FF7D37",
+                  marginBottom: "0.5rem",
+                  "&::before": {
+                    color: "#FF7D37", // 根据需要更改颜色
+                  },
+                  "&::after": {
+                    color: "#FF7D37", // 根据需要更改颜色
+                  },
+                },
+              },
+              // 后续标题的规则
+              "&:nth-of-type(n+2)": {
+                h2: {
+                  fontSize: "1rem",
+                },
+                p: {
+                  color: "#797979",
+                  whiteSpace: "normal",
+                  margin: 0,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography"), "tailwindcss/nesting"],
 } satisfies Config;
 
 export default config;
