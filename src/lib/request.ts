@@ -26,7 +26,6 @@ export const alovaInstance = createAlova({
   timeout: 5000,
   localCache: DISABLE_CACHE ? null : { GET: 60000 },
   requestAdapter: LOCAL_MOCK ? mockAdapter : GlobalFetch(),
-  // requestAdapter: mockAdapter, // FIXME： 由于跨域没有配置好 先全部使用mock
   beforeRequest(method) {
     if (IS_DEV) {
       console.info(`[alova] ${method.type} ${method.url}`);
