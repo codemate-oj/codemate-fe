@@ -74,6 +74,9 @@ dependencies:
   katex:
     specifier: ^0.16.10
     version: 0.16.10
+  lodash:
+    specifier: ^4.17.21
+    version: 4.17.21
   lucide-react:
     specifier: ^0.364.0
     version: 0.364.0(react@18.3.1)
@@ -190,6 +193,9 @@ devDependencies:
   '@types/hast':
     specifier: ^3.0.4
     version: 3.0.4
+  '@types/lodash':
+    specifier: ^4.17.4
+    version: 4.17.4
   '@types/mdast':
     specifier: ^4.0.4
     version: 4.0.4
