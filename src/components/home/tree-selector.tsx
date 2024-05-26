@@ -1,14 +1,14 @@
 "use client";
 import React, { useMemo } from "react";
 import FilterTabsTree, { FilterTabsTreeData, type TreeItem } from "../common/filter-tabs-tree";
-import { useUrlParam } from "@/hooks/useUrl";
+import { useUrlParamState } from "@/hooks/useUrlParamState";
 
 interface Props {
   treeData: FilterTabsTreeData;
 }
 
 const TreeSelector: React.FC<Props> = ({ treeData }) => {
-  const [tid, setTid] = useUrlParam("tid");
+  const [tid, setTid] = useUrlParamState("tid");
 
   const selectedTreePath = useMemo(() => {
     if (!treeData || !tid) return [];
