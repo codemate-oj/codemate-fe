@@ -12,6 +12,8 @@ import { extractQuestionsFromMarkdown } from "@/lib/problem-parse";
 import React, { Suspense } from "react";
 import Loading from "@/components/ui/loading";
 import dynamic from "next/dynamic";
+import code from "@/lib/unified/code";
+import media from "@/lib/unified/media";
 
 type Props = {
   params: {
@@ -102,9 +104,9 @@ const Page = async ({ params }: Props) => {
             title={pDetailData.pdoc?.title}
             pid={pDetailData.pdoc?.pid}
             tag={pDetailData.pdoc?.tag}
-            difficulty={pDetailData.pdoc?.difficulty!}
-            uname={pDetailData.udoc.uname!}
-            nAccept={pDetailData.pdoc.nAccept!}
+            difficulty={pDetailData.pdoc?.difficulty}
+            uname={pDetailData.udoc.uname}
+            nAccept={pDetailData.pdoc.nAccept}
             nSubmit={pDetailData.pdoc.nSubmit}
           />
           <div className="flex mt-10">
@@ -115,7 +117,20 @@ const Page = async ({ params }: Props) => {
                     {pType == "objective" ? (
                       <FormilyRenderer schema={extractQuestionsFromMarkdown(markdownContent)} />
                     ) : (
-                      <MarkdownRenderer markdown={markdownContent} />
+                      <MarkdownRenderer
+                        markdown={markdownContent}
+                        plugins={[
+                          {
+                            hookIn: "pre-parse",
+                            plugin: code,
+                          },
+                          {
+                            hookIn: "pre-parse",
+                            plugin: media(`p/${pDetailData.pdoc.docId}/file`, pDetailData.pdoc.additional_file),
+                          },
+                        ]}
+                        className="prose-pdetail"
+                      />
                     )}
                   </div>
                 </Suspense>

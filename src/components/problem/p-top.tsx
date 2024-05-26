@@ -1,15 +1,14 @@
 import React from "react";
-import store from "@/store/login";
 import { Button } from "@/components/ui/button";
 
 interface PTopProps {
-  nAccept: number;
-  nSubmit: number;
-  difficulty: number;
-  tag: string[];
-  title: string;
-  pid: string;
-  uname: string;
+  nAccept?: number;
+  nSubmit?: number;
+  difficulty?: number;
+  tag?: string[];
+  title?: string;
+  pid?: string;
+  uname?: string;
 }
 const PTop: React.FC<PTopProps> = (props) => {
   const { title, pid, tag, difficulty, nSubmit, nAccept, uname } = props;
@@ -42,6 +41,7 @@ const PTop: React.FC<PTopProps> = (props) => {
       </div>
       <div className="flex bg-[#F9F9F9] justify-around py-2 font-yahei text-[#797979]">
         {list.map((item) => {
+          if (!item.value) return null;
           if (item.name == "知识点")
             return (
               <div key={item.name}>

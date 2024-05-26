@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RequestBody, createAlova } from "alova";
 import ReactHook from "alova/react";
 import GlobalFetch from "alova/GlobalFetch";
@@ -26,10 +27,9 @@ export const alovaInstance = createAlova({
   timeout: 5000,
   localCache: DISABLE_CACHE ? null : { GET: 60000 },
   requestAdapter: LOCAL_MOCK ? mockAdapter : GlobalFetch(),
-  // requestAdapter: mockAdapter, // FIXME： 由于跨域没有配置好 先全部使用mock
   beforeRequest(method) {
     if (IS_DEV) {
-      console.log(`[alova] ${method.type} ${method.url}`);
+      console.info(`[alova] ${method.type} ${method.url}`);
     }
     // 缺省状态下默认添加 Accept: application/json
     const _acc = method.config.headers["Accept"];
@@ -120,7 +120,7 @@ export const request = {
     } = {}
   ) => {
     let payload: RequestBody | undefined = data;
-    let contentType: string = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
+    const contentType: string = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
 
     if (data) {
       // 处理自动序列化逻辑

@@ -1,21 +1,25 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   rewrites: async () => {
-    if (process.env.NODE_ENV === "development") {
-      return [
-        {
-          source: "/api/:path*",
-          destination: `${process.env.API_URL ?? "https://www.aioj.net/"}:path*`,
-        },
-      ];
-    }
-    return [];
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${process.env.API_URL ?? "https://www.aioj.net/"}:path*`,
+      },
+    ];
   },
   images: {
     dangerouslyAllowSVG: true, // 允许Image提供SVG而非img
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.aioj.net",
+        port: "",
+        pathname: "/file/**",
+      },
+
       {
         protocol: "https",
         hostname: "www.aioj.net",

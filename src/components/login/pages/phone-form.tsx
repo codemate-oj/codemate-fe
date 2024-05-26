@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import store from "@/store/login";
-import { phoneSchema } from "@/lib/validate";
+import { phoneSchema } from "@/lib/form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";

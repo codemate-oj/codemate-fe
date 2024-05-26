@@ -1,10 +1,10 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import useUrl from "@/hooks/useUrl";
 import { request } from "@/lib/request";
 import { useRequest } from "ahooks";
 import Item from "./contest-item";
-import Loading from "@/app/(home)/loading";
+import Loading from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import { Pagination } from "antd";
 import LinkBtn from "../common/link-btn";

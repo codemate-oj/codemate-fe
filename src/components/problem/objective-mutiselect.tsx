@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useField } from "@formily/react";
-import { GeneralField } from "@formily/core";
 import { Field as FormilyField } from "@formily/core/esm/models/Field";
 
 interface Option {
@@ -38,7 +37,6 @@ export const ObjectiveMutiSelect = (props: ObjectiveInputProps) => {
   return (
     <div className="flex flex-col w-1/2">
       <div>
-        {" "}
         <span className="text-primary">【题目描述】</span>
         {props.title}
       </div>
@@ -47,7 +45,7 @@ export const ObjectiveMutiSelect = (props: ObjectiveInputProps) => {
           key={index}
           value={option.label}
           variant={selectedIndex.includes(index) ? undefined : "outline"}
-          className="mb-2 justify-start text-wrap"
+          className="my-2 justify-start text-wrap"
           onClick={() => handleButtonClick(index)}
         >
           {option.label}

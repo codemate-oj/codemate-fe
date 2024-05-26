@@ -12,6 +12,7 @@ import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import UserPopup from "../user/user-popup";
 import LoginRegisterModal from "./login-register-modal";
+import { remoteUrl } from "@/lib/utils";
 
 const UserLogin = () => {
   const [isLoaded, setIsLoaded] = React.useState(false);
@@ -66,7 +67,7 @@ const UserLogin = () => {
       <HoverCard openDelay={100}>
         <HoverCardTrigger asChild>
           <Avatar>
-            <AvatarImage src={userContext?.avatarUrl ?? "/img/avatar.png"} />
+            <AvatarImage src={remoteUrl(userContext?.avatarUrl) ?? "/img/avatar.png"} />
             <AvatarFallback>
               <Image src="/img/avatar.png" alt="avatar" width={32} height={32} />
             </AvatarFallback>
