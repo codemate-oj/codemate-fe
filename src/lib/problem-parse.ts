@@ -48,7 +48,6 @@ export const extractQuestionsFromAst = (ast: Parent): FormilySchema => {
   ast.children.forEach((node: { type: string }, nodeIndex: number) => {
     if (node.type === "paragraph") {
       const text = getNodeText(node);
-      console.log(text, 1);
       const infos = text.matchAll(regex);
       for (const info of infos) {
         if (!info) return;

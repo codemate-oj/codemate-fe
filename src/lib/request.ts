@@ -29,7 +29,7 @@ export const alovaInstance = createAlova({
   // requestAdapter: mockAdapter, // FIXME： 由于跨域没有配置好 先全部使用mock
   beforeRequest(method) {
     if (IS_DEV) {
-      console.log(`[alova] ${method.type} ${method.url}`);
+      console.info(`[alova] ${method.type} ${method.url}`);
     }
     // 缺省状态下默认添加 Accept: application/json
     const _acc = method.config.headers["Accept"];
