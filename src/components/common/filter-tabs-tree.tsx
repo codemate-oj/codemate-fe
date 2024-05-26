@@ -8,10 +8,10 @@ export type TreeItem = {
   label: React.ReactNode;
   children?: TreeItem[];
 };
-export type FilerTabsTreeData = TreeItem[];
+export type FilterTabsTreeData = TreeItem[];
 
-export interface FilerTabsTreeProps {
-  data: FilerTabsTreeData;
+export interface FilterTabsTreeProps {
+  data: FilterTabsTreeData;
   depth?: number;
   selectedPath?: string[];
   onChange?: (selectedPath: string[]) => void;
@@ -19,7 +19,7 @@ export interface FilerTabsTreeProps {
 }
 
 export interface FilterTabsTreeRendererProps {
-  data: FilerTabsTreeData;
+  data: FilterTabsTreeData;
   selectedKey?: string;
   onChange?: (key: string) => void;
 }
@@ -83,7 +83,7 @@ export const TextRenderer: React.FC<FilterTabsTreeRendererProps> = ({ data, sele
   );
 };
 
-const FilerTabsTree: React.FC<FilerTabsTreeProps> = ({
+const FilterTabsTree: React.FC<FilterTabsTreeProps> = ({
   data,
   depth = 0,
   selectedPath,
@@ -120,7 +120,7 @@ const FilerTabsTree: React.FC<FilerTabsTreeProps> = ({
     <>
       <Renderer data={data} selectedKey={activeKey} onChange={handleClickTab} />
       {subData && subData.length > 0 && (
-        <FilerTabsTree
+        <FilterTabsTree
           data={subData}
           selectedPath={selectedPath?.slice(1)}
           depth={depth + 1}
@@ -132,4 +132,4 @@ const FilerTabsTree: React.FC<FilerTabsTreeProps> = ({
   );
 };
 
-export default FilerTabsTree;
+export default FilterTabsTree;

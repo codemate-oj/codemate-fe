@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Image from "next/image";
 
-import PageFooter from "@/components/common/page-footer";
 import Navigation from "@/components/common/page-navigation";
 import UserLogin from "@/components/login/user-login";
 import { cn } from "@/lib/utils";

@@ -1,5 +1,5 @@
 "use client";
-import FilerTabsTree, { TreeItem, type FilerTabsTreeData } from "@/components/common/filter-tabs-tree";
+import FilerTabsTree, { TreeItem, type FilterTabsTreeData } from "@/components/common/filter-tabs-tree";
 import FixedSelect, { type FixedSelectOptions } from "@/components/common/fixed-select";
 import LinkBtn from "@/components/common/link-btn";
 import useUrl from "@/hooks/useUrl";
@@ -104,7 +104,7 @@ const HomePage = () => {
     async () => {
       const { data } = await request.get("/p-list", {
         transformData: (data) => {
-          console.log(data);
+          // console.log(data);
           return data;
         },
       });
@@ -128,7 +128,7 @@ const HomePage = () => {
         } as FixedSelectOptions;
       });
       return {
-        filterTree: [{ label: "全部", key: "" }, ...data.roots?.map(parsePlistItem)] as FilerTabsTreeData,
+        filterTree: [{ label: "全部", key: "" }, ...data.roots?.map(parsePlistItem)] as FilterTabsTreeData,
         sideTabs: [{ label: "全部", value: "" }, ...permittedLangs],
       };
     },

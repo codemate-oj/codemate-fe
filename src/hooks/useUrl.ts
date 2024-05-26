@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import queryString from "query-string";
+import { useState, useEffect, useCallback } from "react";
+import qs from "query-string";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const useUrl = () => {
@@ -17,21 +17,37 @@ const useUrl = () => {
     setOriginUrlQueryParams(parsed);
   }, [searchParams]);
 
-  const updateQueryParams = (key: string, value: string) => {
-    if (searchParams.get(key) === value) return;
-    const updatedParams = {
-      ...originUrlQueryParams,
-      [key]: value,
-    };
-    const newUrl = queryString.stringifyUrl({
-      url: window.location.pathname,
-      query: updatedParams,
-    });
-    //@ts-ignore
-    router.push(newUrl);
-  };
+  const updateQueryParams = useCallback(
+    (key: string, value: string) => {
+      if (searchParams.get(key) === value) return;
+      const updatedParams = {
+        ...originUrlQueryParams,
+        [key]: value,
+      };
+      const newUrl = qs.stringifyUrl({
+        url: window.location.pathname,
+        query: updatedParams,
+      });
+      //@ts-ignore
+      router.push(newUrl);
+    },
+    [originUrlQueryParams, router, searchParams]
+  );
 
   return { queryParams: originUrlQueryParams, updateQueryParams };
+};
+
+export const useUrlParam = (key: string) => {
+  const { queryParams, updateQueryParams } = useUrl();
+
+  const value = queryParams[key];
+  const setValue = useCallback(
+    (value: string) => {
+      updateQueryParams(key, value);
+    },
+    [key, updateQueryParams]
+  );
+  return [value, setValue] as const;
 };
 
 export default useUrl;

@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss";
+import plugin, { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
@@ -67,9 +67,67 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      fontFamily: {
+        yahei: ["Microsoft YaHei", "sans-serif"],
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            div: {
+              display: "flex",
+
+              "flex-wrap": "wrap",
+              "align-items": "center",
+
+              "&:first-of-type": {
+                "margin-bottom": "1rem",
+                h2: {
+                  " font-weight": "normal",
+                  margin: "0",
+                  display: "inline-block",
+                  color: "#FF7D37",
+                  "&::before": {
+                    margin: "0",
+                    content: '"【"',
+                    color: "#FF7D37", // 根据需要更改颜色
+                  },
+                  "&::after": {
+                    content: '"】"',
+                    color: "#FF7D37", // 根据需要更改颜色
+                  },
+                },
+              },
+              "&:nth-of-type(n+2)": {
+                "margin-bottom": "0.5rem",
+                h2: {
+                  display: "inline-block",
+                  " font-weight": "normal",
+                  "font-size": "1rem",
+                  margin: "0",
+                  "&::before": {
+                    content: '"【"',
+                    "margin-left": "0.3rem",
+                  },
+                  "&::after": {
+                    content: '"】"',
+                  },
+                },
+                p: {
+                  color: "#797979",
+                  "white-space": "normal",
+                },
+              },
+            },
+            p: {
+              display: "inline-block",
+              margin: "0",
+            },
+          },
+        },
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;
 
 export default config;
