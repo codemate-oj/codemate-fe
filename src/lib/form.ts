@@ -16,6 +16,7 @@ export const passwordSchema = z
   .min(6, "密码不能少于6位")
   .max(255, "密码不能超过255位");
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function objectToFormData(obj: Record<string, any>) {
   const formData = new FormData();
   for (const key in obj) {

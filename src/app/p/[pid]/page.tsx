@@ -104,9 +104,9 @@ const Page = async ({ params }: Props) => {
             title={pDetailData.pdoc?.title}
             pid={pDetailData.pdoc?.pid}
             tag={pDetailData.pdoc?.tag}
-            difficulty={pDetailData.pdoc?.difficulty!}
-            uname={pDetailData.udoc.uname!}
-            nAccept={pDetailData.pdoc.nAccept!}
+            difficulty={pDetailData.pdoc?.difficulty}
+            uname={pDetailData.udoc.uname}
+            nAccept={pDetailData.pdoc.nAccept}
             nSubmit={pDetailData.pdoc.nSubmit}
           />
           <div className="flex mt-10">

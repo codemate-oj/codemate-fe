@@ -4,7 +4,7 @@ import FilerTabsTree from "@/components/common/filter-tabs-tree";
 import TOP_FILTER from "@/constants/contest-top-filter";
 import useUrl from "@/hooks/useUrl";
 const TreeSelector: React.FC = () => {
-  const { queryParams, updateQueryParams } = useUrl();
+  const { updateQueryParams } = useUrl();
   return (
     <FilerTabsTree
       data={TOP_FILTER}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RequestBody, createAlova } from "alova";
 import ReactHook from "alova/react";
 import GlobalFetch from "alova/GlobalFetch";
@@ -119,7 +120,7 @@ export const request = {
     } = {}
   ) => {
     let payload: RequestBody | undefined = data;
-    let contentType: string = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
+    const contentType: string = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
 
     if (data) {
       // 处理自动序列化逻辑

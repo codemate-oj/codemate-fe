@@ -186,7 +186,7 @@ export interface paths {
                */
               rule: string;
               /** 比赛列表 */
-              tdocs: components["schemas"]["ContestBase"][];
+              tdocs: components["schemas"]["Contest"][];
               tsdict: {
                 [key: string]: Record<string, never>;
               };
@@ -293,7 +293,6 @@ export interface paths {
               page: number;
               /** 所有评测记录 */
               rdocs: components["schemas"]["Record"][];
-              /** 查询的比赛信息 */
               tdoc: components["schemas"]["Contest"];
               pdict: {
                 [key: string]: Record<string, never>;
@@ -832,7 +831,7 @@ export interface paths {
             "application/json": {
               UserContext: components["schemas"]["UserContext"];
               UiContext: components["schemas"]["UiContext"];
-              roots: components["schemas"]["SystemProblemList"][];
+              roots: components["schemas"]["SystemProblemList Recursive"][];
             };
           };
         };
@@ -1106,7 +1105,6 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              /** 查询的比赛信息 */
               tdoc: components["schemas"]["Contest"];
               /** 用户状态 */
               tsdoc: {
@@ -1583,6 +1581,25 @@ export interface paths {
                * @description 仅在存在tid时才会有值
                */
               tdoc?: {
+                /**
+                 * 比赛标签
+                 * @description 用于筛选比赛
+                 */
+                tag: string[];
+                /**
+                 * 报名开始时间
+                 * Format: date-time
+                 */
+                checkinBeginAt: string;
+                /**
+                 * 报名结束时间
+                 * Format: date-time
+                 */
+                checkinEndAt: string;
+                /** 封面图 */
+                imageURL: string;
+                /** 是否需要实名 */
+                needRealName: boolean;
                 /** @description ObjectID */
                 _id: string;
                 /** @description ObjectID */
@@ -1661,6 +1678,12 @@ export interface paths {
                  * @description 单位为小时，仅用于比赛
                  */
                 duration: number;
+                /**
+                 * 惩罚起始时间
+                 * Format: date-time
+                 * @description 仅用于作业
+                 */
+                penaltySince?: string;
               };
               /**
                * 比赛所有者信息
@@ -1672,6 +1695,73 @@ export interface paths {
               ctdocs: components["schemas"]["Contest"][];
               /** 相关作业 */
               htdocs: components["schemas"]["Contest"][];
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+    /**
+     * 检查题目权限
+     * @description 检查题目是否可被当前用户访问，若不能则提供可选的激活方式。
+     */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+        path: {
+          pid: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /**
+             * @description 操作名，Hydro特有的post魔法
+             * @example check
+             * @constant
+             */
+            operation?: "check";
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              /** 是否有权限访问 */
+              hasPerm: boolean;
+              /**
+               * 可用的激活途径
+               * @description 仅在hasPerm=false时才会返回ways
+               */
+              activation?: ("group" | "point")[];
             };
           };
         };
@@ -2319,7 +2409,60 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    "SystemProblemList Recursive": {
+      /**
+       * 父节点
+       * @description ObjectID
+       */
+      parent: string;
+      /** 子节点数组 */
+      children: components["schemas"]["SystemProblemList Recursive"][];
+      /** @description ObjectID */
+      _id: string;
+      /** @description ObjectID */
+      docId: string;
+      /**
+       * 类型
+       * Format: uint32
+       * @description 30=比赛 32=系统题单
+       * @enum {integer}
+       */
+      docType: 30 | 31 | 32 | 40;
+      /**
+       * 开始日期
+       * Format: date-time
+       * @description 比赛/作业的开放日期（题单不受此影响）
+       */
+      beginAt: string;
+      /**
+       * 结束日期
+       * Format: date-time
+       */
+      endAt: string;
+      /** 标题 */
+      title: string;
+      /** 说明内容 */
+      content: string;
+      /**
+       * 规则
+       * @description 比赛规则（赛制），homework为特殊规则
+       * @enum {string}
+       */
+      rule: "acm" | "oi" | "homework" | "ioi" | "ledo" | "strictioi";
+      /** 题目 */
+      pids: number[];
+      /**
+       * 分配给
+       * @description 若只分配给特定小组，则只有特定组有权限访问（与权限组结合）
+       */
+      assign?: string[];
+    };
     BulletinDoc: {
+      _id: string;
+      docId: string;
+      docType: number;
+      domainId: string;
+      maintainer: number[];
       title: string;
       /** 标签 */
       tags: string[];
@@ -2495,6 +2638,31 @@ export interface components {
        * @description 单位为小时，仅用于比赛
        */
       duration: number;
+      /**
+       * 惩罚起始时间
+       * Format: date-time
+       * @description 仅用于作业
+       */
+      penaltySince?: string;
+      /**
+       * 比赛标签
+       * @description 用于筛选比赛
+       */
+      tag: string[];
+      /**
+       * 报名开始时间
+       * Format: date-time
+       */
+      checkinBeginAt: string;
+      /**
+       * 报名结束时间
+       * Format: date-time
+       */
+      checkinEndAt: string;
+      /** 封面图 */
+      imageURL: string;
+      /** 是否需要实名 */
+      needRealName: boolean;
     };
     ContestStatus: {
       /** ObjectID */

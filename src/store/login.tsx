@@ -16,6 +16,7 @@ export interface DialogPage {
 
 export interface DialogPageContext extends DialogPage {
   pageName: DialogStatusName;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
@@ -64,6 +65,7 @@ const loginStore = store(
   login: async (uname: string, password: string) => {
     await request.post("/login", { uname, password });
     // FIXME: 当前后端不能在登陆时更新UserContext 需要重复请求
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const { data } = await request.get("/login");
     // 登录失败：访客 _id=0 也算失败

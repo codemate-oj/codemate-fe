@@ -11,8 +11,13 @@ export const metadata: Metadata = {
   title: "题库 - CODEMATE",
 };
 
+interface PlistItemBase {
+  docId: string;
+  title: string;
+  children?: PlistItemBase[];
+}
 function getFilterInfo() {
-  const parsePlistItem = (item: any) => {
+  const parsePlistItem = (item: PlistItemBase) => {
     const _ret: TreeItem = {
       key: item.docId,
       label: item.title,

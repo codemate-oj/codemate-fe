@@ -9,8 +9,6 @@ import { cn } from "@/lib/utils";
 import { mainRoutes } from "@/constants/routes";
 import AntdThemeConfigProvider from "@/providers/antd-theme-config-provider";
 
-import { Suspense } from "react";
-
 import "./globals.css";
 import dynamic from "next/dynamic";
 

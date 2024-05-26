@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useField } from "@formily/react";
-import { GeneralField } from "@formily/core";
 import { Field as FormilyField } from "@formily/core/esm/models/Field";
 
 interface Option {

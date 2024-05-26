@@ -3,7 +3,6 @@
 import PageTitle from "@/components/common/page-title";
 import NavigationTabs from "@/components/user/navigation-tabs";
 import { userCenterRoutes } from "@/constants/routes";
-import { Metadata } from "next";
 import { usePathname } from "next/navigation";
 import React, { useMemo } from "react";
 

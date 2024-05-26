@@ -29,7 +29,7 @@ const extractTitle = (nodeIndex: number, ast: Parent): string => {
 
 const extractOptions = (node: List): OptionType[] =>
   node.children
-    .map((item: any, index: number) => {
+    .map((item, index) => {
       const listItem = item as ListItem;
       if (listItem.children && listItem.children.length > 0) {
         const text = getNodeText(listItem);
@@ -51,7 +51,7 @@ export const extractQuestionsFromAst = (ast: Parent): FormilySchema => {
       const infos = text.matchAll(regex);
       for (const info of infos) {
         if (!info) return;
-        const [_, type, pIndex] = info;
+        const [, type, pIndex] = info;
         const titleText = extractTitle(nodeIndex, ast);
 
         switch (type) {

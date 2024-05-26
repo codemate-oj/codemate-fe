@@ -4,7 +4,6 @@ import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
-import { visit } from "unist-util-visit";
 import React from "react";
 import "katex/dist/katex.min.css"; // 引入 KaTeX 样式
 import { cn } from "@/lib/utils";

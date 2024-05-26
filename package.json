@@ -82,6 +82,8 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/unist": "^3.0.2",
+    "@typescript-eslint/eslint-plugin": "^7.10.0",
+    "@typescript-eslint/parser": "^7.10.0",
     "ahooks": "^3.7.11",
     "autoprefixer": "^10.0.1",
     "daisyui": "^4.9.0",

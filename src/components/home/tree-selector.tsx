@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import FilterTabsTree, { FilterTabsTreeData, type TreeItem } from "../common/filter-tabs-tree";
-import useUrl, { useUrlParam } from "@/hooks/useUrl";
+import { useUrlParam } from "@/hooks/useUrl";
 
 interface Props {
   treeData: FilterTabsTreeData;

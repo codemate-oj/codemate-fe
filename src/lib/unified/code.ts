@@ -26,7 +26,7 @@ const code: Plugin = () => {
         if (!code.lang) return;
         const matches = code.lang.matchAll(regex);
         for (const match of matches) {
-          const [_, type, dataIndex] = match;
+          const [, type, dataIndex] = match;
           const dataTitle: Heading = {
             type: "heading",
             depth: 3,

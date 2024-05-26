@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { connect, mapProps } from "@formily/react";
 import { Input } from "antd";

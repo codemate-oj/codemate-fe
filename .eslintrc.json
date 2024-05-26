@@ -1,3 +1,19 @@
 {
-  "extends": ["next/core-web-vitals", "plugin:storybook/recommended", "plugin:prettier/recommended"]
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:storybook/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "error", // 禁止使用 'any' 类型
+    "no-console": [
+      "error",
+      {
+        "allow": ["warn", "error", "info", "debug"] // 允许特定的 console 方法
+      }
+    ]
+  }
 }

@@ -62,6 +62,7 @@ const FormilyRenderer: React.FC<FormilySchemaProps> = ({ schema }) => {
   const handleSubmit = async () => {
     try {
       const values = await form.submit();
+      console.info(values);
     } catch (err) {
       console.error(err);
     }
