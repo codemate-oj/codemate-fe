@@ -10,10 +10,10 @@ import "katex/dist/katex.min.css"; // 引入 KaTeX 样式
 
 // 定义一个插件，用于将 <h2> 和 <p> 元素包裹在带有 flex 和 items-center 类的 <div> 中
 const flexify = () => {
-  return (tree) => {
+  return (tree: any) => {
     visit(tree, (node, index, parent) => {
       if (node.type === "heading" && node.depth === 2) {
-        const nextNode = parent.children[index + 1];
+        const nextNode = parent.children[index! + 1];
         if (nextNode && nextNode.type === "paragraph") {
           const flexDiv = {
             type: "element",
@@ -36,7 +36,7 @@ const flexify = () => {
   };
 };
 
-const renderMarkdown = async (markdown) => {
+const renderMarkdown = async (markdown: string) => {
   const result = await unified()
     .use(remarkParse) // 解析 markdown
     .use(remarkMath) // 支持数学表达式
@@ -49,9 +49,9 @@ const renderMarkdown = async (markdown) => {
   return result.toString();
 };
 
-const ServerComponent = async ({ markdown }) => {
+const ServerComponent = async ({ markdown }: { markdown: string }) => {
   const htmlContent = await renderMarkdown(markdown);
-  console.log(htmlContent);
+
   return <div className="prose prose-yellow" dangerouslySetInnerHTML={{ __html: htmlContent }} />;
 };
 

@@ -104,7 +104,7 @@ const HomePage = () => {
     async () => {
       const { data } = await request.get("/p-list", {
         transformData: (data) => {
-          console.log(data);
+          // console.log(data);
           return data;
         },
       });

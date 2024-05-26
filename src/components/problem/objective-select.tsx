@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useField } from "@formily/react";
 import { GeneralField } from "@formily/core";
@@ -33,7 +33,11 @@ export const ObjectiveSelect = (props: ObjectiveInputProps) => {
 
   return (
     <div className="flex flex-col w-1/2">
-      <div>{props.title}</div>
+      <div>
+        {" "}
+        <span className="text-primary">【题目描述】</span>
+        {props.title}
+      </div>
       {props.options.map((option, index) => (
         <Button
           key={index}

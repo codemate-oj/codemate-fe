@@ -14,7 +14,6 @@ interface PTopProps {
 const PTop: React.FC<PTopProps> = (props) => {
   const { title, pid, tag, difficulty, nSubmit, nAccept, uname } = props;
 
-  console.log(title);
   const list = [
     { name: "知识点", value: tag },
     { name: "难度值", value: difficulty },
@@ -22,7 +21,7 @@ const PTop: React.FC<PTopProps> = (props) => {
     { name: "AC", value: nAccept },
     { name: "上传者", value: uname },
   ];
-  console.log(props, 1);
+
   return (
     <div>
       <div className="flex items-center mb-4">
