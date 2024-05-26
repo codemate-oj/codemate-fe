@@ -1,3 +1,5 @@
+// TODO: 将这部分逻辑转移到后端kv存储上
+
 interface LabelValueMapItemTYPE {
   label: string;
   key: string;
