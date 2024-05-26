@@ -5,6 +5,7 @@ import Link from "next/link";
 import ContestState from "./contest-state";
 import Image from "next/image";
 import { paths } from "@/types/schema";
+import { remoteUrl } from "@/lib/utils";
 function calculateTimeDifference(time1: string, time2: string): number {
   const date1 = new Date(time1);
   const date2 = new Date(time2);
@@ -35,7 +36,7 @@ const Item: React.FC<ItemProps> = (props) => {
           checkinBeginAt={checkinBeginAt}
           checkinEndAt={checkinEndAt}
         />
-        <Image src={`https://www.aioj.net${imageURL}`} alt="loading" width={320} height={160} />
+        <Image src={remoteUrl(imageURL)} alt="loading" width={320} height={160} />
       </div>
       <div className="flex-1 relative">
         <div className="title">
