@@ -26,6 +26,12 @@ dependencies:
   '@hookform/resolvers':
     specifier: ^3.3.4
     version: 3.4.0(react-hook-form@7.51.4)
+  '@iconify-json/mdi':
+    specifier: ^1.1.66
+    version: 1.1.66
+  '@iconify/tailwind':
+    specifier: ^1.1.1
+    version: 1.1.1
   '@monaco-editor/react':
     specifier: ^4.6.0
     version: 4.6.0(monaco-editor@0.48.0)(react-dom@18.3.1)(react@18.3.1)
@@ -2461,6 +2467,12 @@ packages:
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
     dev: true
 
+  /@iconify-json/mdi@1.1.66:
+    resolution: {integrity: sha512-7KPF2RVUUWav/hXCM8Ti/smqu3cmgePJpiX9CSkldiL+80+eBRBeKlc4vPOc9jhAItlqIU1vKsbKoPP0JIfgbg==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: false
+
   /@iconify/react@4.1.1(react@18.3.1):
     resolution: {integrity: sha512-jed14EjvKjee8mc0eoscGxlg7mSQRkwQG3iX3cPBCO7UlOjz0DtlvTqxqEcHUJGh+z1VJ31Yhu5B9PxfO0zbdg==}
     peerDependencies:
@@ -2470,9 +2482,14 @@ packages:
       react: 18.3.1
     dev: true
 
+  /@iconify/tailwind@1.1.1:
+    resolution: {integrity: sha512-4mmA//qjZigv7D4KlqcVSYTqfRIJzyts2/lSCAJfCL0rVMIE76+ifJnaE5jxCo1+nYGBF8FsFo0qFOs+sX4EnA==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: false
+
   /@iconify/types@2.0.0:
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
-    dev: true
 
   /@img/sharp-darwin-arm64@0.33.4:
     resolution: {integrity: sha512-p0suNqXufJs9t3RqLBO6vvrgr5OhgbWp76s5gTRvdmxmuv9E1rcaqGUsl3l4mKVmXPkTkTErXediAui4x+8PSA==}
