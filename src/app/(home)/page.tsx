@@ -9,7 +9,7 @@ import { Switch, Table, TableColumnsType, Tag } from "antd";
 import Image from "next/image";
 import { Suspense } from "react";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
-import BulltinBoard from "@/components/common/bulletin-board/index";
+import BulltinBoard, { type BulletinCardProps, type BullltinItemProps } from "@/components/common/bulletin-board/index";
 interface DataType {
   key: string;
   pid: number;
@@ -161,53 +161,37 @@ const HomePage = () => {
     }
   );
 
-  const result = useRequest(async () => {
-    const res = await request.get("/bulletin/list", {});
-  });
+  const { data: bulletinCardData } = useRequest(async () => {
+    const res = await request.get("/bulletin/list", {
+      params: {
+        page: 1,
+        limit: 3,
+      },
+    });
 
-  const bulletinCardData = [
-    {
-      key: "12412",
-      label: "赛事资讯",
-      children: [
-        {
-          text: "可以折叠/展开的内容区域，用于对复杂区域进行分组和隐藏，保持页面的整洁2。",
-          date: "2023-1-10",
-          time: "20:09",
-          href: "",
-        },
-        {
-          text: "可以折叠/展开的内容区域，用于对复杂区域进行分组和隐藏，保持页面的整洁4。",
-          date: "2023-1-10",
-          time: "20:09",
-          href: "",
-        },
-      ],
-    },
-    {
-      key: "1241223",
-      label: "赛事资讯2",
-      children: [
-        {
-          text: "可以折叠/展开的内容区域，用于对复杂区域进行分组和隐藏，保持页面的整洁2。",
-          date: "2023-1-10",
-          time: "20:09",
-          href: "",
-        },
-        {
-          text: "可以折叠/展开的内容区域，用于对复杂区域进行分组和隐藏，保持页面的整洁4。",
-          date: "2023-1-10",
-          time: "20:09",
-          href: "",
-        },
-      ],
-    },
-  ];
+    const parseBulletinItem = (item: any) => {
+      const _ret: BullltinItemProps = {
+        id: item.docId,
+        title: item.title,
+        postTime: item.postAt,
+        href: `/bulletin/${item.docId}`,
+      };
+      return _ret;
+    };
+
+    return [
+      {
+        key: "重要公告",
+        children: res?.data?.bdocs?.map(parseBulletinItem),
+        label: "重要公告",
+      },
+    ] as BulletinCardProps[];
+  });
 
   return (
     <Suspense>
       <div className="w-full flex">
-        <div className=" 4xl:max-w-7xl xl:max-w-[949px]">
+        <div className="md:w-[768px] lg:w-[1024px] xl:w-[1280px] 4xl:max-w-7xl">
           <FixedSelect
             options={homeFilterData?.sideTabs ?? []}
             onSelect={(i) => updateQueryParams("lang", i)}
@@ -266,8 +250,8 @@ const HomePage = () => {
             }}
           />
         </div>
-        <div className="md:w-[0px] lg:w-[400px] overflow-hidden ml-[14px]">
-          <BulltinBoard data={bulletinCardData}></BulltinBoard>
+        <div className="w-[0px] lg:w-[400px] overflow-hidden  ml-[14px]">
+          <BulltinBoard data={bulletinCardData as BulletinCardProps[]}></BulltinBoard>
         </div>
       </div>
     </Suspense>

@@ -2,15 +2,16 @@
   border: 0px solid transparent;
   border-left: 4px solid #FF7D37;
   padding-left: 8px;
-  font-weight: 700;
-  font-size: 18px;
+  font-weight: 600;
+  font-size: 16px;
 }
 
-.ant-collapse-header{
-  width: 211px;
-  padding-left: 0; 
-  border: 0px solid transparent;
-  border-bottom: 1px solid #F1F1F1;
+.bulletin-board-ekko{
+  .ant-collapse-header{
+    padding-left: 0; 
+    border: 0px solid transparent;
+    border-bottom: 1px solid #F1F1F1;
+  }
 }
 
 

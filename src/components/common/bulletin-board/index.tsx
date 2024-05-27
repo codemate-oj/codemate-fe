@@ -1,33 +1,39 @@
-import { Button, Collapse } from "antd";
+import { Collapse } from "antd";
+import { theme } from "antd";
+import dayjs from "dayjs";
 import Link from "next/link";
-import Image from "next/image";
-import React, { ComponentProps, Dispatch, ReactElement, SetStateAction, useEffect, useState } from "react";
+import React from "react";
 import type { CollapseProps } from "antd";
+import { antdCustomTheme } from "@/providers/antd-theme-config-provider";
 import "./styles.css";
 
-interface BullltinItemProps {
-  text: string;
-  date: string;
-  time: string;
+export interface BullltinItemProps {
+  id: string;
+  title: string;
+  postTime: string;
   href: NavItemType["href"];
 }
 
+const { getDesignToken } = theme;
+const { colorPrimary } = getDesignToken(antdCustomTheme);
+
 const BulletinItem = (props: BullltinItemProps) => {
-  const { text, date, time, href } = props;
+  // 通过静态方法获取
+  const { title, postTime, href } = props;
+
   return (
-    <>
-      <Link className="text-gray-900" href={href}>
-        {text}
+    <div className="mb-3">
+      <Link className={`text-gray-900 hover:text-[${colorPrimary}]`} href={href}>
+        {title}
       </Link>
-      <div className="flex flex-col text-[#B9B9B9] text-sm mt-[54px]">
-        <span>{date}</span>
-        <span>{time}</span>
+      <div className="flex flex-col text-[#B9B9B9] text-sm mt-[32px]">
+        <span>{dayjs(postTime).format("YYYY-M-D HH:mm")}</span>
       </div>
-    </>
+    </div>
   );
 };
 
-interface BulletinCardProps {
+export interface BulletinCardProps {
   key: string;
   label: string;
   children: BullltinItemProps[];
@@ -37,13 +43,13 @@ const BulletinList = ({ children }: BulletinCardProps) => {
   return (
     <>
       {children.map((child) => (
-        <BulletinItem key={child.text} {...child}></BulletinItem>
+        <BulletinItem key={child.id} {...child}></BulletinItem>
       ))}
     </>
   );
 };
 
-interface BulletinBoardProps {
+export interface BulletinBoardProps {
   data: BulletinCardProps[];
   bulletinListRenderer?: (card: BulletinCardProps) => React.ReactElement;
 }
@@ -62,7 +68,9 @@ const Index = (props: BulletinBoardProps) => {
     };
   });
 
-  return <Collapse defaultActiveKey={["1"]} ghost items={items} expandIconPosition="end" />;
+  return (
+    <Collapse className="bulletin-board-ekko" defaultActiveKey={["1"]} ghost items={items} expandIconPosition="end" />
+  );
 };
 
 export default Index;
