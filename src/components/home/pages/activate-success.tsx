@@ -5,15 +5,15 @@ import { Button } from "../../ui/button";
 import { Icon } from "@iconify/react";
 import store from "@/store/modal";
 import { useLockFn } from "ahooks";
-import useUrl from "@/hooks/useUrl";
+import { useUrlParamState } from "@/hooks/useUrlParamState";
 
 const ActivateSuccess: React.FC = () => {
   const currentContext = store.currentContext.use();
-  const { queryParams, updateQueryParams } = useUrl();
+  const [, setTid] = useUrlParamState("tid");
 
   const handleSubmit = useLockFn(async () => {
     if (currentContext.from === "activate") {
-      updateQueryParams("tid", currentContext.tid);
+      setTid(currentContext.tid);
     }
     store.isModalShow.set(false);
   });

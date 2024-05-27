@@ -26,6 +26,7 @@ export interface ModalPage {
 export interface ModalPageContext extends ModalPage {
   pageName: ModalStatusName;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 

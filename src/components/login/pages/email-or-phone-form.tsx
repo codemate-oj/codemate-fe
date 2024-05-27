@@ -9,6 +9,7 @@ import EmailForm from "./email-form";
 import PhoneForm from "./phone-form";
 import { request } from "@/lib/request";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const sendCode = async (payload: string, type: "phone" | "mail") => {
   const _body =
     type === "phone"
@@ -18,8 +19,7 @@ const sendCode = async (payload: string, type: "phone" | "mail") => {
       : {
           mail: payload,
         };
-  // FIXME: 还没有添加该类型
-  // @ts-ignore
+  // @ts-expect-error 后端还没有添加该类型
   const { data } = await request.post("/register", _body);
   const _slices = data.url.split("/");
   return _slices[_slices.length - 1] ?? "";
@@ -32,8 +32,6 @@ const EmailOrPhoneForm = () => {
 
   const handleSubmit = async (value: string) => {
     setAgreed(true);
-    const token = await sendCode(value, isEmail ? "mail" : "phone");
-    console.log(token);
     switch (formContext?.purpose) {
       case "register":
         store.dialogJumpTo("user-info", {

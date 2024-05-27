@@ -2,15 +2,15 @@
 import React from "react";
 import FilerTabsTree from "@/components/common/filter-tabs-tree";
 import TOP_FILTER from "@/constants/contest-top-filter";
-import useUrl from "@/hooks/useUrl";
+import { useUrlParamState } from "@/hooks/useUrlParamState";
 const TreeSelector: React.FC = () => {
-  const { queryParams, updateQueryParams } = useUrl();
+  const [, setTags] = useUrlParamState("tags");
   return (
     <FilerTabsTree
       data={TOP_FILTER}
       onChange={(value) => {
         const key = value.join("-");
-        updateQueryParams("tags", key);
+        setTags(key);
       }}
     />
   );

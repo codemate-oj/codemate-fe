@@ -3,17 +3,21 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Image from "next/image";
 
-import PageFooter from "@/components/common/page-footer";
 import Navigation from "@/components/common/page-navigation";
-import UserLogin from "@/components/login/user-login";
 import { cn } from "@/lib/utils";
 
 import { mainRoutes } from "@/constants/routes";
 import AntdThemeConfigProvider from "@/providers/antd-theme-config-provider";
 
 import "./globals.css";
+import dynamic from "next/dynamic";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const UserLogin = dynamic(() => import("@/components/login/user-login"), {
+  ssr: false,
+  loading: () => null,
+});
 
 export const metadata: Metadata = {
   title: "CODEMATE",

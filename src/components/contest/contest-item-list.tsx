@@ -1,29 +1,30 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
-import useUrl from "@/hooks/useUrl";
+import React, { useCallback } from "react";
+import { useUrlParamState } from "@/hooks/useUrlParamState";
 import { request } from "@/lib/request";
 import { useRequest } from "ahooks";
 import Item from "./contest-item";
-import Loading from "@/app/(home)/loading";
-import { useRouter } from "next/navigation";
+import Skeleton from "@/components/ui/skeleton";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Pagination } from "antd";
 import LinkBtn from "../common/link-btn";
 const ContestItemList: React.FC = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [page, setPage] = useUrlParamState("page", "1");
   const toDetial = useCallback(
     (id: string) => {
       router.push(`/contest/${id}`);
     },
     [router]
   );
-  const { queryParams, updateQueryParams } = useUrl();
   const { data: itemListData, loading } = useRequest(
     async () => {
       const { data } = await request.get("/contest", {
         params: {
-          page: Number(queryParams["page"]),
-          tags: queryParams["tags"],
-          category: queryParams["category"] as "incoming" | "ready" | "ongoing" | "done" | undefined,
+          page: Number(page),
+          tags: searchParams.get("tags") || undefined,
+          category: searchParams.get("category") as "incoming" | "ready" | "ongoing" | "done" | undefined,
         },
         transformData: (data) => {
           return data;
@@ -38,16 +39,14 @@ const ContestItemList: React.FC = () => {
       };
     },
     {
-      refreshDeps: [queryParams["tags"], queryParams["category"], queryParams["page"]],
+      refreshDeps: [searchParams, page],
     }
   );
-  useEffect(() => {
-    updateQueryParams("page", "1");
-  }, []);
+
   return (
     <div className={"pt-3"}>
       {loading ? (
-        <Loading />
+        <Skeleton />
       ) : (
         <>
           {itemListData?.itemList?.map((item) => {
@@ -64,7 +63,7 @@ const ContestItemList: React.FC = () => {
           })}
           <div className={"text-center mb-4"}>
             <Pagination
-              defaultCurrent={Number(queryParams["page"])}
+              defaultCurrent={Number(page)}
               pageSize={20}
               total={itemListData?.itemList?.length || 0 * 20}
               showSizeChanger={false}
@@ -88,7 +87,7 @@ const ContestItemList: React.FC = () => {
                 return element;
               }}
               onChange={(page) => {
-                updateQueryParams("page", String(page));
+                setPage(String(page));
               }}
             />
           </div>

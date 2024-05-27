@@ -48,3 +48,16 @@ export function parseTemplate(template: string, values: string[]) {
     return values[index] !== undefined ? values[index] : match;
   });
 }
+
+export function isBrowser() {
+  return typeof window !== "undefined";
+}
+
+export function remoteUrl(url: string) {
+  if (url.indexOf("://") > -1) {
+    return url;
+  }
+  const CDN_PREFIX = process.env.CDN_PREFIX ?? "https://cdn.aioj.net/";
+  if (url.startsWith("/")) return CDN_PREFIX + url.slice(1);
+  return CDN_PREFIX + url;
+}
