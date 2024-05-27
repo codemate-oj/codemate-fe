@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import FixedSelect from "@/components/common/fixed-select";
-import useUrl from "@/hooks/useUrl";
+import { useUrlParamState } from "@/hooks/useUrlParamState";
 enum CATEGORY {
   "all" = "全部",
   "incoming" = "预告中",
@@ -12,7 +12,7 @@ enum CATEGORY {
 type CATEGORYTYPE = "all" | "incoming" | "ready" | "ongoing" | "done";
 
 const AsideCategorySelector: React.FC = () => {
-  const { queryParams, updateQueryParams } = useUrl();
+  const [category, setCategory] = useUrlParamState("category");
   return (
     <FixedSelect
       options={Object.keys(CATEGORY).map((item) => {
@@ -21,8 +21,8 @@ const AsideCategorySelector: React.FC = () => {
           value: item,
         };
       })}
-      onSelect={(i) => updateQueryParams("category", i)}
-      defaultSelectedValue={queryParams["category"]}
+      onSelect={setCategory}
+      defaultSelectedValue={category}
     />
   );
 };

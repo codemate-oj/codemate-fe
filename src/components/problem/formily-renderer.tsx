@@ -1,16 +1,25 @@
 "use client";
 import React from "react";
-import { createForm } from "@formily/core";
+import { createForm, onFormValuesChange } from "@formily/core";
 import { FormProvider, createSchemaField, ISchema } from "@formily/react";
 import { Form } from "antd";
 import { CustomInput, CustomMutiSelect, CustomSelect, CustomTextarea } from "@/components/problem/formily-items"; // 导入自定义组件
-import * as unified from "unified";
-import * as markdown from "remark-parse";
 import ObjectiveBottom from "@/components/problem/objective-bottom";
-import useClientOnly from "@/hooks/useClientOnly";
-import Loading from "../ui/loading";
+import { debounce } from "lodash";
 
-const form = createForm();
+const PID = window.location.pathname.split("/")[2];
+const CACHE_KEY = `answers-${PID}`;
+
+const form = createForm({
+  effects() {
+    onFormValuesChange(
+      debounce((form) => {
+        window.localStorage.setItem(CACHE_KEY, JSON.stringify(form.values));
+      }, 100)
+    );
+  },
+  initialValues: JSON.parse(window.localStorage.getItem(CACHE_KEY) || "{}"),
+});
 
 const SchemaField = createSchemaField({
   components: {
@@ -53,6 +62,7 @@ const FormilyRenderer: React.FC<FormilySchemaProps> = ({ schema }) => {
   const handleSubmit = async () => {
     try {
       const values = await form.submit();
+      console.info(values);
     } catch (err) {
       console.error(err);
     }

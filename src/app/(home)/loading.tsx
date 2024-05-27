@@ -1,12 +1,12 @@
-import { Skeleton, Spin } from "antd";
+import React from "react";
+import Skeleton from "@/components/ui/skeleton";
 
-export default function Loading() {
-  // You can add any UI inside Loading, including a Skeleton.
+const Loading = () => {
   return (
-    <div>
-      {new Array(5).fill(0).map((_, index) => {
-        return <Skeleton className={"pb-2"} key={index} active paragraph={{ rows: 4 }} />;
-      })}
+    <div className="p-5">
+      <Skeleton />
     </div>
   );
-}
+};
+
+export default Loading;

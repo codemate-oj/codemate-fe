@@ -7,7 +7,7 @@ const astProcessor = unified.unified().use(markdown.default);
 
 const regex = /{{\s*(\w+)\s*\(\s*(\d+)\s*\)\s*}}/g;
 
-const getNodeText = (node: Node): string => {
+export const getNodeText = (node: Node): string => {
   let nodeText = "";
   if ("value" in node) nodeText = node.value as string;
   if ("children" in node) nodeText = (node.children as Node[]).map(getNodeText).join();
@@ -29,7 +29,7 @@ const extractTitle = (nodeIndex: number, ast: Parent): string => {
 
 const extractOptions = (node: List): OptionType[] =>
   node.children
-    .map((item: any, index: number) => {
+    .map((item, index) => {
       const listItem = item as ListItem;
       if (listItem.children && listItem.children.length > 0) {
         const text = getNodeText(listItem);
@@ -48,11 +48,10 @@ export const extractQuestionsFromAst = (ast: Parent): FormilySchema => {
   ast.children.forEach((node: { type: string }, nodeIndex: number) => {
     if (node.type === "paragraph") {
       const text = getNodeText(node);
-      console.log(text, 1);
       const infos = text.matchAll(regex);
       for (const info of infos) {
         if (!info) return;
-        const [_, type, pIndex] = info;
+        const [, type, pIndex] = info;
         const titleText = extractTitle(nodeIndex, ast);
 
         switch (type) {

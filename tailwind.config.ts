@@ -1,5 +1,5 @@
-import plugin, { Config } from "tailwindcss";
-const { addIconSelectors } = require("@iconify/tailwind");
+import { Config } from "tailwindcss";
+
 const config = {
   darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
@@ -72,62 +72,88 @@ const config = {
       },
       typography: {
         DEFAULT: {
+          // 定义code样式
+          pre: {
+            background: "transparent",
+            border: "1px solid #e2e8f0", // gray.300
+            borderRadius: "0.25rem",
+          },
+          code: {
+            color: "#2d3748", // gray.800
+          },
+        },
+        // 定制题目详情页的prose样式
+        pdetail: {
           css: {
+            // 定义code样式
+            pre: {
+              background: "transparent",
+              border: "1px solid #e2e8f0", // gray.300
+              borderRadius: "0.25rem",
+            },
+            code: {
+              color: "#2d3748", // gray.800
+            },
+            // 配合flexify插件使用
             div: {
-              display: "flex",
+              margin: "0.5rem 0",
 
-              "flex-wrap": "wrap",
-              "align-items": "center",
-
-              "&:first-of-type": {
-                "margin-bottom": "1rem",
-                h2: {
-                  " font-weight": "normal",
+              // 内部标题的通用规则
+              h2: {
+                display: "inline-block",
+                fontWeight: "bold",
+                margin: "0",
+                "&::before": {
+                  content: '"【"',
                   margin: "0",
-                  display: "inline-block",
+                },
+                "&::after": {
+                  content: '"】"',
+                  margin: "0",
+                },
+              },
+
+              p: {
+                display: "inline-block",
+                margin: 0,
+              },
+
+              // 首个标题的特殊规则
+              "&:first-of-type": {
+                alignItems: "flex-start",
+                flexDirection: "column",
+                gap: "0.5rem",
+                marginBottom: "1rem",
+                h2: {
+                  display: "block",
                   color: "#FF7D37",
+                  marginBottom: "0.5rem",
                   "&::before": {
-                    margin: "0",
-                    content: '"【"',
                     color: "#FF7D37", // 根据需要更改颜色
                   },
                   "&::after": {
-                    content: '"】"',
                     color: "#FF7D37", // 根据需要更改颜色
                   },
                 },
               },
+              // 后续标题的规则
               "&:nth-of-type(n+2)": {
-                "margin-bottom": "0.5rem",
                 h2: {
-                  display: "inline-block",
-                  " font-weight": "normal",
-                  "font-size": "1rem",
-                  margin: "0",
-                  "&::before": {
-                    content: '"【"',
-                    "margin-left": "0.3rem",
-                  },
-                  "&::after": {
-                    content: '"】"',
-                  },
+                  fontSize: "1rem",
                 },
                 p: {
                   color: "#797979",
-                  "white-space": "normal",
+                  whiteSpace: "normal",
+                  margin: 0,
                 },
               },
-            },
-            p: {
-              display: "inline-block",
-              margin: "0",
             },
           },
         },
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography"), addIconSelectors(["mdi"])],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography"), "tailwindcss/nesting"],
 } satisfies Config;
 
 export default config;

@@ -6,9 +6,9 @@ export const AVAILABLE_LANG_MAP: Record<string, string> = {
   "py.py3": "Python",
 };
 
-export const CodeLangContext = React.createContext({
+export const CodeLangContext = React.createContext<{ lang: string; setLang: (lang: string) => void }>({
   lang: "cc.cc14o2",
-  setLang: (lang: string) => {},
+  setLang: () => {},
 });
 
 const CodeLangProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
