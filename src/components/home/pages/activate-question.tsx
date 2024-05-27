@@ -57,13 +57,6 @@ const ActivateQuestion: React.FC = () => {
     store.modalJumpTo("customer-service");
   };
 
-  function transformContent(input: string) {
-    return input
-      .split(",")
-      .map((item) => `【${item}】`)
-      .join("--");
-  }
-
   return (
     <div>
       <div className="w-full bg-[#FF7D37] h-12 rounded-t-lg flex text-2xl pt-3 pl-3 text-white">
@@ -78,7 +71,7 @@ const ActivateQuestion: React.FC = () => {
               <p>该题目属于专属题库内容：</p>
               <article className="indent-3 space-y-3">
                 {currentContext.group.map((item: string) => (
-                  <p key={item}>{transformContent(item)}</p>
+                  <p key={item}>{item}</p>
                 ))}
               </article>
               <p>专属题库内容需要使用 以上任一【激活码】 激活后才能开始 练习。</p>

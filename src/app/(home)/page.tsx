@@ -217,7 +217,7 @@ const HomePage = () => {
   );
 
   const { run: runPdocData } = useRequest(
-    async (pid, assign) => {
+    async (pid, assign, title) => {
       const { data } = await request.post(
         // @ts-ignore
         `/p/${pid}` as "/p/{pid}",
@@ -244,6 +244,7 @@ const HomePage = () => {
           storeModal.modalJumpTo("activate-question-point", {
             pid,
             group: assign,
+            title,
           });
           storeModal.isModalShow.set(true);
         }
@@ -284,7 +285,7 @@ const HomePage = () => {
           rowKey="pid"
           onRow={(record) => ({
             onClick: () => {
-              runPdocData(record.pid, record.assign);
+              runPdocData(record.pid, record.assign, record.title);
             },
           })}
           rowClassName="cursor-pointer"

@@ -18,9 +18,9 @@ const ActivateQuestionPoint: React.FC = () => {
     //   }
     // );
     // if (data.success) {
-    // store.modalJumpTo("activate-success-point", {
-    //   point: "point",
-    // });
+    store.modalJumpTo("activate-success-point", {
+      point: "point",
+    });
     // } else {
     // store.modalJumpTo("activate-error-point", {
     //   point: "point",
@@ -42,7 +42,9 @@ const ActivateQuestionPoint: React.FC = () => {
         <div className="space-y-3 my-3">
           <p>亲爱的用户：</p>
           <article className="indent-3 space-y-3">
-            <p>使用【XXX题目名称】原创内容增值服务本次将消耗您【{"point"}】魅值。</p>
+            <p>
+              使用【{currentContext.title}】原创内容增值服务本次将消耗您【{"point"}】魅值。
+            </p>
             <p>您是否同意？</p>
           </article>
         </div>
