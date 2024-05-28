@@ -1,17 +1,17 @@
 "use client";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CodeLangContext, AVAILABLE_LANG_MAP } from "@/providers/code-lang-provider";
+import { AVAILABLE_LANG_MAP, useCodeLangContext, langType } from "@/providers/code-lang-provider";
 import { Textarea } from "../ui/textarea";
 
 interface CodeInputProps {
   pid?: string;
-  langs: string[];
+  langs: langType[];
 }
 
 const CodeInput: React.FC<CodeInputProps> = ({ langs, pid }) => {
   const [code, setCode] = useState<string>("");
-  const { lang: selectedLang, setLang: setSelectedLang } = useContext(CodeLangContext);
+  const { lang: selectedLang, setLang: setSelectedLang } = useCodeLangContext();
   const cacheKey = useRef(`code-${pid}`);
 
   // 初始化
@@ -29,7 +29,7 @@ const CodeInput: React.FC<CodeInputProps> = ({ langs, pid }) => {
     }
   };
 
-  const handleLangChange = (newLang: string) => {
+  const handleLangChange = (newLang: langType) => {
     setSelectedLang(newLang);
   };
 
@@ -46,7 +46,7 @@ const CodeInput: React.FC<CodeInputProps> = ({ langs, pid }) => {
               className={`mr-2 mb-2 justify-start  ${selectedLang === lang ? "border-primary border-2  text-primary hover:text-primary  mr-2 hover:bg-accent/30" : ""}`}
               onClick={() => handleLangChange(lang)}
             >
-              {AVAILABLE_LANG_MAP[lang]}
+              {AVAILABLE_LANG_MAP[lang as langType]}
             </Button>
           ))}
         </div>

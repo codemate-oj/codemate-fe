@@ -1,5 +1,7 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { request } from "@/lib/request";
 
 interface PTopProps {
   nAccept?: number;
@@ -10,8 +12,10 @@ interface PTopProps {
   pid?: string;
   uname?: string;
 }
+
 const PTop: React.FC<PTopProps> = (props) => {
   const { title, pid, tag, difficulty, nSubmit, nAccept, uname } = props;
+  const [isCollect, setIsCollect] = useState(true);
 
   const list = [
     { name: "知识点", value: tag },
@@ -20,6 +24,16 @@ const PTop: React.FC<PTopProps> = (props) => {
     { name: "AC", value: nAccept },
     { name: "上传者", value: uname },
   ];
+  const collect = async () => {
+    setIsCollect(false);
+
+    await request.post("/p", { operation: "star" as "unstar", pid: 1 });
+  };
+  const disCollect = async () => {
+    setIsCollect(true);
+
+    await request.post("/p", { operation: "unstar" as const, pid: 1 });
+  };
 
   return (
     <div>
@@ -27,6 +41,7 @@ const PTop: React.FC<PTopProps> = (props) => {
         <div className="text-[2rem] font-bold  ">{pid} ：</div>
         <div className="text-[2rem] font-bold mr-7">{title}</div>
         <Button
+          onClick={isCollect ? () => collect() : () => disCollect()}
           variant={"outline"}
           className="border-primary border   text-primary hover:text-primary  mr-2 hover:bg-accent/30"
         >

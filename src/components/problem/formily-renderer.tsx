@@ -6,6 +6,7 @@ import { Form } from "antd";
 import { CustomInput, CustomMutiSelect, CustomSelect, CustomTextarea } from "@/components/problem/formily-items"; // 导入自定义组件
 import ObjectiveBottom from "@/components/problem/objective-bottom";
 import { debounce } from "lodash";
+import { objectToYaml } from "@/lib/objectToYaml";
 
 const PID = window.location.pathname.split("/")[2];
 const CACHE_KEY = `answers-${PID}`;
@@ -62,7 +63,9 @@ const FormilyRenderer: React.FC<FormilySchemaProps> = ({ schema }) => {
   const handleSubmit = async () => {
     try {
       const values = await form.submit();
-      console.info(values);
+
+      const data = objectToYaml(values as { [key: string]: string | number });
+      console.info(values, data);
     } catch (err) {
       console.error(err);
     }
