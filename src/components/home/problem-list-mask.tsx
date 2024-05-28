@@ -1,7 +1,6 @@
 import { Icon } from "@iconify/react";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import CommonModal from "@/components/common/common-modal";
 import store from "@/store/modal";
 
 interface ProblemListMaskProps {
