@@ -191,7 +191,7 @@ const HomePage = () => {
   return (
     <Suspense>
       <div className="w-full flex">
-        <div className="md:w-[768px] lg:w-[1024px] xl:w-[1280px] 4xl:max-w-7xl">
+        <div className="md:w-[90vw] lg:w-[60vw] 4xl:max-w-7xl">
           <FixedSelect
             options={homeFilterData?.sideTabs ?? []}
             onSelect={(i) => updateQueryParams("lang", i)}
