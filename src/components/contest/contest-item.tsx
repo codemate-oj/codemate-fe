@@ -1,24 +1,34 @@
 import { Button } from "antd";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
-import React from "react";
+import React, { useCallback } from "react";
 import Link from "next/link";
 import ContestState from "./contest-state";
 import Image from "next/image";
-import { paths } from "@/types/schema";
+import { useRouter } from "next/navigation";
 import { remoteUrl } from "@/lib/utils";
-function calculateTimeDifference(time1: string, time2: string): number {
+export function calculateTimeDifference(time1: string, time2: string): number {
   const date1 = new Date(time1);
   const date2 = new Date(time2);
-  const differenceInMilliseconds = date1.getTime() - date2.getTime();
+  const differenceInMilliseconds = (date1 as any) - (date2 as any);
   const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
   return differenceInHours;
 }
-
-type ContestItemProps = paths["/contest"]["get"]["responses"]["200"]["content"]["application/json"]["tdocs"][number];
-
+interface contestItemProps {
+  title: string;
+  rule: string;
+  beginAt: string;
+  endAt: string;
+  attend: number;
+  tag?: string[];
+  _id: string;
+  checkinBeginAt?: string;
+  checkinEndAt?: string;
+  imageURL?: string;
+  [key: string]: any;
+}
 interface ItemProps {
   toDetail: (id: string) => void;
-  item: ContestItemProps;
+  item: contestItemProps;
   tsdict: {
     [key: string]: Record<string, string>;
   };
@@ -35,8 +45,10 @@ const Item: React.FC<ItemProps> = (props) => {
           endAt={endAt}
           checkinBeginAt={checkinBeginAt}
           checkinEndAt={checkinEndAt}
+          styleClassNames="absolute top-2 right-2 py-2 px-4 text-sm font-normal rounded-lg"
         />
-        <Image src={remoteUrl(imageURL)} alt="loading" width={320} height={160} />
+
+        <Image src={remoteUrl(imageURL as string)} alt="loading" width={320} height={160} />
       </div>
       <div className="flex-1 relative">
         <div className="title">
