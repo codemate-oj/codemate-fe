@@ -1,15 +1,14 @@
 import { Button } from "antd";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
-import React, { useCallback } from "react";
+import React from "react";
 import Link from "next/link";
 import ContestState from "./contest-state";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { remoteUrl } from "@/lib/utils";
 export function calculateTimeDifference(time1: string, time2: string): number {
   const date1 = new Date(time1);
   const date2 = new Date(time2);
-  const differenceInMilliseconds = (date1 as any) - (date2 as any);
+  const differenceInMilliseconds = date1.getTime() - date2.getTime();
   const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
   return differenceInHours;
 }
@@ -24,7 +23,6 @@ interface contestItemProps {
   checkinBeginAt?: string;
   checkinEndAt?: string;
   imageURL?: string;
-  [key: string]: any;
 }
 interface ItemProps {
   toDetail: (id: string) => void;

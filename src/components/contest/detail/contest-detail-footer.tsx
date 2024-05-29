@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import { CheckOutlined, ExportOutlined } from "@ant-design/icons";
 import CountdownTimer from "./count-down";
 import { useState } from "react";
+import Link from "next/link";
 
 const handleClickApply = async (tid: string, setIsOpen: () => void) => {
-  const { data } = await request.post(`/contest/${tid as "{tid}"}`, { operation: "attend" });
+  // const { data } =
+  await request.post(`/contest/${tid as "{tid}"}`, { operation: "attend" });
   // if(data){
 
   // }
@@ -52,6 +54,13 @@ const DetailStateApply: React.FC<{
         </span>
       );
     } else {
+      if (isApply) {
+        return (
+          <span className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-[#FF7D37] bg-[#FF7D37] cursor-not-allowed">
+            查看结果
+          </span>
+        );
+      }
       return (
         <span className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-[#FF7D37] bg-[#FF7D37] cursor-not-allowed">
           报名已结束
@@ -89,6 +98,12 @@ const ContestDetailFooter: React.FC<{
             比赛报名成功
           </div>
         }
+        centered={true}
+        footer={() => (
+          <Link href={"/contest"} className="text-white bg-[#FF7D37] px-4 py-2 text-base font-normal rounded-md">
+            返回首页
+          </Link>
+        )}
         open={isOpen}
         onOk={() => setIsOpen(false)}
         onCancel={() => setIsOpen(false)}
@@ -98,7 +113,7 @@ const ContestDetailFooter: React.FC<{
         <p>&nbsp;&nbsp;&nbsp;&nbsp;请务必记住比赛时间，及时参赛哦</p>
       </Modal>
       {state == "可报名" ? (
-        <CountdownTimer time={Math.floor(((new Date(checkinEndAt as string) as any) - (new Date() as any)) / 1000)} />
+        <CountdownTimer time={Math.floor((new Date(checkinEndAt as string).getTime() - new Date().getTime()) / 1000)} />
       ) : (
         <div />
       )}
