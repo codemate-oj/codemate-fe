@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import { CheckOutlined, ExportOutlined } from "@ant-design/icons";
 import CountdownTimer from "./count-down";
 import { useState } from "react";
+import store from "@/store/login";
 import Link from "next/link";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import LoginRegisterModal from "@/components/login/login-register-modal";
 
 const handleClickApply = async (tid: string, setIsOpen: () => void) => {
   // const { data } =
@@ -19,13 +22,14 @@ const handleClickApply = async (tid: string, setIsOpen: () => void) => {
   return 0;
 };
 const DetailStateApply: React.FC<{
+  isLogin: boolean;
   isApply: boolean;
   state: string;
   tid: string;
   click: () => void;
 }> = (props) => {
   const router = useRouter();
-  const { isApply, state, tid, click } = props;
+  const { isLogin, isApply, state, tid, click } = props;
   if (state == "预告中") {
     return <></>;
   } else if (state == "可报名") {
@@ -34,11 +38,15 @@ const DetailStateApply: React.FC<{
       return (
         <span
           className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-[#FF7D37] bg-[#FF7D37] cursor-pointer"
-          onClick={() =>
+          onClick={() => {
+            if (!isLogin) {
+              store.dialogJumpTo("login");
+              return;
+            }
             handleClickApply(tid, () => {
               click();
-            })
-          }
+            });
+          }}
         >
           马上报名
         </span>
@@ -88,9 +96,22 @@ const ContestDetailFooter: React.FC<{
 }> = (props) => {
   const { isApply, state, tid, checkinEndAt, title } = props;
   const [isOpen, setIsOpen] = useState(false);
-
+  const handleOpenChange = (open: boolean) => {
+    store.isDialogShow.set(open);
+    if (!open) {
+      store.dialogReset();
+    }
+  };
+  const currentDialogPage = store.useCurrentContext();
+  const userContext = store.user.use();
+  const isDialogShow = store.isDialogShow.use();
   return (
     <div className={"flex justify-between mt-8"}>
+      <Dialog modal={true} open={isDialogShow} onOpenChange={handleOpenChange}>
+        <DialogContent className="max-w-[400px]">
+          <LoginRegisterModal>{currentDialogPage?.component}</LoginRegisterModal>
+        </DialogContent>
+      </Dialog>
       <Modal
         title={
           <div className="text-[#ffa54c]">
@@ -108,7 +129,9 @@ const ContestDetailFooter: React.FC<{
         onOk={() => setIsOpen(false)}
         onCancel={() => setIsOpen(false)}
       >
-        <p>亲爱的{}</p>
+        <p>
+          亲爱的<span className="font-bold">{userContext?.uname}</span>
+        </p>
         <p>&nbsp;&nbsp;&nbsp;&nbsp;您已成功报名{title}，请在后台“我的比赛”中查看。</p>
         <p>&nbsp;&nbsp;&nbsp;&nbsp;请务必记住比赛时间，及时参赛哦</p>
       </Modal>
@@ -119,6 +142,7 @@ const ContestDetailFooter: React.FC<{
       )}
       <div>
         <DetailStateApply
+          isLogin={Boolean(userContext)}
           isApply={isApply}
           state={state}
           tid={tid}
@@ -126,7 +150,10 @@ const ContestDetailFooter: React.FC<{
             setIsOpen(true);
           }}
         />
-        <span className="ml-2 py-2 px-4 text-sm font-normal rounded-lg text-white border border-[#ffa54c] bg-[#fb9c3c] cursor-pointer">
+        <span
+          onClick={() => store.dialogJumpTo("login")}
+          className="ml-2 py-2 px-4 text-sm font-normal rounded-lg text-white border border-[#ffa54c] bg-[#fb9c3c] cursor-pointer"
+        >
           <ExportOutlined />
           分享
         </span>

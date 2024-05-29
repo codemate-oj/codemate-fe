@@ -46,12 +46,14 @@ const ContestDetail: React.FC<PropsType> = (props) => {
     content: "",
     importantContent: "",
     tag: [""],
+    owner: "",
   };
   const defaultTsdocData = {
     attend: 1 | 0,
   };
-  const { title, attend, rule, beginAt, endAt, content, importantContent, tag } = (data || { tdoc: deafultTdocData })
-    .tdoc;
+  const { title, attend, rule, beginAt, endAt, content, importantContent, tag, owner } = (
+    data || { tdoc: deafultTdocData }
+  ).tdoc;
   const { attend: isApply } = (data || { tsdoc: defaultTsdocData }).tsdoc;
   const state = getDetailState({
     checkinBeginAt: data?.tdoc?.checkinBeginAt,
@@ -59,6 +61,7 @@ const ContestDetail: React.FC<PropsType> = (props) => {
     beginAt: beginAt,
     endAt: endAt,
   });
+
   return (
     <div>
       {loading ? (
@@ -85,11 +88,7 @@ const ContestDetail: React.FC<PropsType> = (props) => {
             checkinEndAt={data?.tdoc?.checkinEndAt}
             tid={tid}
           />
-          <ContestDetailRight
-            tag={tag}
-            nickname={"leei"} //data?.udict["2"].nickname}
-            state={state}
-          />
+          <ContestDetailRight tag={tag} nickname={String(data?.udict[owner].nickname) || ""} state={state} />
         </div>
       )}
     </div>
