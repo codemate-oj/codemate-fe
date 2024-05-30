@@ -9,10 +9,7 @@ import CustomerService from "@/components/home/pages/customer-service";
 import ActivateQuestion from "@/components/home/pages/activate-question";
 import ActivateQuestionPoint from "@/components/home/pages/activate-question-point";
 import ActivateSuccessPoint from "@/components/home/pages/activate-success-point";
-import { request } from "@/lib/request";
-import storeLogin from "@/store/login";
 
-const userContext = storeLogin.user.use();
 export type ModalStatusName =
   | "activate"
   | "activate-success"
@@ -82,38 +79,6 @@ const ModalStore = store(
     store.set((draft) => {
       draft.currentContext = ctx;
     });
-  },
-  checkProblemPerm: async (pid, assign, title) => {
-    const { data } = await request.post(
-      `/p/${pid}` as "/p/{pid}",
-      { operation: "check" },
-      {
-        transformData: (data) => {
-          return data;
-        },
-      }
-    );
-    if (!data.hasPerm) {
-      if (!userContext) {
-        storeLogin.dialogJumpTo("login");
-        storeLogin.isDialogShow.set(true);
-        return;
-      }
-      if (data.activation?.includes("group")) {
-        ModalStore.modalJumpTo("activate-question-group", {
-          pid,
-          group: assign,
-        });
-        ModalStore.isModalShow.set(true);
-      } else if (data.activation?.includes("point")) {
-        ModalStore.modalJumpTo("activate-question-point", {
-          pid,
-          group: assign,
-          title,
-        });
-        ModalStore.isModalShow.set(true);
-      }
-    }
   },
 }));
 

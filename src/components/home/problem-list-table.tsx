@@ -9,10 +9,9 @@ import { useWatcher } from "alova";
 import { paths } from "@/types/schema";
 import { useSearchParams } from "next/navigation";
 import ProblemListMask from "@/components/home/problem-list-mask";
-import storeModal from "@/store/modal";
 import CommonModal from "@/components/common/common-modal";
-import storeLogin from "@/store/login";
 import { useRequest } from "ahooks";
+import { useProblemPermission } from "@/hooks/useProblemPermission";
 
 type DataType = paths["/p"]["get"]["responses"]["200"]["content"]["application/json"]["pdocs"][number];
 
@@ -95,7 +94,6 @@ const columns: TableColumnsType<DataType> = [
 const ProblemListTable = () => {
   const [page, setPage] = useUrlParamState("page", "1");
   const queryParams = useSearchParams();
-  const userContext = storeLogin.user.use();
 
   const { data, loading = true } = useWatcher(
     request.get("/p", {
@@ -130,46 +128,7 @@ const ProblemListTable = () => {
     }
   );
 
-  const { run: runPdocData } = useRequest(
-    async (pid, assign, title) => {
-      const { data } = await request.post(
-        `/p/${pid}` as "/p/{pid}",
-        { operation: "check" },
-        {
-          transformData: (data) => {
-            return data;
-          },
-        }
-      );
-      if (!data.hasPerm) {
-        if (!userContext) {
-          storeLogin.dialogJumpTo("login");
-          storeLogin.isDialogShow.set(true);
-          return;
-        }
-        if (data.activation?.includes("group")) {
-          storeModal.modalJumpTo("activate-question-group", {
-            pid,
-            group: assign,
-          });
-          storeModal.isModalShow.set(true);
-        } else if (data.activation?.includes("point")) {
-          storeModal.modalJumpTo("activate-question-point", {
-            pid,
-            group: assign,
-            title,
-          });
-          storeModal.isModalShow.set(true);
-        }
-      } else {
-        window.open(`/p/${pid}`);
-      }
-    },
-    {
-      cacheKey: "/home/filter-data/hasPerm",
-      manual: true,
-    }
-  );
+  const { runCheckProblemPermission } = useProblemPermission();
 
   return (
     <ProblemListMask
@@ -189,7 +148,7 @@ const ProblemListTable = () => {
             onClick: () => {
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-expect-error
-              runPdocData(record.pid, record.assign, record.title);
+              runCheckProblemPermission({ pid: record.pid, assign: record.assign, title: record.title });
             },
           };
         }}
