@@ -17,6 +17,7 @@ export interface DialogPage {
 
 export interface DialogPageContext extends DialogPage {
   pageName: DialogStatusName;
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
