@@ -1,4 +1,4 @@
-import plugin, { Config } from "tailwindcss";
+import { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
