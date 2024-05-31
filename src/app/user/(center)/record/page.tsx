@@ -1,7 +1,6 @@
 "use client";
 
 import FaultList from "@/components/user/record/fault-list";
-import StarredList from "@/components/user/record/starred-list";
 import SubmitRecords from "@/components/user/record/submit-records";
 import { useUrlParamState } from "@/hooks/useUrlParamState";
 import { Tabs, type TabsProps } from "antd";
@@ -26,7 +25,7 @@ const tabItems: TabsProps["items"] = [
   {
     key: "favorites",
     label: "收藏",
-    children: <StarredList />,
+    children: null,
   },
 ];
 

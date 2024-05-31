@@ -7,6 +7,7 @@ import EmailOrPhoneForm from "@/components/login/pages/email-or-phone-form";
 import ChooseVerifyForm from "@/components/login/pages/choose-verify-form";
 import UserInfoForm from "@/components/login/pages/user-info-form";
 import { toast } from "sonner";
+import Cookies from "js-cookie";
 
 export type DialogStatusName = "login" | "choose-verify" | "input-email-or-phone" | "user-info";
 
@@ -66,10 +67,12 @@ const loginStore = store(
   }
 ).extend((store) => ({
   /**
-   * 无感刷新登录状态
+   * 无感刷新登录状态；
+   * 从store/cookie中获取上一次的登录态并做校验；
+   * 从响应的Header/Body中获取sid
    */
   renew: async () => {
-    const sid = store.sid.get();
+    const sid = store.sid.get() ?? Cookies.get("sid") ?? null;
     if (!sid) return;
     //@ts-expect-error 后端还没有添加该类型
     const { data } = await request.get(`/login?sid=${sid}`, {
@@ -89,7 +92,7 @@ const loginStore = store(
       store.sid.set(null);
     } else {
       store.user.set(data.UserContext);
-      store.sid.set(data.sid);
+      store.sid.set(data.sid ?? sid);
     }
   },
   login: async (uname: string, password: string) => {
