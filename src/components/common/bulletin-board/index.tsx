@@ -1,10 +1,8 @@
 import { Collapse } from "antd";
-import { theme } from "antd";
 import dayjs from "dayjs";
 import Link from "next/link";
 import React from "react";
 import type { CollapseProps } from "antd";
-import { antdCustomTheme } from "@/providers/antd-theme-config-provider";
 import "./styles.css";
 
 export interface BullltinItemProps {
@@ -14,16 +12,13 @@ export interface BullltinItemProps {
   href: NavItemType["href"];
 }
 
-const { getDesignToken } = theme;
-const { colorPrimary } = getDesignToken(antdCustomTheme);
-
 const BulletinItem = (props: BullltinItemProps) => {
   // 通过静态方法获取
   const { title, postTime, href } = props;
 
   return (
     <div className="mb-3">
-      <Link className={`text-gray-900 hover:text-[${colorPrimary}]`} href={href}>
+      <Link className={`text-gray-900 hover:text-[#FF7D37]`} href={href}>
         {title}
       </Link>
       <div className="flex flex-col text-[#B9B9B9] text-sm mt-[32px]">

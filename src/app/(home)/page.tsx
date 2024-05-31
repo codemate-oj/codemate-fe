@@ -9,7 +9,10 @@ import { Switch, Table, TableColumnsType, Tag } from "antd";
 import Image from "next/image";
 import { Suspense } from "react";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
-import BulltinBoard, { type BulletinCardProps, type BullltinItemProps } from "@/components/common/bulletin-board/index";
+import BulletinBoard, {
+  type BulletinCardProps,
+  type BullltinItemProps,
+} from "@/components/common/bulletin-board/index";
 interface DataType {
   key: string;
   pid: number;
@@ -251,7 +254,7 @@ const HomePage = () => {
           />
         </div>
         <div className="w-[0px] lg:w-[400px] overflow-hidden  ml-[14px]">
-          <BulltinBoard data={bulletinCardData as BulletinCardProps[]}></BulltinBoard>
+          <BulletinBoard data={bulletinCardData as BulletinCardProps[]}></BulletinBoard>
         </div>
       </div>
     </Suspense>
