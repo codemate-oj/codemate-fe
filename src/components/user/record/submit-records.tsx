@@ -2,7 +2,7 @@
 import { TagRenderer } from "@/components/common/filter-tabs-tree";
 import Tag from "@/components/ui/tag";
 import { STATUS_ACCEPTED } from "@/constants/judge-status";
-import { useUrlParam } from "@/hooks/useUrl";
+import { useUrlParamState } from "@/hooks/useUrlParamState";
 import { request } from "@/lib/request";
 import { cn, getTimeDiffFromNow } from "@/lib/utils";
 import loginStore from "@/store/login";
@@ -66,6 +66,7 @@ export const getRecords = (lang?: string, page = 1, full = false, uid = loginSto
     params: {
       uidOrName: String(uid),
       page,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       lang: lang as any,
       full,
     },
@@ -91,13 +92,12 @@ export const getRecords = (lang?: string, page = 1, full = false, uid = loginSto
 };
 
 const SubmitRecords = () => {
-  const [activeKey, setActiveKey] = useUrlParam("category", {
-    defaultValue: "objective",
-  });
+  const [activeKey, setActiveKey] = useUrlParamState("category", "objective");
 
   const { data, loadingMore, loading, loadMore, noMore } = useInfiniteScroll(
     async (_data) => {
       const current = _data?.currentPage ?? 1;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const rdocs = (await getRecords(activeKey === "objective" ? ("_" as any) : undefined, current, true)).filter(
         (r) => {
           if (activeKey === "objective") return true;
