@@ -82,7 +82,8 @@ export function isBrowser() {
   return typeof window !== "undefined";
 }
 
-export function remoteUrl(url: string) {
+export function remoteUrl(url?: string) {
+  if (!url) return "";
   if (url.indexOf("://") > -1) {
     return url;
   }
