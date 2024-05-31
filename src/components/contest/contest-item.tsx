@@ -4,15 +4,8 @@ import React from "react";
 import Link from "next/link";
 import ContestState from "./contest-state";
 import Image from "next/image";
-import { remoteUrl } from "@/lib/utils";
-export function calculateTimeDifference(time1: string, time2: string): number {
-  const date1 = new Date(time1);
-  const date2 = new Date(time2);
-  const differenceInMilliseconds = date1.getTime() - date2.getTime();
-  const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
-  return differenceInHours;
-}
-interface contestItemProps {
+import { remoteUrl, calculateTimeDifference, formatTime } from "@/lib/utils";
+interface ContestItemProps {
   title: string;
   rule: string;
   beginAt: string;
@@ -26,7 +19,7 @@ interface contestItemProps {
 }
 interface ItemProps {
   toDetail: (id: string) => void;
-  item: contestItemProps;
+  item: ContestItemProps;
   tsdict: {
     [key: string]: Record<string, string>;
   };
@@ -77,8 +70,8 @@ const Item: React.FC<ItemProps> = (props) => {
         </div>
         <footer className="relative mt-6">
           <p className="font-normal text-sm text-[#3D3D3D]">
-            报名时间：{!checkinBeginAt ? "---" : checkinBeginAt.slice(0, 16).replace("T", " ")} --{" "}
-            {!checkinEndAt ? "---" : checkinEndAt.slice(0, 16).replace("T", " ")}
+            报名时间：{!checkinBeginAt ? "---" : formatTime(checkinBeginAt)} --{" "}
+            {!checkinEndAt ? "---" : formatTime(checkinEndAt)}
           </p>
           <p className="font-normal text-sm text-[#3D3D3D]">
             比赛时间：{beginAt.slice(0, 16).replace("T", " ")} -- {endAt.slice(0, 16).replace("T", " ")}

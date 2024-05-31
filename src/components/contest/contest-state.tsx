@@ -12,6 +12,7 @@ const ContestState: React.FC<{
   const endDate = new Date(endAt);
   const checkinBeginDate = new Date(checkinBeginAt as string);
   const checkinEndDate = new Date(checkinEndAt as string);
+
   if (nowDate < checkinBeginDate)
     return <span className={"text-[#FF7D37] border border-[#FF7D37]" + " " + styleClassNames}>预告中</span>;
   else if (nowDate < beginDate)

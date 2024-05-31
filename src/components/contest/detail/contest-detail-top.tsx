@@ -26,21 +26,27 @@ const ContestDetailTop: React.FC<PropsType> = (props) => {
       </div>
 
       <div className="footor mt-6">
-        <div className="text-base text-[#797979]  relative">
-          <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 mr-0.5 text-center">
-            语言：{tag ? (tag.length !== 1 ? "多种语言" : PROGRAMMING_LANGS[tag[0]] || "多种语言") : "多种语言"}
-          </span>
-          <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 mx-0.5 text-center">赛制：{rule}</span>
-          <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 mx-0.5 text-center">阶段：初赛</span>
-          <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 mx-0.5 text-center">时长：{time * 60}分钟</span>
-          <ContestState
-            isApply={isApply}
-            beginAt={beginAt}
-            endAt={endAt}
-            checkinBeginAt={checkinBeginAt}
-            checkinEndAt={checkinEndAt}
-            styleClassNames={"py-2 px-9 text-[#FF7D37] bg-[rgb(255, 125, 55)] absolute right-2 text-base rounded-lg"}
-          />
+        <div className="text-base text-[#797979]  flex justify-between">
+          <div>
+            <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 text-center">
+              语言：{tag ? (tag.length !== 1 ? "多种语言" : PROGRAMMING_LANGS[tag[0]] || "多种语言") : "多种语言"}
+            </span>
+            <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 text-center">赛制：{rule}</span>
+            <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 text-center">阶段：初赛</span>
+            <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 text-center">时长：{time * 60}分钟</span>
+          </div>
+          <div>
+            <ContestState
+              isApply={isApply}
+              beginAt={beginAt}
+              endAt={endAt}
+              checkinBeginAt={checkinBeginAt}
+              checkinEndAt={checkinEndAt}
+              styleClassNames={
+                "py-2 px-9 text-[#FF7D37] bg-[rgb(255, 125, 55)]  text-base rounded-lg min-w-30 border-0 text-center"
+              }
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -61,3 +61,23 @@ export function remoteUrl(url: string) {
   if (url.startsWith("/")) return CDN_PREFIX + url.slice(1);
   return CDN_PREFIX + url;
 }
+
+// 计算时间差，time1 - time2
+export function calculateTimeDifference(time1: string, time2: string): number {
+  const date1 = new Date(time1);
+  const date2 = new Date(time2);
+  const differenceInMilliseconds = date1.getTime() - date2.getTime();
+  const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
+  return differenceInHours;
+}
+
+//时间格式化为 "YYYY-MM-DD HH:mm"
+export function formatTime(time: string) {
+  const date = new Date(time);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}

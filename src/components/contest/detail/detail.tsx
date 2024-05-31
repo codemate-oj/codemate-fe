@@ -4,7 +4,7 @@ import { request } from "@/lib/request";
 import { useRequest } from "ahooks";
 import ContestDetailTop from "./contest-detail-top";
 import ContestDetailContent from "./contest-detail-content";
-import { calculateTimeDifference } from "../contest-item";
+import { calculateTimeDifference } from "@/lib/utils";
 import ContestDetailFooter from "./contest-detail-footer";
 import ContestDetailRight from "./contest-detail-right";
 const getDetailState = (props: { beginAt: string; endAt: string; checkinBeginAt?: string; checkinEndAt?: string }) => {
@@ -51,9 +51,7 @@ const ContestDetail: React.FC<PropsType> = (props) => {
   const defaultTsdocData = {
     attend: 1 | 0,
   };
-  const { title, attend, rule, beginAt, endAt, content, importantContent, tag, owner } = (
-    data || { tdoc: deafultTdocData }
-  ).tdoc;
+  const { title, attend, rule, beginAt, endAt, content, tag, owner } = (data || { tdoc: deafultTdocData }).tdoc;
   const { attend: isApply } = (data || { tsdoc: defaultTsdocData }).tsdoc;
   const state = getDetailState({
     checkinBeginAt: data?.tdoc?.checkinBeginAt,
@@ -80,7 +78,7 @@ const ContestDetail: React.FC<PropsType> = (props) => {
             endAt={endAt}
             tag={""}
           />
-          <ContestDetailContent content={content} importanceContent={importantContent} />
+          <ContestDetailContent content={content} tid={tid} />
           <ContestDetailFooter
             title={title}
             isApply={isApply == 1 ? true : false}
