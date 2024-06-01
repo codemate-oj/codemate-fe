@@ -40,7 +40,7 @@ const ContestDetailRight: React.FC<ContestDetailRightPropsType> = (props) => {
     },
   ];
   return (
-    <div className={"absolute top-0 -right-72"}>
+    <div className={""}>
       {items.map((item) => {
         if ((item.key == "5" || item.key == "6") && state !== "已结束") return null;
         return (

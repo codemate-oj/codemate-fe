@@ -65,27 +65,29 @@ const ContestDetail: React.FC<PropsType> = (props) => {
       {loading ? (
         <Loading />
       ) : (
-        <div className="relative pb-16">
-          <ContestDetailTop
-            title={title}
-            attend={attend}
-            rule={rule}
-            time={calculateTimeDifference(endAt, beginAt)}
-            isApply={isApply == 1 ? true : false}
-            checkinBeginAt={data?.tdoc?.checkinBeginAt}
-            checkinEndAt={data?.tdoc?.checkinEndAt}
-            beginAt={beginAt}
-            endAt={endAt}
-            tag={""}
-          />
-          <ContestDetailContent content={content} tid={tid} />
-          <ContestDetailFooter
-            title={title}
-            isApply={isApply == 1 ? true : false}
-            state={state}
-            checkinEndAt={data?.tdoc?.checkinEndAt}
-            tid={tid}
-          />
+        <div className="flex pb-16 space-x-10 justify-between">
+          <div className="flex-1 mt-6">
+            <ContestDetailTop
+              title={title}
+              attend={attend}
+              rule={rule}
+              time={calculateTimeDifference(endAt, beginAt)}
+              isApply={isApply == 1 ? true : false}
+              checkinBeginAt={data?.tdoc?.checkinBeginAt}
+              checkinEndAt={data?.tdoc?.checkinEndAt}
+              beginAt={beginAt}
+              endAt={endAt}
+              tag={""}
+            />
+            <ContestDetailContent content={content} />
+            <ContestDetailFooter
+              title={title}
+              isApply={isApply == 1 ? true : false}
+              state={state}
+              checkinEndAt={data?.tdoc?.checkinEndAt}
+              tid={tid}
+            />
+          </div>
           <ContestDetailRight tag={tag} nickname={String(data?.udict[owner].nickname) || ""} state={state} />
         </div>
       )}

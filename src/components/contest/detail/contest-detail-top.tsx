@@ -19,8 +19,8 @@ const ContestDetailTop: React.FC<PropsType> = (props) => {
   const { title, attend, tag, rule, time, isApply, checkinBeginAt, checkinEndAt, beginAt, endAt } = props;
 
   return (
-    <div>
-      <div className="header relative flex justify-between">
+    <div className="mb-10">
+      <div className="header relative flex justify-between ">
         <div className="title font-bold text-2xl">比赛:{title}</div>
         <div className="text-[#FF7D37] font-bold text-2xl">参赛人数：{attend}人</div>
       </div>
@@ -33,7 +33,7 @@ const ContestDetailTop: React.FC<PropsType> = (props) => {
             </span>
             <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 text-center">赛制：{rule}</span>
             <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 text-center">阶段：初赛</span>
-            <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 text-center">时长：{time * 60}分钟</span>
+            <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 text-center">时长：{time} 小时</span>
           </div>
           <div>
             <ContestState
