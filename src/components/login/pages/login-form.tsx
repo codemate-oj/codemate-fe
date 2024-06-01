@@ -9,7 +9,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput from "@/components/form/form-input";
 import store from "@/store/login";
-import { passwordSchema, unameSchema } from "@/lib/validate";
+import { passwordSchema, unameSchema } from "@/lib/form";
 import { HydroError } from "@/lib/error";
 import { useLockFn } from "ahooks";
 

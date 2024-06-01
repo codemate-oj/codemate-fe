@@ -1,263 +1,104 @@
-"use client";
-import FilerTabsTree, { TreeItem, type FilerTabsTreeData } from "@/components/common/filter-tabs-tree";
-import FixedSelect, { type FixedSelectOptions } from "@/components/common/fixed-select";
-import LinkBtn from "@/components/common/link-btn";
-import useUrl from "@/hooks/useUrl";
+import { TreeItem } from "@/components/common/filter-tabs-tree";
+import { type FixedSelectOptions } from "@/components/common/fixed-select";
 import { request } from "@/lib/request";
-import { useAntdTable, useRequest } from "ahooks";
-import { Switch, Table, TableColumnsType, Tag } from "antd";
-import Image from "next/image";
-import { Suspense } from "react";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
 import BulletinBoard, {
   type BulletinCardProps,
   type BullltinItemProps,
 } from "@/components/common/bulletin-board/index";
-interface DataType {
-  key: string;
-  pid: number;
+import AsideLangSelector from "@/components/home/aside-lang-selector";
+import TreeSelector from "@/components/home/tree-selector";
+import ProblemListTable from "@/components/home/problem-list-table";
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "题库 - CODEMATE",
+};
+
+interface PlistItemBase {
+  docId: string;
   title: string;
-  titleDescription: string;
-  difficulty: number;
-  nSubmit: number;
-  nAccept: number;
-  tag: string[];
+  children?: PlistItemBase[];
 }
-
-const columns: TableColumnsType<DataType> = [
-  {
-    title: "编号",
-    dataIndex: "pid",
-    key: "pid",
-    width: "10%",
-  },
-  {
-    title: "题目名称",
-    dataIndex: "title",
-    key: "title",
-    width: "18%",
-    render: (_, { title }) => <span className="font-bold text-sm">{title}</span>,
-  },
-  {
-    title: () => (
-      <>
-        <span className="font-bold text-sm mr-3">算法标签</span>
-        <Switch defaultChecked />
-      </>
-    ),
-    key: "tag",
-    dataIndex: "tag",
-    width: "40%",
-    render: (_, { tag }) => (
-      <>
-        {tag?.map((tag) => {
-          return (
-            <Tag color={"volcano"} key={tag} className="!text-primary !bg-orange-50 !leading-4">
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "难度",
-    key: "difficulty",
-    dataIndex: "difficulty",
-    width: "12%",
-    render: (_, record) => (
-      <div className="flex gap-1">
-        {new Array(Number(record?.difficulty))
-          .fill(0)
-          ?.map((_, index) => <Image src="/svg/star.svg" alt="" key={index} width={15} height={15}></Image>)}
-      </div>
-    ),
-  },
-  {
-    title: "尝试",
-    key: "nSubmit",
-    dataIndex: "nSubmit",
-    width: "5%",
-  },
-  {
-    title: "AC率",
-    key: "nAccept",
-    dataIndex: "nAccept",
-    width: "5%",
-  },
-  {
-    title: "热度",
-    key: "difficulty",
-    dataIndex: "difficulty",
-    width: "15%",
-    render: (_, record) => (
-      <div className="flex gap-1">
-        {new Array(Number(record?.difficulty))
-          .fill(0)
-          ?.map((_, index) => <Image src="/img/fire.png" alt="" key={index} width={15} height={15}></Image>)}
-      </div>
-    ),
-  },
-];
-
-const HomePage = () => {
-  const { queryParams, updateQueryParams } = useUrl();
-
-  const { data: homeFilterData } = useRequest(
-    async () => {
-      const { data } = await request.get("/p-list", {
-        transformData: (data) => {
-          console.log(data);
-          return data;
-        },
-      });
-      const parsePlistItem = (item: any) => {
-        const _ret: TreeItem = {
-          key: item.docId,
-          label: item.title,
-          children: [],
-        };
-        if (item.children?.length) {
-          _ret.children = item.children.map(parsePlistItem);
-        }
-        return _ret;
-      };
-      const permittedLangs = Array.from(
+function getFilterInfo() {
+  const parsePlistItem = (item: PlistItemBase) => {
+    const _ret: TreeItem = {
+      key: item.docId,
+      label: item.title,
+      children: [],
+    };
+    if (item.children?.length) {
+      _ret.children = item.children.map(parsePlistItem);
+    }
+    return _ret;
+  };
+  return request.get("/p-list", {
+    transformData: ({ data }) => {
+      // 获取语言筛选信息
+      const langNames = Array.from(
         new Set(data.UiContext?.domain?.langs?.split(",").map((langId: string) => PROGRAMMING_LANGS[langId]))
-      ).map((langName: any) => {
+      );
+      const langOptions = langNames.map((langName) => {
         return {
           label: langName,
           value: Object.keys(PROGRAMMING_LANGS).find((key) => PROGRAMMING_LANGS[key] === langName),
         } as FixedSelectOptions;
       });
+      // 获取题单筛选信息
+      const treeData = data.roots?.map(parsePlistItem) ?? [];
+
       return {
-        filterTree: [{ label: "全部", key: "" }, ...data.roots?.map(parsePlistItem)] as FilerTabsTreeData,
-        sideTabs: [{ label: "全部", value: "" }, ...permittedLangs],
+        filterTree: [{ key: "", label: "全部" }, ...treeData],
+        sideTabs: [{ label: "全部", value: "" }, ...langOptions],
       };
     },
-    {
-      cacheKey: "/home/filter-data",
-    }
-  );
-
-  const {
-    data: tableData,
-    tableProps: { pagination, ...tableProps },
-  } = useAntdTable(
-    async ({ current, pageSize }) => {
-      const { data } = await request.get("/p", {
-        params: {
-          page: current,
-          limit: pageSize,
-          source: queryParams["tid"],
-          lang: queryParams["lang"],
-        },
-      });
-      updateQueryParams("page", String(current));
-      return { total: data.pcount, list: data.pdocs as any[] };
-    },
-    {
-      cacheKey: "/home/p/table-data",
-      defaultCurrent: Number(queryParams["page"]) || 1,
-      defaultPageSize: 15,
-      refreshDeps: [queryParams["tid"], queryParams["lang"]],
-    }
-  );
-
-  const { data: bulletinCardData } = useRequest(async () => {
-    const res = await request.get("/bulletin/list", {
-      params: {
-        page: 1,
-        limit: 3,
-      },
-    });
-
-    const parseBulletinItem = (item: any) => {
-      const _ret: BullltinItemProps = {
-        id: item.docId,
-        title: item.title,
-        postTime: item.postAt,
-        href: `/bulletin/${item.docId}`,
-      };
-      return _ret;
-    };
-
-    return [
-      {
-        key: "重要公告",
-        children: res?.data?.bdocs?.map(parseBulletinItem),
-        label: "重要公告",
-      },
-    ] as BulletinCardProps[];
   });
+}
+
+function getBulletinCardData() {
+  return request.get("/bulletin/list", {
+    params: {
+      page: 1,
+      limit: 3,
+    },
+    transformData({ data }) {
+      const parseBulletinItem = (item) => {
+        const _ret: BullltinItemProps = {
+          id: item.docId,
+          title: item.title,
+          postTime: item.postAt,
+          href: `/bulletin/${item.docId}`,
+        };
+        return _ret;
+      };
+      return [
+        {
+          key: "重要公告",
+          children: data?.bdocs?.map(parseBulletinItem),
+          label: "重要公告",
+        },
+      ] as BulletinCardProps[];
+    },
+  });
+}
+
+const HomePage = async () => {
+  const { filterTree, sideTabs } = await getFilterInfo();
+  const bulletinCardData = await getBulletinCardData();
 
   return (
-    <Suspense>
+    <>
+      <AsideLangSelector options={sideTabs} />
       <div className="w-full flex">
         <div className="md:w-[90vw] lg:w-[60vw] 4xl:max-w-7xl">
-          <FixedSelect
-            options={homeFilterData?.sideTabs ?? []}
-            onSelect={(i) => updateQueryParams("lang", i)}
-            defaultSelectedValue={queryParams["lang"]}
-          />
-          <FilerTabsTree
-            filerTabsTreeData={homeFilterData?.filterTree ?? []}
-            onChange={(key) => {
-              updateQueryParams("tid", key);
-            }}
-            defaultActiveKey={queryParams["tid"]}
-          />
-          <Table
-            {...tableProps}
-            columns={columns}
-            rowKey="pid"
-            expandable={{
-              expandedRowRender: (record) => (
-                <div
-                  style={{
-                    color: "#797979",
-                    paddingBottom: "1rem",
-                    borderBottom: "0.1rem dashed #F1F1F1",
-                  }}
-                >
-                  {record?.titleDescription}
-                </div>
-              ),
-              expandedRowClassName: () => "!text-grey",
-              expandedRowKeys: tableData?.list?.map((item) => item.key),
-              expandIcon: () => <></>,
-            }}
-            pagination={{
-              ...pagination,
-              position: ["bottomCenter"],
-              showSizeChanger: false,
-              itemRender(_, type, element) {
-                if (type === "prev") {
-                  return (
-                    <>
-                      <LinkBtn>首页</LinkBtn>
-                      <LinkBtn>上一页</LinkBtn>
-                    </>
-                  );
-                }
-                if (type === "next") {
-                  return (
-                    <>
-                      <LinkBtn>下一页</LinkBtn>
-                      <LinkBtn>末页</LinkBtn>
-                    </>
-                  );
-                }
-                return element;
-              },
-            }}
-          />
+          <TreeSelector treeData={filterTree} />
+          <ProblemListTable />
         </div>
         <div className="w-[0px] lg:w-[400px] overflow-hidden  ml-[14px]">
           <BulletinBoard data={bulletinCardData as BulletinCardProps[]}></BulletinBoard>
         </div>
       </div>
-    </Suspense>
+    </>
   );
 };
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RequestBody, createAlova } from "alova";
 import ReactHook from "alova/react";
 import GlobalFetch from "alova/GlobalFetch";
@@ -6,10 +7,11 @@ import qs from "qs";
 import { tryParseHydroResponse } from "./error";
 import { paths } from "@/types/schema";
 import { objectToFormData } from "./form";
+import { isBrowser } from "./utils";
 
 const IS_DEV = process.env.NODE_ENV === "development";
 
-const BASE_URL = "/api";
+const BASE_URL = isBrowser() ? "/api" : process.env.API_URL ?? "https://www.aioj.net/";
 const APIFOX_TOKEN = process.env.NEXT_PUBLIC_APIFOX_TOKEN; // 用于云端mock鉴权
 const DISABLE_CACHE = IS_DEV || process.env.DISABLE_CACHE === "true"; // 用于停用请求库内建的缓存，对next缓存无效
 const LOCAL_MOCK = IS_DEV || process.env.LOCAL_MOCK === "true"; // 是否使用alova内置的本地mock服务（DEV环境下默认启用）
@@ -25,8 +27,10 @@ export const alovaInstance = createAlova({
   timeout: 5000,
   localCache: DISABLE_CACHE ? null : { GET: 60000 },
   requestAdapter: LOCAL_MOCK ? mockAdapter : GlobalFetch(),
-  // requestAdapter: mockAdapter, // FIXME： 由于跨域没有配置好 先全部使用mock
   beforeRequest(method) {
+    if (IS_DEV) {
+      console.info(`[alova] ${method.type} ${method.url}`);
+    }
     // 缺省状态下默认添加 Accept: application/json
     const _acc = method.config.headers["Accept"];
     if (!_acc) method.config.headers["Accept"] = "application/json";
@@ -100,6 +104,7 @@ export const request = {
     const { params, ...rest } = config;
     return alovaInstance.Get(url, {
       ...rest,
+      params,
       headers: {
         Accept: "application/json",
         ...(config.headers ?? {}),
@@ -115,7 +120,7 @@ export const request = {
     } = {}
   ) => {
     let payload: RequestBody | undefined = data;
-    let contentType: string = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
+    const contentType: string = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
 
     if (data) {
       // 处理自动序列化逻辑
