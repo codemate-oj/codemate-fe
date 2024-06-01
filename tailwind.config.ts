@@ -67,6 +67,9 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      screens: {
+        "4xl": "1920px",
+      },
       fontFamily: {
         yahei: ["Microsoft YaHei", "sans-serif"],
       },

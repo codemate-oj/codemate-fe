@@ -66,7 +66,7 @@ export const getRecords = (lang?: string, page = 1, full = false, uid = loginSto
     params: {
       uidOrName: String(uid),
       page,
-      lang: lang as any,
+      lang: lang,
       full,
     },
     transformData: ({ data }) => {
@@ -98,12 +98,10 @@ const SubmitRecords = () => {
   const { data, loadingMore, loading, loadMore, noMore } = useInfiniteScroll(
     async (_data) => {
       const current = _data?.currentPage ?? 1;
-      const rdocs = (await getRecords(activeKey === "objective" ? ("_" as any) : undefined, current, true)).filter(
-        (r) => {
-          if (activeKey === "objective") return true;
-          return r.lang !== "_";
-        }
-      );
+      const rdocs = (await getRecords(activeKey === "objective" ? "_" : undefined, current, true)).filter((r) => {
+        if (activeKey === "objective") return true;
+        return r.lang !== "_";
+      });
       if (rdocs.length === 0) {
         return {
           list: [],

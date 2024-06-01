@@ -22,7 +22,7 @@ export interface AlovaResponse<T = Hydro.HydroResponse> {
 }
 
 export const alovaInstance = createAlova({
-  baseURL: BASE_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL ?? BASE_URL,
   statesHook: ReactHook,
   timeout: 5000,
   localCache: DISABLE_CACHE ? null : { GET: 60000 },

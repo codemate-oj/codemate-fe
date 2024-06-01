@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React from "react";
 import { Tag as AntdTag, type TagProps } from "antd";
 import { cn } from "@/lib/utils";
 
