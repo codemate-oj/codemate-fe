@@ -403,7 +403,6 @@ export interface paths {
     /**
      * 首页题目筛选
      * @description 支持多条件并列筛选，默认留空的情况下直接读取题库题目；
-     * 由于 `config` 是yaml文本实现（hydro的狗屎设计），导致没法在filter时直接使用配置，只能在读取完成分页后再筛选，因此可能导致**每个分页元素数不等**，`lang`和`objective`这两个定义在config中的选项会受到影响，请注意
      */
     get: {
       parameters: {
@@ -426,12 +425,12 @@ export interface paths {
            */
           tags?: string[];
           /**
-           * @description 指定可用于提交题目的语言【WARN：使用该选项可能导致每个分页元素数不等】
+           * @description 指定可用于提交题目的语言
            * @example scratch
            */
           lang?: string;
           /**
-           * @description 默认为false，为true时只选择客观题【WARN：使用该选项可能导致每个分页元素数不等】
+           * @description 默认为false，为true时只选择客观题
            * @example true
            */
           objective?: boolean;
@@ -888,6 +887,70 @@ export interface paths {
             "application/json": {
               /** 重定向的URL */
               url: string;
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/problem/starred": {
+    /** 查看已收藏题目 */
+    get: {
+      parameters: {
+        query?: {
+          /** @example 1 */
+          page?: number;
+          /** @example 15 */
+          pageSize?: number;
+        };
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              /** 题目ID */
+              pids: number[];
+              /** 题目状态字典 */
+              psdict?: {
+                [key: string]: components["schemas"]["StatusBaseDoc"];
+              };
+              /** 题目字典 */
+              pdict?: {
+                [key: string]: Record<string, never>;
+              };
+              page: number;
+              pageSize: number;
+              psdocCount: number;
+              pageCount: number;
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
               UiContext: components["schemas"]["UiContext"];
               UserContext: components["schemas"]["UserContext"];
             };
