@@ -115,7 +115,10 @@ const Page = async ({ params }: Props) => {
                 <Suspense fallback={<Loading />}>
                   <div className="mb-4">
                     {pType == "objective" ? (
-                      <FormilyRenderer schema={extractQuestionsFromMarkdown(markdownContent)} />
+                      <FormilyRenderer
+                        pid={pDetailData.pdoc?.pid}
+                        schema={extractQuestionsFromMarkdown(markdownContent)}
+                      />
                     ) : (
                       <MarkdownRenderer
                         markdown={markdownContent}

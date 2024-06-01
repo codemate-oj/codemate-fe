@@ -36,7 +36,6 @@ function determineQuestionType(pdoc: Awaited<ReturnType<typeof getProblemDetail>
   return "default";
 }
 
-interface SolutionPageProps {}
 const SolutionPage = async ({ params }: Props) => {
   const { data: pDetailData } = await getProblemDetail(params.pid!);
 

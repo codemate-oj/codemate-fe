@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 import { request } from "@/lib/request";
 import { useCodeLangContext } from "@/providers/code-lang-provider";
 
-import { forwardAuthClient } from "@/lib/forward-auth-client";
-
 interface PBottomProps {
   type: string;
   pid: string;
@@ -13,6 +11,7 @@ interface PBottomProps {
 const PBottom: React.FC<PBottomProps> = (props) => {
   const { type, pid } = props;
   const { lang } = useCodeLangContext();
+
   const handleSubmit = async () => {
     const code = localStorage.getItem(`code-${pid}`) || "";
 
@@ -22,8 +21,8 @@ const PBottom: React.FC<PBottomProps> = (props) => {
         lang: lang,
         pretest: false,
         code: code,
-      },
-      { ...forwardAuthClient() }
+      }
+      // { ...forwardAuthClient() }
     );
   };
 

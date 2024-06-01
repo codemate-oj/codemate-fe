@@ -28,11 +28,13 @@ const PTop: React.FC<PTopProps> = (props) => {
     setIsCollect(false);
 
     await request.post("/p", { operation: "star" as "unstar", pid: 1 });
+    // console.log(result, "11");
   };
   const disCollect = async () => {
     setIsCollect(true);
 
     await request.post("/p", { operation: "unstar" as const, pid: 1 });
+    // console.log(result, "11");
   };
 
   return (
