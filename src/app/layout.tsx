@@ -10,6 +10,7 @@ import { mainRoutes } from "@/constants/routes";
 import AntdThemeConfigProvider from "@/providers/antd-theme-config-provider";
 
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 import dynamic from "next/dynamic";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -45,6 +46,7 @@ export default function RootLayout({
               </div>
             </header>
             <main className="max-w-full">{children}</main>
+            <Toaster richColors />
           </AntdThemeConfigProvider>
         </AntdRegistry>
       </body>

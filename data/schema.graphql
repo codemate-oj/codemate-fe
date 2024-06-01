@@ -1,0 +1,163 @@
+scalar Date
+scalar Time
+scalar DateTime
+scalar DateTimeISO
+scalar Timestamp
+scalar TimeZone
+scalar UtcOffset
+scalar Duration
+scalar ISO8601Duration
+scalar LocalDate
+scalar LocalTime
+scalar LocalDateTime
+scalar LocalEndTime
+scalar EmailAddress
+scalar NegativeFloat
+scalar NegativeInt
+scalar NonEmptyString
+scalar NonNegativeFloat
+scalar NonNegativeInt
+scalar NonPositiveFloat
+scalar NonPositiveInt
+scalar PhoneNumber
+scalar PositiveFloat
+scalar PositiveInt
+scalar PostalCode
+scalar UnsignedFloat
+scalar UnsignedInt
+scalar URL
+scalar BigInt
+scalar Long
+scalar Byte
+scalar UUID
+scalar GUID
+scalar Hexadecimal
+scalar HexColorCode
+scalar HSL
+scalar HSLA
+scalar IP
+scalar IPv4
+scalar IPv6
+scalar ISBN
+scalar JWT
+scalar Latitude
+scalar Longitude
+scalar MAC
+scalar Port
+scalar RGB
+scalar RGBA
+scalar SafeInt
+scalar USCurrency
+scalar Currency
+scalar JSON
+scalar JSONObject
+scalar IBAN
+scalar ObjectID
+scalar Void
+scalar DID
+scalar CountryCode
+scalar Locale
+scalar RoutingNumber
+scalar AccountNumber
+scalar Cuid
+scalar SemVer
+scalar SESSN
+scalar DeweyDecimal
+scalar LCCSubclass
+scalar IPCPatent
+type Contest {
+  _id: ObjectID!
+  domainId: String!
+  docId: ObjectID!
+  owner: Int!
+  beginAt: Date!
+  title: String!
+  content: String!
+  endAt: Date!
+  attend: Int!
+  pids: [Int]!
+  rated: Boolean!
+}
+
+type Query {
+  "Get a contest by ID"
+  contest(id: ObjectID!): Contest
+  domain(id: String): Domain
+  problem(id: Int, pid: String): Problem
+  "Get a list of problem by ids"
+  problems(ids: [Int]): [Problem]
+  """
+  Get a user by id, uname, or mail.
+  Returns current user if no argument is provided.
+  """
+  user(id: Int, uname: String, mail: String): User
+  "Get a list of user by ids, or search users with the prefix."
+  users(ids: [Int], search: String, limit: Int, exact: Boolean): [User]
+}
+
+type GroupInfo {
+  name: String!
+  uids: [Int]!
+}
+
+type Domain {
+  manage: DomainManage
+}
+
+type DomainManage {
+  group: DomainGroup
+}
+
+type DomainGroup {
+  list(uid: Int): [GroupInfo]
+  update(name: String!, uids: [Int]!): Boolean
+  del(name: String!): Boolean
+}
+
+type FileInfo {
+  _id: String!
+  name: String!
+  size: Int
+  lastModified: Date
+}
+
+type Problem {
+  _id: ObjectID!
+  owner: Int!
+  domainId: String!
+  docId: Int!
+  docType: Int!
+  pid: String
+  title: String!
+  content: String!
+  config: String!
+  data: [FileInfo]
+  additional_file: [FileInfo]
+  nSubmit: Int
+  nAccept: Int
+  difficulty: Int
+  tag: [String]
+  hidden: Boolean
+  manage: ProblemManage
+}
+
+type ProblemManage {
+  delete: Boolean!
+  edit(title: String, content: String, tag: [String], hidden: Boolean): Problem!
+}
+
+type User {
+  _id: Int!
+  uname: String!
+  mail: String!
+  perm: String
+  role: String
+  loginat: Date
+  regat: Date!
+  "User Privilege"
+  priv: Int!
+  avatarUrl: String
+  tfa: Boolean!
+  authn: Boolean!
+  displayName: String
+}

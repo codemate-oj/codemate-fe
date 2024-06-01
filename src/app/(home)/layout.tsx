@@ -33,7 +33,9 @@ const HomeLayout = async ({
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
-      <div className="m-auto max-w-screen-lg">{children}</div>
+      <div className="w-full flex justify-center ">
+        <div>{children}</div>
+      </div>
       <PageFooter />
     </>
   );
