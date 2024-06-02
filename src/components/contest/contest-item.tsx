@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import ContestState from "./contest-state";
 import Image from "next/image";
-import { remoteUrl, calculateTimeDifference, formatTime } from "@/lib/utils";
+import { remoteUrl, getTimeDiffByHour, formatTime } from "@/lib/utils";
 interface ContestItemProps {
   title: string;
   rule: string;
@@ -54,7 +54,7 @@ const Item: React.FC<ItemProps> = (props) => {
             <span className="font-normal text-sm text-[#797979]">赛制</span>
           </div>
           <div className="time flex-1">
-            <p className="font-normal text-lg">{calculateTimeDifference(endAt, beginAt)}小时</p>
+            <p className="font-normal text-lg">{getTimeDiffByHour(endAt, beginAt)}小时</p>
             <span className="font-normal text-sm text-[#797979]">时长</span>
           </div>
           <div className="attend flex-1">

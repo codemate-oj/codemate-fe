@@ -105,6 +105,7 @@ const ContestDetailFooter: React.FC<{
   const currentDialogPage = store.useCurrentContext();
   const userContext = store.user.use();
   const isDialogShow = store.isDialogShow.use();
+  //TODO: 待处理登录问题
   return (
     <div className={"flex justify-between mt-8"}>
       <Dialog modal={true} open={isDialogShow} onOpenChange={handleOpenChange}>

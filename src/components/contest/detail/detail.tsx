@@ -4,7 +4,7 @@ import { request } from "@/lib/request";
 import { useRequest } from "ahooks";
 import ContestDetailTop from "./contest-detail-top";
 import ContestDetailContent from "./contest-detail-content";
-import { calculateTimeDifference } from "@/lib/utils";
+import { getTimeDiffByHour } from "@/lib/utils";
 import ContestDetailFooter from "./contest-detail-footer";
 import ContestDetailRight from "./contest-detail-right";
 const getDetailState = (props: { beginAt: string; endAt: string; checkinBeginAt?: string; checkinEndAt?: string }) => {
@@ -71,7 +71,7 @@ const ContestDetail: React.FC<PropsType> = (props) => {
               title={title}
               attend={attend}
               rule={rule}
-              time={calculateTimeDifference(endAt, beginAt)}
+              time={getTimeDiffByHour(endAt, beginAt)}
               isApply={isApply == 1 ? true : false}
               checkinBeginAt={data?.tdoc?.checkinBeginAt}
               checkinEndAt={data?.tdoc?.checkinEndAt}
