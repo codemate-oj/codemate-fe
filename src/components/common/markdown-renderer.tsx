@@ -7,6 +7,7 @@ import remarkMath from "remark-math";
 import React from "react";
 import "katex/dist/katex.min.css"; // 引入 KaTeX 样式
 import { cn } from "@/lib/utils";
+import media from "@/lib/unified/media";
 
 interface IUnifiedPlugin {
   hookIn: "pre-parse" | "post-parse" | "pre-render" | "post-render";
@@ -24,6 +25,7 @@ const renderMarkdown = async (markdown: string, plugins: IUnifiedPlugin[] = []) 
     .use(remarkParse) // 解析 markdown
     .use(remarkMath) // 支持数学表达式
     .use(postParsePlugins.map((plugin) => plugin.plugin)) // 加入post-parse插件
+    .use(media()) // 默认的媒体处理功能，可以在`post-parse`插入以覆盖该功能
     .use(remarkRehype, { allowDangerousHtml: true }) // 转换为 HTML
     .use(rehypeKatex) // 解析数学表达式为 KaTeX
     .use(preRenderPlugins.map((plugin) => plugin.plugin)) // 加入pre-render插件
