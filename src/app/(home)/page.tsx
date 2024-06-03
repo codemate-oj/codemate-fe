@@ -10,6 +10,7 @@ import AsideLangSelector from "@/components/home/aside-lang-selector";
 import TreeSelector from "@/components/home/tree-selector";
 import ProblemListTable from "@/components/home/problem-list-table";
 import { type Metadata } from "next";
+import PageTitle from "@/components/common/page-title";
 
 export const metadata: Metadata = {
   title: "题库 - CODEMATE",
@@ -88,6 +89,7 @@ const HomePage = async () => {
 
   return (
     <>
+      <PageTitle>修炼场</PageTitle>
       <AsideLangSelector options={sideTabs} />
       <div className="w-full flex">
         <div className="md:w-[90vw] lg:w-[60vw] 4xl:max-w-7xl">

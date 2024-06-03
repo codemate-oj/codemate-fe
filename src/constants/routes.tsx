@@ -36,4 +36,3 @@ export const userCenterRoutes: NavItemWithIcon[] = [
     icon: <Image src="/svg/popup-account.svg" alt="my-account" width={20} height={22} />,
   },
 ];
-export const contestRoutes: NavItemType[] = [{ name: "竞技场-题目详情", href: "/contest/6655d6fe01b9cf0123b88608" }];

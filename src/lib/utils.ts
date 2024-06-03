@@ -92,8 +92,14 @@ export function remoteUrl(url?: string) {
   return CDN_PREFIX + url;
 }
 
-// 计算时间差，time1 - time2
-export function calculateTimeDifference(time1: string, time2: string): number {
+/**
+ * 计算当前给定两个时间的差值的时间差。
+ * time1-time2
+ * @param {Date} time1 - 参考时间。
+ * @param {Date} time2 - 参考时间。
+ * @return {string} 时间差（小时）。
+ */
+export function getTimeDiffByHour(time1: string, time2: string): number {
   const date1 = new Date(time1);
   const date2 = new Date(time2);
   const differenceInMilliseconds = date1.getTime() - date2.getTime();
@@ -103,11 +109,7 @@ export function calculateTimeDifference(time1: string, time2: string): number {
 
 //时间格式化为 "YYYY-MM-DD HH:mm"
 export function formatTime(time: string) {
-  const date = new Date(time);
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  return `${year}-${month}-${day} ${hours}:${minutes}`;
+  const date = dayjs(time);
+
+  return date.format("YYYY-MM-DD HH:mm");
 }
