@@ -27,7 +27,7 @@ const TreeSelector: React.FC<Props> = ({ treeData }) => {
     };
     traverse(treeData);
     return currentSelectedKeysPath;
-  }, [tid]);
+  }, [tid, treeData]);
 
   return (
     <FilterTabsTree

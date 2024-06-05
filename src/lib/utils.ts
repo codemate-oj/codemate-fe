@@ -91,3 +91,25 @@ export function remoteUrl(url?: string) {
   if (url.startsWith("/")) return CDN_PREFIX + url.slice(1);
   return CDN_PREFIX + url;
 }
+
+/**
+ * 计算当前给定两个时间的差值的时间差。
+ * time1-time2
+ * @param {Date} time1 - 参考时间。
+ * @param {Date} time2 - 参考时间。
+ * @return {string} 时间差（小时）。
+ */
+export function getTimeDiffByHour(time1: string, time2: string): number {
+  const date1 = new Date(time1);
+  const date2 = new Date(time2);
+  const differenceInMilliseconds = date1.getTime() - date2.getTime();
+  const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
+  return differenceInHours;
+}
+
+//时间格式化为 "YYYY-MM-DD HH:mm"
+export function formatTime(time: string) {
+  const date = dayjs(time);
+
+  return date.format("YYYY-MM-DD HH:mm");
+}

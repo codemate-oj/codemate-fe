@@ -4,18 +4,19 @@ import React from "react";
 import Link from "next/link";
 import ContestState from "./contest-state";
 import Image from "next/image";
-import { paths } from "@/types/schema";
-import { remoteUrl } from "@/lib/utils";
-function calculateTimeDifference(time1: string, time2: string): number {
-  const date1 = new Date(time1);
-  const date2 = new Date(time2);
-  const differenceInMilliseconds = date1.getTime() - date2.getTime();
-  const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
-  return differenceInHours;
+import { remoteUrl, getTimeDiffByHour, formatTime } from "@/lib/utils";
+interface ContestItemProps {
+  title: string;
+  rule: string;
+  beginAt: string;
+  endAt: string;
+  attend: number;
+  tag?: string[];
+  _id: string;
+  checkinBeginAt?: string;
+  checkinEndAt?: string;
+  imageURL?: string;
 }
-
-type ContestItemProps = paths["/contest"]["get"]["responses"]["200"]["content"]["application/json"]["tdocs"][number];
-
 interface ItemProps {
   toDetail: (id: string) => void;
   item: ContestItemProps;
@@ -35,8 +36,10 @@ const Item: React.FC<ItemProps> = (props) => {
           endAt={endAt}
           checkinBeginAt={checkinBeginAt}
           checkinEndAt={checkinEndAt}
+          styleClassNames="absolute top-2 right-2 py-2 px-4 text-sm font-normal rounded-lg"
         />
-        <Image src={remoteUrl(imageURL)} alt="loading" width={320} height={160} />
+
+        <Image src={remoteUrl(imageURL as string)} alt="loading" width={320} height={160} />
       </div>
       <div className="flex-1 relative">
         <div className="title">
@@ -51,7 +54,7 @@ const Item: React.FC<ItemProps> = (props) => {
             <span className="font-normal text-sm text-[#797979]">赛制</span>
           </div>
           <div className="time flex-1">
-            <p className="font-normal text-lg">{calculateTimeDifference(endAt, beginAt)}小时</p>
+            <p className="font-normal text-lg">{getTimeDiffByHour(endAt, beginAt)}小时</p>
             <span className="font-normal text-sm text-[#797979]">时长</span>
           </div>
           <div className="attend flex-1">
@@ -67,8 +70,8 @@ const Item: React.FC<ItemProps> = (props) => {
         </div>
         <footer className="relative mt-6">
           <p className="font-normal text-sm text-[#3D3D3D]">
-            报名时间：{!checkinBeginAt ? "---" : checkinBeginAt.slice(0, 16).replace("T", " ")} --{" "}
-            {!checkinEndAt ? "---" : checkinEndAt.slice(0, 16).replace("T", " ")}
+            报名时间：{!checkinBeginAt ? "---" : formatTime(checkinBeginAt)} --{" "}
+            {!checkinEndAt ? "---" : formatTime(checkinEndAt)}
           </p>
           <p className="font-normal text-sm text-[#3D3D3D]">
             比赛时间：{beginAt.slice(0, 16).replace("T", " ")} -- {endAt.slice(0, 16).replace("T", " ")}

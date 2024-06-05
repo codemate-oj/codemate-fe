@@ -7,7 +7,7 @@ import { request } from "@/lib/request";
 
 import type { Metadata } from "next";
 import { forwardAuthHeader } from "@/lib/forward-auth";
-import CodeLangProvider from "@/providers/code-lang-provider";
+import CodeLangProvider, { langType } from "@/providers/code-lang-provider";
 import { extractQuestionsFromMarkdown } from "@/lib/problem-parse";
 import React, { Suspense } from "react";
 import Loading from "@/components/ui/loading";
@@ -115,7 +115,10 @@ const Page = async ({ params }: Props) => {
                 <Suspense fallback={<Loading />}>
                   <div className="mb-4">
                     {pType == "objective" ? (
-                      <FormilyRenderer schema={extractQuestionsFromMarkdown(markdownContent)} />
+                      <FormilyRenderer
+                        pid={pDetailData.pdoc?.pid}
+                        schema={extractQuestionsFromMarkdown(markdownContent)}
+                      />
                     ) : (
                       <MarkdownRenderer
                         markdown={markdownContent}
@@ -137,8 +140,8 @@ const Page = async ({ params }: Props) => {
               </div>
               {pType === "default" && (
                 <>
-                  <CodeInput langs={langs} />
-                  <PBottom type={pType} />
+                  <CodeInput langs={langs as langType[]} pid={params.pid} />
+                  <PBottom type={pType} pid={params.pid} />
                 </>
               )}
             </div>

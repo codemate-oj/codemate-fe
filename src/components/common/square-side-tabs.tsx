@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 
 interface IProps {
   items: NavItemType[];

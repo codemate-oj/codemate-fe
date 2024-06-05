@@ -1,15 +1,36 @@
+"use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { request } from "@/lib/request";
+import { useCodeLangContext } from "@/providers/code-lang-provider";
 
 interface PBottomProps {
   type: string;
+  pid: string;
 }
 const PBottom: React.FC<PBottomProps> = (props) => {
-  const { type } = props;
+  const { type, pid } = props;
+  const { lang } = useCodeLangContext();
+
+  const handleSubmit = async () => {
+    const code = localStorage.getItem(`code-${pid}`) || "";
+
+    await request.post(
+      `/p/${pid}/submit` as "/p/{pid}/submit",
+      {
+        lang: lang,
+        pretest: false,
+        code: code,
+      }
+      // { ...forwardAuthClient() }
+    );
+  };
 
   return (
     <div>
-      <Button className="mr-2">{type == "scratch" ? "开始答题" : "确认提交"}</Button>
+      <Button className="mr-2" onClick={handleSubmit}>
+        {type == "scratch" ? "开始答题" : "确认提交"}
+      </Button>
       <Button variant={"outline"} className="border-primary  text-primary hover:text-primary  mr-2 hover:bg-accent/20">
         上一题
       </Button>
