@@ -64,7 +64,13 @@ const Index = (props: BulletinBoardProps) => {
   });
 
   return (
-    <Collapse className="bulletin-board-ekko" defaultActiveKey={["1"]} ghost items={items} expandIconPosition="end" />
+    <Collapse
+      className="bulletin-board-ekko"
+      defaultActiveKey={data.map((item) => item.key)}
+      ghost
+      items={items}
+      expandIconPosition="end"
+    />
   );
 };
 
