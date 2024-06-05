@@ -8,7 +8,7 @@ import "./styles.css";
 export interface BullltinItemProps {
   id: string;
   title: string;
-  postTime: string;
+  postTime: number;
   href: NavItemType["href"];
 }
 
@@ -18,7 +18,7 @@ const BulletinItem = (props: BullltinItemProps) => {
 
   return (
     <div className="mb-3">
-      <Link className={`text-gray-900 hover:text-[#FF7D37]`} href={href}>
+      <Link className={`text-gray-900 hover:text-[#FF7D37]`} target="_blank" href={href}>
         {title}
       </Link>
       <div className="flex flex-col text-[#B9B9B9] text-sm mt-[32px]">
