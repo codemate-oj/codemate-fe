@@ -24,11 +24,10 @@ export interface paths {
              * @example 18012345678
              */
             uname: string;
-            /**
-             * @description Recaptcha 等验证码返回的 token
-             * @example 123456
-             */
-            verifyToken?: string;
+            /** @description captcha 验证成功的票据 */
+            ticket: string;
+            /** @description 本次验证的随机串，后续票据校验时需传递该参数 */
+            randStr: string;
           };
         };
       };
@@ -978,10 +977,12 @@ export interface paths {
             /** @example 12345678900 */
             phoneNumber: string;
             /**
-             * @description Recaptcha 等验证码返回的 token
+             * @description captcha 验证成功的票据
              * @example 123456
              */
-            verifyToken?: string;
+            ticket: string;
+            /** @description 本次验证的随机串，后续票据校验时需传递该参数 */
+            randStr: string;
           };
         };
       };
@@ -1524,10 +1525,12 @@ export interface paths {
             /** @example {% mock 'email' %} */
             mail: string;
             /**
-             * @description Recaptcha 等验证码返回的 token
+             * @description captcha 验证成功的票据
              * @example 123456
              */
-            verifyToken?: string;
+            ticket: string;
+            /** @description 本次验证的随机串，后续票据校验时需传递该参数 */
+            randStr: string;
           };
         };
       };
@@ -1903,6 +1906,55 @@ export interface paths {
     };
   };
   "/login": {
+    /** 使用sid续约登录 */
+    get: {
+      parameters: {
+        query?: {
+          /**
+           * @description Cookie中返回的SessionID
+           * @example U81Z9oOEONRlynLYIoRPVn13Sj10l3Om
+           */
+          sid?: string;
+        };
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
     /**
      * 用户名&密码登录
      * @description 使用用户名和密码登录

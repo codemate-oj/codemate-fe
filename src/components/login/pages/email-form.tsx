@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { emailSchema } from "@/lib/form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -9,6 +9,7 @@ import UnderlinedText from "@/components/common/underlined-text";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import VerifyButton from "@/components/common/verify-button";
 
 const formSchema = z.object({
   email: emailSchema,
@@ -18,7 +19,7 @@ interface IProps {
   title?: string;
   description?: string;
   buttonText?: string;
-  onSubmit?: (value: string) => void;
+  onSubmit?: (value: string, ticket: string, randStr: string) => void;
 }
 
 const EmailForm: React.FC<IProps> = ({ title = "请输入邮箱", description, buttonText = "提交", onSubmit }) => {
@@ -28,6 +29,10 @@ const EmailForm: React.FC<IProps> = ({ title = "请输入邮箱", description, b
       email: "",
     },
   });
+  const [verifyPassed, setVerifyPassed] = useState(false);
+  const [ticket, setTicket] = useState("");
+  const [randStr, setRandStr] = useState("");
+
   return (
     <>
       {title && (
@@ -35,9 +40,9 @@ const EmailForm: React.FC<IProps> = ({ title = "请输入邮箱", description, b
           <UnderlinedText>{title}</UnderlinedText>
         </div>
       )}
-      {description && <p className=" mt-3 text-sm text-[#797979]">{description}</p>}
+      {description && <p className="mt-3 text-sm text-[#797979]">{description}</p>}
       <Form {...form}>
-        <form className="my-10" onSubmit={form.handleSubmit((values) => onSubmit?.(values.email))}>
+        <form className="my-10" onSubmit={form.handleSubmit((values) => onSubmit?.(values.email, ticket, randStr))}>
           <div className="flex flex-col gap-8">
             <FormField
               control={form.control}
@@ -51,8 +56,15 @@ const EmailForm: React.FC<IProps> = ({ title = "请输入邮箱", description, b
                 </FormItem>
               )}
             />
-
-            <Button type="submit" className="w-full block">
+            <VerifyButton
+              className="mb-2"
+              onVerifySuccess={(e) => {
+                setTicket(e.ticket);
+                setRandStr(e.randstr);
+                setVerifyPassed(true);
+              }}
+            />
+            <Button type="submit" className="block w-full" disabled={!verifyPassed}>
               {buttonText ?? "下一步"}
             </Button>
           </div>
