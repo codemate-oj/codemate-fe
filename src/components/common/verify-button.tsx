@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import useTencentCaptcha from "@/hooks/useTencentCaptcha";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import { Dialog, DialogContent } from "../ui/dialog";
-import { useLockFn } from "ahooks";
 
 interface IProps {
   className?: string;
@@ -14,7 +13,7 @@ interface IProps {
 
 const VerifyButton: React.FC<IProps> = ({ className, onVerifyFail, onVerifySuccess }) => {
   const [verifyPassed, setVerifyPassed] = useState(false);
-  const handleClick = useLockFn(async () => {
+  const handleClick = async () => {
     if (verifyPassed) return;
     try {
       const result = (await NiceModal.show(VerifyModal)) as ICaptchaResult;
@@ -27,7 +26,7 @@ const VerifyButton: React.FC<IProps> = ({ className, onVerifyFail, onVerifySucce
         onVerifyFail?.(error as ICaptchaResult);
       }
     }
-  });
+  };
 
   return (
     <button
@@ -73,7 +72,6 @@ export const VerifyModal = NiceModal.create(({ idSuffix = "" }: { idSuffix: stri
 
   return (
     <Dialog
-      modal={true}
       open={modal.visible}
       onOpenChange={(isOpen) => {
         if (!isOpen) {

@@ -5,7 +5,8 @@ import { cn } from "@/lib/utils";
 import { getNames, registerLocale } from "@dior/i18n-iso-countries";
 import zhCN from "@dior/i18n-iso-countries/langs/zh.json";
 import { getPrefectures, getProvinces } from "china-region";
-import { Select } from "antd";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import { CommonFormItemProps } from "./form-item-wrapper";
 
 interface Option {
@@ -48,65 +49,74 @@ const LocationSelect = React.forwardRef<HTMLDivElement, IProps>(({ value = ["CN"
 
   const cities = useMemo(() => getCityChoices(province), [province]);
 
-  // Filter `option.label` match the user type `input`
-  const filterOption = (input: string, option?: { label: string; value: string }) =>
-    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
-
   return (
     <div className="flex w-full gap-x-2" ref={ref}>
-      <div className="flex-1">
-        <Select
-          className="w-full"
-          showSearch
-          placeholder="国家/地区"
-          optionFilterProp="children"
-          filterOption={filterOption}
-          options={countryChoices}
-          value={value[0]}
-          onChange={(value) => {
-            setProvince(undefined);
-            setCity(undefined);
-            onChange?.([value]);
-          }}
-        />
-      </div>
+      <Select
+        value={value[0]}
+        defaultValue="CN"
+        onValueChange={(value) => {
+          setProvince(undefined);
+          setCity(undefined);
+          onChange?.([value]);
+        }}
+      >
+        <SelectTrigger className="flex-1">
+          <SelectValue placeholder="国家/地区" />
+        </SelectTrigger>
+        <SelectContent>
+          {countryChoices.map((item) => (
+            <SelectItem key={item.value} value={item.value}>
+              {item.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
       {value[0] === "CN" && (
         <>
-          <div className="flex-1">
-            <Select
-              className="w-full"
-              showSearch
-              placeholder="省级行政区"
-              optionFilterProp="children"
-              filterOption={filterOption}
-              options={provinceChoices}
-              value={province}
-              onChange={(v) => {
-                setProvince((prev) => {
-                  if (prev === v) {
-                    onChange?.([value[0], v]);
-                    return;
-                  }
-                  setCity(undefined);
-                  return v;
-                });
-              }}
-            />
-          </div>
-          {cities.length > 0 && (
-            <div className="flex-1">
-              <Select
-                className="w-full"
-                showSearch
-                placeholder="市级行政区"
-                options={cities}
-                value={city}
-                onChange={(v) => {
-                  setCity(v);
+          <Select
+            value={province}
+            defaultValue={provinceChoices[0].value}
+            onValueChange={(v) => {
+              setProvince((prev) => {
+                if (prev === v) {
                   onChange?.([value[0], v]);
-                }}
-              />
-            </div>
+                  return;
+                }
+                return v;
+              });
+            }}
+          >
+            <SelectTrigger className="flex-1">
+              <SelectValue placeholder="请选择" />
+            </SelectTrigger>
+            <SelectContent>
+              {provinceChoices.map((item) => (
+                <SelectItem key={item.value} value={item.value}>
+                  {item.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {cities.length > 0 && (
+            <Select
+              value={city}
+              onValueChange={(v) => {
+                setCity(v);
+                onChange?.([value[0], v]);
+              }}
+            >
+              <SelectTrigger className="flex-1">
+                <SelectValue placeholder="请选择" />
+              </SelectTrigger>
+              <SelectContent>
+                {cities.map((item) => (
+                  <SelectItem key={item.value} value={item.value}>
+                    {item.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           )}
         </>
       )}
