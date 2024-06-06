@@ -25,7 +25,7 @@ export const alovaInstance = createAlova({
   baseURL: process.env.NEXT_PUBLIC_API_URL ?? BASE_URL,
   statesHook: ReactHook,
   timeout: 5000,
-  localCache: DISABLE_CACHE ? null : { GET: 60000 },
+  localCache: DISABLE_CACHE ? null : { GET: 60000 }, // 默认GET缓存60s
   requestAdapter: LOCAL_MOCK ? mockAdapter : GlobalFetch(),
   beforeRequest(method) {
     if (IS_DEV) {
