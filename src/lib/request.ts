@@ -110,6 +110,7 @@ export const request = {
         ...(config.headers ?? {}),
       },
       mode: "cors",
+      next: { revalidate: 60 }, // 设置静态请求缓存时间为60秒，可以过滤一些高频请求
     });
   },
   post: <P extends PathsHavingMethod<"post">, R = any>(
