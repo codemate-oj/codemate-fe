@@ -12,6 +12,7 @@ import store from "@/store/login";
 import { passwordSchema, unameSchema } from "@/lib/form";
 import { HydroError } from "@/lib/error";
 import { useLockFn } from "ahooks";
+import VerifyButton from "@/components/common/verify-button";
 
 const formSchema = z.object({
   uname: unameSchema,
@@ -21,6 +22,7 @@ const formSchema = z.object({
 const LoginForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({ resolver: zodResolver(formSchema) });
   const [errorText, setErrorText] = React.useState("");
+  const [verifyPassed, setVerifyPassed] = React.useState(false);
 
   const handleSubmit = useLockFn(async (values: z.infer<typeof formSchema>) => {
     setErrorText("");
@@ -36,23 +38,29 @@ const LoginForm = () => {
 
   return (
     <Form {...form}>
-      <form className="flex flex-col gap-y-8 items-start" onSubmit={form.handleSubmit(handleSubmit)}>
-        <FormInput name="uname" type="text" placeholder="请输入用户名 / 邮箱 / 手机号" />
+      <form className="flex flex-col items-start gap-1" onSubmit={form.handleSubmit(handleSubmit)}>
+        <FormInput name="uname" type="text" wrapperClassName="mb-4" placeholder="请输入用户名 / 邮箱 / 手机号" />
         <FormInput name="password" type="password" placeholder="请输入密码" />
         {errorText && (
-          <p className="px-1 flex gap-x-2 items-center text-sm text-red-500">
+          <p className="flex items-center gap-x-2 px-1 text-sm text-red-500">
             <Icon inline icon="ic:baseline-error" />
             {errorText}
           </p>
         )}
-        <Button type="button" variant="link">
+        <Button type="button" variant="link" className="mb-4 mt-2 p-0 pl-1">
           短信验证码登录
         </Button>
-        <Button type="submit" className="w-full block">
+        <VerifyButton
+          className="mb-2"
+          onVerifySuccess={() => {
+            setVerifyPassed(true);
+          }}
+        />
+        <Button type="submit" className="block w-full" disabled={!verifyPassed}>
           登录
         </Button>
       </form>
-      <div className="w-full flex justify-between">
+      <div className="mt-4 flex w-full justify-between">
         <Button
           onClick={() =>
             store.dialogJumpTo("choose-verify", {

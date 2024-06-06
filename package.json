@@ -15,6 +15,7 @@
     "@ant-design/icons": "^5.3.7",
     "@ant-design/nextjs-registry": "^1.0.0",
     "@davstack/store": "^0.2.1",
+    "@ebay/nice-modal-react": "^1.2.13",
     "@formily/antd": "^2.3.1",
     "@formily/core": "^2.3.1",
     "@formily/react": "^2.3.1",

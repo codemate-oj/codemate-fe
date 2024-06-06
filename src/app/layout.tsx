@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-sync-scripts */
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -12,6 +13,7 @@ import AntdThemeConfigProvider from "@/providers/antd-theme-config-provider";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import dynamic from "next/dynamic";
+import NiceModalProvider from "@/providers/nice-modal-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,21 +34,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-cn">
+      <head>
+        <script src="https://turing.captcha.qcloud.com/TCaptcha.js"></script>
+      </head>
       <body className={cn(inter.className)}>
         <AntdRegistry>
           <AntdThemeConfigProvider>
-            <header className="flex items-center relative justify-between m-auto py-2 max-w-screen-xl px-10 xl:px-0">
-              <section className="flex flex-none items-center gap-x-2.5">
-                <Image src="/img/logo.png" alt="website-logo" width={80} height={80} />
-                <h1 className="text-2xl font-bold hidden lg:block">AI推题，高效有趣玩OJ</h1>
-              </section>
-              <Navigation routes={mainRoutes} />
-              <div className="flex-none">
-                <UserLogin />
-              </div>
-            </header>
-            <main className="max-w-full">{children}</main>
-            <Toaster richColors />
+            <NiceModalProvider>
+              <header className="relative m-auto flex max-w-screen-xl items-center justify-between px-10 py-2 xl:px-0">
+                <section className="flex flex-none items-center gap-x-2.5">
+                  <Image src="/img/logo.png" alt="website-logo" width={80} height={80} />
+                  <h1 className="hidden text-2xl font-bold lg:block">AI推题，高效有趣玩OJ</h1>
+                </section>
+                <Navigation routes={mainRoutes} />
+                <div className="flex-none">
+                  <UserLogin />
+                </div>
+              </header>
+              <main className="max-w-full">{children}</main>
+              <Toaster richColors />
+            </NiceModalProvider>
           </AntdThemeConfigProvider>
         </AntdRegistry>
       </body>

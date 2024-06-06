@@ -8,16 +8,16 @@ interface SectionProps {
 
 export const FooterSection: React.FC<React.PropsWithChildren<SectionProps>> = ({ icon, title, children }) => (
   <section className="flex flex-col items-center">
-    <div className="h-[40px] flex items-center">{icon}</div>
-    <h4 className="text-[#3D3D3D] text-lg mt-3">{title}</h4>
-    <ul className="grid grid-cols-2 mt-5 gap-x-2 gap-y-3 text-center">{children}</ul>
+    <div className="flex h-[40px] items-center">{icon}</div>
+    <h4 className="mt-3 text-lg text-[#3D3D3D]">{title}</h4>
+    <ul className="mt-5 grid grid-cols-2 gap-x-2 gap-y-3 text-center">{children}</ul>
   </section>
 );
 
 const PageFooter = () => {
   return (
-    <footer className="bg-[#F8F8F8] text-[#797979] w-full text-center">
-      <div className="m-auto p-10 max-w-screen-2xl flex justify-center gap-14">
+    <footer className="w-full bg-[#F8F8F8] text-center text-[#797979]">
+      <div className="m-auto flex max-w-screen-2xl justify-center gap-14 p-10">
         <section className="text-center">
           <Image src="/img/logo.png" alt="website-logo" width={178} height={178} />
           <p className="mt-5 text-xl text-[#3D3D3D]">AI推题，高效有趣玩OJ</p>
@@ -68,13 +68,25 @@ const PageFooter = () => {
           <li>加入我们</li>
         </FooterSection>
       </div>
-      <aside className="py-3 bg-[#ECECEC]">
-        <ul className="m-auto max-w-screen-2xl flex justify-end gap-4">
+      <aside className="bg-[#ECECEC] py-3">
+        <ul className="m-auto flex max-w-screen-2xl justify-end gap-4">
           <li>故障反馈</li>
           <li>用户条款</li>
           <li>评测队列</li>
           <li>服务状态</li>
-          <li>网站备案号</li>
+          {process.env.NEXT_PUBLIC_BEIAN && (
+            <li>
+              <a href="https://beian.miit.gov.cn/" target="_blank">
+                {process.env.NEXT_PUBLIC_BEIAN}
+              </a>
+            </li>
+          )}
+          <li>
+            <span>Powered By </span>
+            <a href="https://github.com/hydro-dev/Hydro" target="_blank">
+              Hydro
+            </a>
+          </li>
         </ul>
       </aside>
     </footer>
