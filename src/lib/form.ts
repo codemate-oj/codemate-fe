@@ -9,12 +9,15 @@ export const unameSchema = z
     required_error: "请输入用户名",
   })
   .regex(/^(.{3,31}|[\u4e00-\u9fa5]{2})$/, "用户名不能少于3位或超过31位，或者是汉字");
-export const passwordSchema = z
+export const passwordSchema = z.string({
+  required_error: "请输入密码",
+});
+// 密码长度8-16位数，必须包含数字字母
+export const createPasswordSchema = z
   .string({
     required_error: "请输入密码",
   })
-  .min(6, "密码不能少于6位")
-  .max(255, "密码不能超过255位");
+  .regex(/^(?=.*[a-zA-Z])(?=.*\d).{8,16}$/, "密码长度8-16位数，必须包含数字字母");
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function objectToFormData(obj: Record<string, any>) {

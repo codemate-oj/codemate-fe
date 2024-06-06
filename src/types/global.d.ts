@@ -4,6 +4,48 @@ declare module "*.yml" {
   export default value;
 }
 
+declare module "china-region" {
+  interface RegionInfo {
+    /** 地区名称 */
+    name: string;
+    /** 地区代码 */
+    code: string;
+    /** 地区简称 */
+    alias?: string;
+  }
+
+  interface RegionLeveledInfo extends RegionInfo {
+    /** 上属城市名，为null则代表无上属城市或自己就是城市 */
+    prefecture: string | null;
+    /** 上属省份名，为null则代表无上属省份或自己就是省份 */
+    province: string | null;
+  }
+
+  /** 根据升级行政区名称或简称获取行政区划代码 */
+  export function getCodeByProvinceName(name: string): string;
+  /** 返回某个行政区号代表的行政区 */
+  export function info(code: string): RegionLeveledInfo;
+  /** 返回中国所有的各级行政区 */
+  export function getAllRegions(): RegionInfo[];
+  /** 返回中国所有的省级行政区 */
+  export function getProvinces(): RegionInfo[];
+  /**
+   * 返回中国/某省级行政区下所有的地级行政区
+   * @param code code 指行政区代码，code 为空时返回中国所有的地级行政区，不为空时返回该省级行政区的所有地级行政区
+   */
+  export function getPrefectures(code?: string): RegionInfo[];
+  /**
+   * 返回中国/某省级行政区下所有的县级行政区
+   * @param code code 指行政区代码，code 为空时返回中国所有的县级行政区，不为空时返回该省级行政区的所有县级行政区
+   */
+  export function getCounties(code?: string): RegionInfo[];
+  /**
+   * 返回中国/某省级行政区下所有的省直管县。如海南省的各县和县级市、湖北省的仙桃市、潜江市、天门市、神农架林区、河南省的济源市、新疆的数个由自治区和新疆兵团双重领导的县级市等
+   * @param code code 指行政区代码，code 为空时返回中国所有的县级行政区，不为空时返回该省/市级行政区的所有地级行政区
+   */
+  export function getSpecialConties(code?: string): RegionInfo[];
+}
+
 interface NavItemType {
   name: string;
   href: Parameters<typeof Link>[0]["href"];

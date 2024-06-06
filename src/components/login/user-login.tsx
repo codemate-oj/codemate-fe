@@ -41,7 +41,7 @@ const UserLogin = () => {
 
   if (!userContext) {
     return (
-      <Dialog modal={true} open={isDialogShow} onOpenChange={handleOpenChange}>
+      <Dialog open={isDialogShow} onOpenChange={handleOpenChange} modal={false}>
         <div className="flex gap-x-5">
           <DialogTrigger asChild>
             <Button onClick={() => store.dialogJumpTo("login")}>登录</Button>
@@ -50,10 +50,11 @@ const UserLogin = () => {
             <Button
               variant="outline"
               onClick={() =>
-                store.dialogJumpTo("choose-verify", {
-                  title: "请选择注册方式",
-                  category: "register",
-                })
+                // store.dialogJumpTo("choose-verify", {
+                //   title: "请选择注册方式",
+                //   category: "register",
+                // })
+                store.dialogJumpTo("user-info")
               }
             >
               注册
