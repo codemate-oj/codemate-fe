@@ -61,11 +61,7 @@ const UserRoleSelect: React.FC<UserSelectProps> = ({ value, onChange }) => {
         selected={selected === UserRole.SENIOR_MIDDLE_SCHOOL_STUDENT}
         onClick={setSelected}
       />
-      <Select
-        defaultValue={String(UserRole.ADULT)}
-        value={String(selected)}
-        onValueChange={(v) => setSelected(Number(v))}
-      >
+      <Select onValueChange={(v) => setSelected(Number(v))}>
         <SelectTrigger
           className={selected >= 10 ? "border-2 border-primary text-primary hover:bg-accent/30 hover:text-primary" : ""}
         >

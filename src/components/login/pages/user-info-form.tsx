@@ -61,7 +61,7 @@ const UserInfoForm = () => {
             type="text"
             label="用户ID"
             placeholder="请输入用户ID"
-            description="用户ID不能包含汉字和特殊字符，一旦确定将无法更改"
+            description="用户ID是您在本网站身份的标识，由大小写字母、数字和下划线组成，且不能和其它用户的ID重复，注册后不可更改。"
             addressDescription
           />
           <FormInput name="nickname" type="text" label="昵称" placeholder="请输入昵称" />
