@@ -94,6 +94,7 @@ const ContestDetailFooter: React.FC<{
   tid: string;
   checkinEndAt?: string;
 }> = (props) => {
+  const route = useRouter();
   const { isApply, state, tid, checkinEndAt, title } = props;
   const [isOpen, setIsOpen] = useState(false);
   const handleOpenChange = (open: boolean) => {
@@ -157,6 +158,14 @@ const ContestDetailFooter: React.FC<{
         >
           <ExportOutlined />
           分享
+        </span>
+        <span
+          onClick={() => {
+            route.push(`/contest/${tid}/problems`);
+          }}
+          className="ml-2 py-2 px-4 text-sm font-normal rounded-lg text-white border border-[#ffa54c] bg-[#fb9c3c] cursor-pointer"
+        >
+          题单
         </span>
       </div>
     </div>
