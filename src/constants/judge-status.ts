@@ -13,6 +13,7 @@ export const STATUS_ETC = 10;
 export const STATUS_JUDGING = 20;
 export const STATUS_COMPILING = 21;
 export const STATUS_FETCHED = 22;
+export const STATUS_Format = 31;
 export const STATUS_IGNORED = 30;
 
 export const STATUS_TEXTS = {
@@ -31,6 +32,7 @@ export const STATUS_TEXTS = {
   [STATUS_COMPILING]: "Compiling",
   [STATUS_FETCHED]: "Fetched",
   [STATUS_IGNORED]: "Ignored",
+  [STATUS_Format]: "Format Error",
 };
 
 export const STATUS_CODES = {

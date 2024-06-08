@@ -1,17 +1,19 @@
-"use client";
 import { getTimeDiffFromNow } from "@/lib/utils";
 import { Table, TableProps } from "antd";
 import Link from "next/link";
+import ProblemCommitState from "./problem-commit-state";
 interface DataType {
   key: string;
-  status: string;
+  status: string | number;
   title: string;
   last_commit: number | string;
+  score: number;
 }
 interface CommitRecordProps {
   records: {
     key: string;
-    status: string;
+    status: string | number;
+    score: number;
     last_commit: number | string;
     title: string;
   }[];
@@ -23,6 +25,10 @@ const columns: TableProps<DataType>["columns"] = [
     key: "status",
     width: 180,
     align: "center",
+    render: (_, record) => {
+      if (record.status == "没有递交") return record.status;
+      return <ProblemCommitState state={Number(record.status)} score={record.score}></ProblemCommitState>;
+    },
   },
   {
     title: "最后提交于",
