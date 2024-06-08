@@ -17,24 +17,26 @@ const ProblemsList: React.FC<PropsType> = (props) => {
       },
     });
     return {
-      plist: data.pdict,
+      pdict: data.pdict,
       rdocs: data.rdocs,
       psdict: data.psdict,
     };
   });
-  const plist = data?.plist;
+  const plist = data?.pdict;
   const plistKeys = Object.keys(plist || {});
   const psdict = data?.psdict;
   const rdocs = data?.rdocs;
   const commitRecords = plistKeys.slice(0, plistKeys.length / 2).map((key, index) => {
     const res = {
       key: key,
-      status: "没有递交",
+      status: "没有递交" as string | number,
       title: String.fromCharCode("A".charCodeAt(0) + index) + " " + plist[key].title,
       last_commit: "-",
+      score: 0,
     };
     if (psdict[key]) {
-      res.status = psdict[key].status == 1 ? "100 Accepted" : "提交失败";
+      res.status = psdict[key].status;
+      res.score = psdict[key].score;
     }
     for (let i = 0; i < rdocs?.length || 0; i++) {
       if (rdocs[i].pid == key) {
