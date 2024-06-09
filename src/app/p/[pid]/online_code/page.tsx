@@ -2,9 +2,12 @@
 
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { Collapse, Divider, Radio, RadioChangeEvent, Spin, Tabs } from "antd";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Allotment, AllotmentHandle } from "allotment";
 import "allotment/dist/style.css";
+// @ts-expect-errorNEXTLINE 无类型声明
+import { language as cppLanguage } from "monaco-editor/esm/vs/basic-languages/cpp/cpp.js";
+import { languages } from "monaco-editor";
 
 const tabList = [
   { key: "tab1", label: "自测结果" },
@@ -17,8 +20,53 @@ const contentList: Record<string, React.ReactNode> = {
 
 const Page = () => {
   const editorInstance = useMonaco();
-  const [selectedLanguage, setSelectedLanguage] = useState("cpp");
-  const [code, setCode] = useState("//lang: cpp");
+
+  useEffect(() => {
+    if (editorInstance) {
+      editorInstance.languages.registerCompletionItemProvider("c++", {
+        provideCompletionItems: function (model, position) {
+          const suggestions: languages.CompletionItem[] = [];
+          // 获取当前单词的范围
+          const word = model.getWordAtPosition(position);
+          if (word) {
+            const startLineNumber = position.lineNumber;
+            const startColumn = word.startColumn;
+            const endLineNumber = position.lineNumber;
+            const endColumn = word.endColumn;
+
+            // 确保单词范围有效
+            const currentWordRange = new editorInstance.Range(startLineNumber, startColumn, endLineNumber, endColumn);
+
+            cppLanguage.keywords.forEach((item: string) => {
+              suggestions.push({
+                label: item,
+                kind: editorInstance.languages.CompletionItemKind.Keyword,
+                insertText: item,
+                range: currentWordRange,
+              });
+            });
+            cppLanguage.operators.forEach((item: string) => {
+              suggestions.push({
+                label: item,
+                kind: editorInstance.languages.CompletionItemKind.Operator,
+                insertText: item,
+                range: currentWordRange,
+              });
+            });
+          }
+          return {
+            suggestions: suggestions,
+            incomplete: true,
+          };
+        },
+      });
+      editorInstance.languages.register({ id: "c++" });
+      editorInstance.languages.setMonarchTokensProvider("c++", cppLanguage);
+    }
+  }, [editorInstance]);
+
+  const [selectedLanguage, setSelectedLanguage] = useState("c++");
+  const [code, setCode] = useState("//lang: c++");
   const onlineEditorHeader: {
     label?: string;
     type?: "default" | "select";
@@ -36,7 +84,7 @@ const Page = () => {
     },
     {
       type: "select",
-      options: ["CPP", "Python"],
+      options: ["C++", "Python"],
       onSelectedChange: (e: RadioChangeEvent) => {
         const value = e.target.value;
         if (!editorInstance) return;
@@ -110,7 +158,7 @@ const Page = () => {
                   //   );
                 }
               })}
-              <Editor language={selectedLanguage} value={code} loading={<Spin />} className="" />
+              <Editor language={selectedLanguage} value={code} loading={<Spin />} />
             </Allotment.Pane>
             <Allotment.Pane preferredSize={position} className="duration-300 ease-in-out">
               <Collapse
