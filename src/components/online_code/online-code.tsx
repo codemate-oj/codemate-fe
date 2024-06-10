@@ -1,7 +1,7 @@
 "use client";
 
 import Editor, { useMonaco } from "@monaco-editor/react";
-import { Divider, Radio, RadioChangeEvent, Spin } from "antd";
+import { Button, Divider, Radio, RadioChangeEvent, Spin } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import "allotment/dist/style.css";
 // @ts-expect-errorNEXTLINE 无类型声明
@@ -9,9 +9,9 @@ import { language as cppLanguage } from "monaco-editor/esm/vs/basic-languages/cp
 // @ts-expect-errorNEXTLINE 无类型声明
 import { language as pythonLanguage } from "monaco-editor/esm/vs/basic-languages/python/python.js";
 import { languages } from "monaco-editor";
-import ResultTab from "@/components/home/online_code/result-tab";
+import ResultTab from "@/components/online_code/result-tab";
 
-const Page = () => {
+const OnlineCode = () => {
   const editorInstance = useMonaco();
 
   const [selectedLanguage, setSelectedLanguage] = useState("c++");
@@ -84,13 +84,16 @@ const Page = () => {
     onSelectedChange?: (e: RadioChangeEvent) => void;
   }[] = [
     {
-      label: "运行自测(F9)",
+      type: "default",
+      label: "自测运行",
     },
     {
-      label: "递交评测(F10)",
+      type: "default",
+      label: "递交评测",
     },
     {
-      label: "退出(Alt+Q)",
+      type: "default",
+      label: "退出",
     },
     {
       type: "select",
@@ -103,49 +106,55 @@ const Page = () => {
         setCode(`//lang: ${lang}`);
       },
     },
-    {
-      label: "自测",
-    },
-    {
-      label: "评测记录",
-    },
   ];
 
   return (
     <>
-      <div className="w-full flex h-[90vh]">
-        <div className="w-[50%]"></div>
-        <Divider type="vertical" className="!h-full" />
-        <div className="flex-1">
-          <ResultTab>
-            {onlineEditorHeader.map((item, index) => {
-              switch (item.type) {
-                case "select":
-                  return (
-                    <div className="m-2 inline-block" key={index}>
-                      选择语言&nbsp;
-                      <Radio.Group onChange={item.onSelectedChange} defaultValue={item?.options?.[0]}>
-                        {item?.options?.map((i) => (
-                          <Radio.Button key={i} value={i}>
-                            {i}
-                          </Radio.Button>
-                        ))}
-                      </Radio.Group>
-                    </div>
-                  );
-                // default:
-                //   return (
-                //     <Button key={index} className={className}>
-                //       {item.label}
-                //     </Button>
-                //   );
-              }
-            })}
-            <Editor language={selectedLanguage} value={code} loading={<Spin />} />
-          </ResultTab>
+      <div className="w-full h-screen fixed inset-0 z-50 bg-white">
+        <div className="w-full flex h-[10vh] items-center justify-center">
+          {onlineEditorHeader.map((item) => {
+            switch (item.type) {
+              case "default":
+                return (
+                  <Button key={item.label} className="mr-2 mb-2">
+                    {item.label}
+                  </Button>
+                );
+            }
+          })}
         </div>
+        <Divider className="!m-0" />
+        <div className="w-full flex h-[80vh]">
+          <div className="w-[50%]"></div>
+          <Divider type="vertical" className="!h-full" />
+          <div className="flex-1">
+            <ResultTab>
+              {onlineEditorHeader.map((item, index) => {
+                switch (item.type) {
+                  case "select":
+                    return (
+                      <div className="m-2 inline-block" key={index}>
+                        选择语言&nbsp;
+                        <Radio.Group onChange={item.onSelectedChange} defaultValue={item?.options?.[0]}>
+                          {item?.options?.map((i) => (
+                            <Radio.Button key={i} value={i}>
+                              {i}
+                            </Radio.Button>
+                          ))}
+                        </Radio.Group>
+                      </div>
+                    );
+                }
+              })}
+              <Editor language={selectedLanguage} value={code} loading={<Spin />} />
+            </ResultTab>
+          </div>
+        </div>
+        <Divider className="!m-0" />
+        <div className="w-full flex h-[10vh]"></div>
       </div>
     </>
   );
 };
-export default Page;
+
+export default OnlineCode;

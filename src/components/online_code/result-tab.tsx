@@ -39,14 +39,15 @@ const ResultTab: React.FC<ResultTabProps> = ({ children }) => {
     setIsCollapsed(Boolean(keys.length));
   };
   const handlePositionChange = (position: number[]) => {
-    if (position[1] / (position[0] + position[1]) > 0.1) {
+    const nowPosition = position[1] / (position[0] + position[1]);
+    if (nowPosition > 0.1) {
       setCollapseKey("result");
       setIsCollapsed(true);
+      setPosition(`${nowPosition * 100}%`);
     } else {
       setCollapseKey("");
       setIsCollapsed(false);
     }
-    setPosition(`${(position[1] / (position[0] + position[1])) * 100}%`);
   };
   const collapseItem = [
     {
@@ -60,7 +61,7 @@ const ResultTab: React.FC<ResultTabProps> = ({ children }) => {
       <Allotment.Pane minSize={200} className="duration-300 ease-in-out">
         {children}
       </Allotment.Pane>
-      <Allotment.Pane preferredSize={position} className="duration-300 ease-in-out">
+      <Allotment.Pane preferredSize={position} className="duration-300 ease-in-out" snap>
         <Collapse
           activeKey={collapseKey}
           items={collapseItem}
