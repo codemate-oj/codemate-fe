@@ -1,26 +1,40 @@
-import ProblemsCommitState from "@/constants/problems-state";
+import { STATUS_TEXTS, StatusType } from "@/constants/judge-status";
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 interface PropsType {
   state: number;
   score: number;
 }
 const ProblemCommitState: React.FC<PropsType> = (porps) => {
   const { state, score } = porps;
-  const stateText =
-    ProblemsCommitState[state as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18];
-  let color = "green";
-  if (score !== 100) {
-    color = "red";
-  }
-  const className = `text-${color}-500 border-[${color}]`;
+  const stateText = STATUS_TEXTS[state as StatusType];
+
+  const textColor = score == 100 ? "[rgb(42,198,73)]" : "red";
+  const borderColor = score == 100 ? " border-green-500 " : " ";
 
   return (
     <div
-      className={
-        "absolute left-0 top-0 flex h-full w-full items-center justify-center border-0 border-l-4 text-center " +
-        className
-      }
+      className={`absolute font-medium top-0 left-0  w-full h-full border-l-4 border-opacity-50 flex items-center justify-center text-center text-${textColor} ${borderColor}`}
     >
-      {score} {stateText}
+      {score == 100 ? (
+        <>
+          <CheckOutlined />
+          <span className={`text-${textColor}-500`}>
+            &nbsp;
+            {score}
+            &nbsp;
+          </span>
+        </>
+      ) : (
+        <>
+          <CloseOutlined />
+          <span className={`text-${textColor}-500`}>
+            &nbsp;
+            {score}
+            &nbsp;
+          </span>
+        </>
+      )}
+      {stateText}
     </div>
   );
 };

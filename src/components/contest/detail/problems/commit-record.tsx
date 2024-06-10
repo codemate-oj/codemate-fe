@@ -8,6 +8,8 @@ interface DataType {
   title: string;
   last_commit: number | string;
   score: number;
+  pid: string;
+  tid: string;
 }
 interface CommitRecordProps {
   records: {
@@ -16,6 +18,8 @@ interface CommitRecordProps {
     score: number;
     last_commit: number | string;
     title: string;
+    pid: string;
+    tid: string;
   }[];
 }
 const columns: TableProps<DataType>["columns"] = [
@@ -48,7 +52,11 @@ const columns: TableProps<DataType>["columns"] = [
     key: "title",
     render: (_, record) => {
       return (
-        <Link target="_blank" href={"/"} className="text-[rgb(255,125,55)]">
+        <Link
+          target="_blank"
+          href={`/p/${record.pid}?tid=${record.tid}&fromContest=true`}
+          className="text-[rgb(255,125,55)]"
+        >
           {record.title}
         </Link>
       );

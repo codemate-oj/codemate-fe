@@ -13,7 +13,7 @@ export const STATUS_ETC = 10;
 export const STATUS_JUDGING = 20;
 export const STATUS_COMPILING = 21;
 export const STATUS_FETCHED = 22;
-export const STATUS_Format = 31;
+export const STATUS_FORMAT = 31;
 export const STATUS_IGNORED = 30;
 
 export const STATUS_TEXTS = {
@@ -32,7 +32,7 @@ export const STATUS_TEXTS = {
   [STATUS_COMPILING]: "Compiling",
   [STATUS_FETCHED]: "Fetched",
   [STATUS_IGNORED]: "Ignored",
-  [STATUS_Format]: "Format Error",
+  [STATUS_FORMAT]: "Format Error",
 };
 
 export const STATUS_CODES = {
@@ -83,3 +83,4 @@ export const STATUS_SCRATCHPAD_SHORT_TEXTS = {
   [STATUS_MEMORY_LIMIT_EXCEEDED]: "MLE",
   [STATUS_RUNTIME_ERROR]: "RTE",
 };
+export type StatusType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 20 | 21 | 22 | 30;
