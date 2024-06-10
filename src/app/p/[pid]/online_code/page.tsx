@@ -122,6 +122,7 @@ const Page = () => {
 
   const [activeTabKey, setActiveTabKey] = useState<string>("tab1");
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [collapseKey, setCollapseKey] = useState<string>("");
   const [position, setPosition] = useState<string>("50%");
   const paneRef = useRef<AllotmentHandle>(null);
 
@@ -129,19 +130,29 @@ const Page = () => {
     setActiveTabKey(key);
   };
   const handleCollapse = (keys: string | string[]) => {
+    if (keys.length) {
+      setCollapseKey("result");
+    } else {
+      setCollapseKey("");
+    }
     if (isCollapsed) {
       if (paneRef.current) paneRef.current.resize([9, 1]);
     } else {
       if (paneRef.current) paneRef.current.reset();
     }
-    setIsCollapsed(keys.length !== 0);
+    setIsCollapsed(Boolean(keys.length));
   };
   const handlePositionChange = (position: number[]) => {
+    if (position[1] / (position[0] + position[1]) > 0.1) {
+      setCollapseKey("result");
+    } else {
+      setCollapseKey("");
+    }
     setPosition(`${(position[1] / (position[0] + position[1])) * 100}%`);
   };
   const collapseItem = [
     {
-      // key: "1",
+      key: "result",
       label: <Tabs activeKey={activeTabKey} items={tabList} onChange={onTabChange} />,
       children: contentList[activeTabKey],
     },
@@ -181,6 +192,7 @@ const Page = () => {
             </Allotment.Pane>
             <Allotment.Pane preferredSize={position} className="duration-300 ease-in-out">
               <Collapse
+                activeKey={collapseKey}
                 items={collapseItem}
                 collapsible="icon"
                 expandIconPosition="end"
