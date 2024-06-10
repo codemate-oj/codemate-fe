@@ -152,21 +152,21 @@ const ContestDetailFooter: React.FC<{
             setIsOpen(true);
           }}
         />
-        <span
+        <button
           onClick={() => store.dialogJumpTo("login")}
           className="ml-2 py-2 px-4 text-sm font-normal rounded-lg text-white border border-[#ffa54c] bg-[#fb9c3c] cursor-pointer"
         >
           <ExportOutlined />
           分享
-        </span>
-        <span
+        </button>
+        <button
           onClick={() => {
             route.push(`/contest/${tid}/problems`);
           }}
-          className="ml-2 py-2 px-4 text-sm font-normal rounded-lg text-white border border-[#ffa54c] bg-[#fb9c3c] cursor-pointer"
+          className="ml-2 py-2 px-4 text-sm font-normal rounded-lg text-white border border-[#ffa54c] bg-[#fb9c3c]"
         >
           题单
-        </span>
+        </button>
       </div>
     </div>
   );

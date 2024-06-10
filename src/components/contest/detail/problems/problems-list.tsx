@@ -29,6 +29,8 @@ const ProblemsList: React.FC<PropsType> = (props) => {
   const commitRecords = plistKeys.slice(0, plistKeys.length / 2).map((key, index) => {
     const res = {
       key: key,
+      tid: tid,
+      pid: plist[key].pid,
       status: "没有递交" as string | number,
       title: String.fromCharCode("A".charCodeAt(0) + index) + " " + plist[key].title,
       last_commit: "-",
