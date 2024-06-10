@@ -1,20 +1,20 @@
 // Please note that accepted < others, rp system uses this feature.
-export const STATUS_WAITING = 0;
-export const STATUS_ACCEPTED = 1;
-export const STATUS_WRONG_ANSWER = 2;
-export const STATUS_TIME_LIMIT_EXCEEDED = 3;
-export const STATUS_MEMORY_LIMIT_EXCEEDED = 4;
-export const STATUS_OUTPUT_LIMIT_EXCEEDED = 5;
-export const STATUS_RUNTIME_ERROR = 6;
-export const STATUS_COMPILE_ERROR = 7;
-export const STATUS_SYSTEM_ERROR = 8;
-export const STATUS_CANCELED = 9;
-export const STATUS_ETC = 10;
-export const STATUS_JUDGING = 20;
-export const STATUS_COMPILING = 21;
-export const STATUS_FETCHED = 22;
-export const STATUS_FORMAT = 31;
-export const STATUS_IGNORED = 30;
+export const STATUS_WAITING = 0 as const;
+export const STATUS_ACCEPTED = 1 as const;
+export const STATUS_WRONG_ANSWER = 2 as const;
+export const STATUS_TIME_LIMIT_EXCEEDED = 3 as const;
+export const STATUS_MEMORY_LIMIT_EXCEEDED = 4 as const;
+export const STATUS_OUTPUT_LIMIT_EXCEEDED = 5 as const;
+export const STATUS_RUNTIME_ERROR = 6 as const;
+export const STATUS_COMPILE_ERROR = 7 as const;
+export const STATUS_SYSTEM_ERROR = 8 as const;
+export const STATUS_CANCELED = 9 as const;
+export const STATUS_ETC = 10 as const;
+export const STATUS_JUDGING = 20 as const;
+export const STATUS_COMPILING = 21 as const;
+export const STATUS_FETCHED = 22 as const;
+export const STATUS_FORMAT = 31 as const;
+export const STATUS_IGNORED = 30 as const;
 
 export const STATUS_TEXTS = {
   [STATUS_WAITING]: "Waiting",
