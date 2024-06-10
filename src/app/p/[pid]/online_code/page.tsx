@@ -2,11 +2,13 @@
 
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { Collapse, Divider, Radio, RadioChangeEvent, Spin, Tabs } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Allotment, AllotmentHandle } from "allotment";
 import "allotment/dist/style.css";
 // @ts-expect-errorNEXTLINE 无类型声明
 import { language as cppLanguage } from "monaco-editor/esm/vs/basic-languages/cpp/cpp.js";
+// @ts-expect-errorNEXTLINE 无类型声明
+import { language as pythonLanguage } from "monaco-editor/esm/vs/basic-languages/python/python.js";
 import { languages } from "monaco-editor";
 
 const tabList = [
@@ -21,52 +23,69 @@ const contentList: Record<string, React.ReactNode> = {
 const Page = () => {
   const editorInstance = useMonaco();
 
-  useEffect(() => {
-    if (editorInstance) {
-      editorInstance.languages.registerCompletionItemProvider("c++", {
-        provideCompletionItems: function (model, position) {
-          const suggestions: languages.CompletionItem[] = [];
-          // 获取当前单词的范围
-          const word = model.getWordAtPosition(position);
-          if (word) {
-            const startLineNumber = position.lineNumber;
-            const startColumn = word.startColumn;
-            const endLineNumber = position.lineNumber;
-            const endColumn = word.endColumn;
-
-            // 确保单词范围有效
-            const currentWordRange = new editorInstance.Range(startLineNumber, startColumn, endLineNumber, endColumn);
-
-            cppLanguage.keywords.forEach((item: string) => {
-              suggestions.push({
-                label: item,
-                kind: editorInstance.languages.CompletionItemKind.Keyword,
-                insertText: item,
-                range: currentWordRange,
-              });
-            });
-            cppLanguage.operators.forEach((item: string) => {
-              suggestions.push({
-                label: item,
-                kind: editorInstance.languages.CompletionItemKind.Operator,
-                insertText: item,
-                range: currentWordRange,
-              });
-            });
-          }
-          return {
-            suggestions: suggestions,
-            incomplete: true,
-          };
-        },
-      });
-      editorInstance.languages.register({ id: "c++" });
-      editorInstance.languages.setMonarchTokensProvider("c++", cppLanguage);
-    }
-  }, [editorInstance]);
-
   const [selectedLanguage, setSelectedLanguage] = useState("c++");
   const [code, setCode] = useState("//lang: c++");
+
+  const registerLanguage = useCallback(
+    (language: string, rule: languages.IMonarchLanguage) => {
+      if (editorInstance) {
+        editorInstance.languages.registerCompletionItemProvider(language, {
+          provideCompletionItems: function (model, position) {
+            const suggestions: languages.CompletionItem[] = [];
+            // 获取当前单词的范围
+            const word = model.getWordAtPosition(position);
+            if (word) {
+              const startLineNumber = position.lineNumber;
+              const startColumn = word.startColumn;
+              const endLineNumber = position.lineNumber;
+              const endColumn = word.endColumn;
+
+              // 确保单词范围有效
+              const currentWordRange = new editorInstance.Range(startLineNumber, startColumn, endLineNumber, endColumn);
+
+              rule.keywords.forEach((item: string) => {
+                suggestions.push({
+                  label: item,
+                  kind: editorInstance.languages.CompletionItemKind.Keyword,
+                  insertText: item,
+                  range: currentWordRange,
+                });
+              });
+              rule.operators?.forEach((item: string) => {
+                suggestions.push({
+                  label: item,
+                  kind: editorInstance.languages.CompletionItemKind.Operator,
+                  insertText: item,
+                  range: currentWordRange,
+                });
+              });
+            }
+            return {
+              suggestions: suggestions,
+              incomplete: true,
+            };
+          },
+        });
+        editorInstance.languages.register({ id: language });
+        editorInstance.languages.setMonarchTokensProvider(language, rule);
+      }
+    },
+    [editorInstance]
+  );
+
+  useEffect(() => {
+    switch (selectedLanguage) {
+      case "c++":
+        registerLanguage("c++", cppLanguage);
+        break;
+      case "python":
+        registerLanguage("python", pythonLanguage);
+        break;
+      default:
+        break;
+    }
+  }, [editorInstance, registerLanguage, selectedLanguage]);
+
   const onlineEditorHeader: {
     label?: string;
     type?: "default" | "select";
