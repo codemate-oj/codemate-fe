@@ -66,7 +66,7 @@ const ResultTab: React.FC<ResultTabProps> = ({ children, handleInput, output, ws
         </div>
       ),
     }),
-    [handleInput, output]
+    [handleInput, output, result.summary_html]
   );
 
   const { connect: wsConnect } = useWebSocket(`ws://43.139.233.159/record-detail-conn?domainId=system&rid=${wsRid}`, {

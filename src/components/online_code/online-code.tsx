@@ -1,17 +1,12 @@
 "use client";
 
-import Editor, { useMonaco } from "@monaco-editor/react";
-import { Button, Divider, Radio, RadioChangeEvent, Spin } from "antd";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { Button, Divider, Radio, RadioChangeEvent } from "antd";
+import { ChangeEvent, useState } from "react";
 import "allotment/dist/style.css";
-// @ts-expect-errorNEXTLINE 无类型声明
-import { language as cppLanguage } from "monaco-editor/esm/vs/basic-languages/cpp/cpp.js";
-// @ts-expect-errorNEXTLINE 无类型声明
-import { language as pythonLanguage } from "monaco-editor/esm/vs/basic-languages/python/python.js";
-import { languages } from "monaco-editor";
 import ResultTab from "@/components/online_code/result-tab";
 import { request } from "@/lib/request";
 import { usePathname } from "next/navigation";
+import CodeEditor from "@/components/online_code/code-editor";
 
 interface OnlineCodeProps {
   toggleOnlineCodeVisibility: () => void;
@@ -19,7 +14,6 @@ interface OnlineCodeProps {
 
 const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) => {
   const pathname = usePathname();
-  const editorInstance = useMonaco();
 
   const [selectedLanguage, setSelectedLanguage] = useState("c++");
   const [code, setCode] = useState("//lang: c++");
@@ -29,66 +23,6 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
   const handleCode = (code: string | undefined) => {
     setCode(code ?? "");
   };
-
-  const registerLanguage = useCallback(
-    (language: string, rule: languages.IMonarchLanguage) => {
-      if (editorInstance) {
-        editorInstance.languages.registerCompletionItemProvider(language, {
-          provideCompletionItems: function (model, position) {
-            const suggestions: languages.CompletionItem[] = [];
-            // 获取当前单词的范围
-            const word = model.getWordAtPosition(position);
-            if (word) {
-              const startLineNumber = position.lineNumber;
-              const startColumn = word.startColumn;
-              const endLineNumber = position.lineNumber;
-              const endColumn = word.endColumn;
-
-              // 确保单词范围有效
-              const currentWordRange = new editorInstance.Range(startLineNumber, startColumn, endLineNumber, endColumn);
-
-              rule.keywords.forEach((item: string) => {
-                suggestions.push({
-                  label: item,
-                  kind: editorInstance.languages.CompletionItemKind.Keyword,
-                  insertText: item,
-                  range: currentWordRange,
-                });
-              });
-              rule.operators?.forEach((item: string) => {
-                suggestions.push({
-                  label: item,
-                  kind: editorInstance.languages.CompletionItemKind.Operator,
-                  insertText: item,
-                  range: currentWordRange,
-                });
-              });
-            }
-            return {
-              suggestions: suggestions,
-              incomplete: true,
-            };
-          },
-        });
-        editorInstance.languages.register({ id: language });
-        editorInstance.languages.setMonarchTokensProvider(language, rule);
-      }
-    },
-    [editorInstance]
-  );
-
-  useEffect(() => {
-    switch (selectedLanguage) {
-      case "c++":
-        registerLanguage("c++", cppLanguage);
-        break;
-      case "python":
-        registerLanguage("python", pythonLanguage);
-        break;
-      default:
-        break;
-    }
-  }, [editorInstance, registerLanguage, selectedLanguage]);
 
   const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
@@ -163,7 +97,6 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
       options: ["C++", "Python"],
       onSelectedChange: (e: RadioChangeEvent) => {
         const value = e.target.value;
-        if (!editorInstance) return;
         const lang = value?.toLocaleLowerCase();
         setSelectedLanguage(lang);
         setCode(`//lang: ${lang}`);
@@ -205,7 +138,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
                     );
                 }
               })}
-              <Editor language={selectedLanguage} value={code} loading={<Spin />} onChange={handleCode} />
+              <CodeEditor selectedLanguage={selectedLanguage} code={code} handleCode={handleCode} />
             </ResultTab>
           </div>
         </div>
