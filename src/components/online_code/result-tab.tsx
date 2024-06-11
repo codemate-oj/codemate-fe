@@ -12,17 +12,22 @@ interface ResultTabProps {
   children: React.ReactNode;
   input: string;
   handleInput: (e: ChangeEvent<HTMLTextAreaElement>) => void;
-  output: string;
-  wsRid: string;
+  rid: string;
+  selfRid: string;
 }
 
-const ResultTab: React.FC<ResultTabProps> = ({ children, input, handleInput, output, wsRid }) => {
+const ResultTab: React.FC<ResultTabProps> = ({ children, input, handleInput, rid, selfRid }) => {
   const [activeTabKey, setActiveTabKey] = useState<string>("tab1");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [collapseKey, setCollapseKey] = useState<string>("");
   const [position, setPosition] = useState<string>("40%");
   const paneRef = useRef<AllotmentHandle>(null);
   const [result, setResult] = useState<{ status: number; status_html: string; summary_html: string }>({
+    status: 0,
+    status_html: "",
+    summary_html: "",
+  });
+  const [selfResult, setSelfResult] = useState<{ status: number; status_html: string; summary_html: string }>({
     status: 0,
     status_html: "",
     summary_html: "",
@@ -34,7 +39,7 @@ const ResultTab: React.FC<ResultTabProps> = ({ children, input, handleInput, out
         <div className="flex items-center justify-around">
           <div className="w-2/5">
             输入：
-            <div className="h-28 border rounded-lg">
+            <div className="h-28 rounded-lg">
               <Input.TextArea
                 className="!h-28 overflow-auto"
                 allowClear
@@ -46,13 +51,8 @@ const ResultTab: React.FC<ResultTabProps> = ({ children, input, handleInput, out
           </div>
           <div className="w-2/5">
             输出：
-            <div className="h-28 border rounded-lg">
-              <Input.TextArea
-                className="!h-28 overflow-auto !bg-white !text-inherit !cursor-default"
-                disabled
-                value={output}
-                autoSize={{ minRows: 4 }}
-              />
+            <div className="h-28 border border-[#d9d9d9] rounded-lg overflow-auto text-inherit pt-1 px-3">
+              <div dangerouslySetInnerHTML={{ __html: selfResult.summary_html }} />
             </div>
           </div>
         </div>
@@ -60,7 +60,7 @@ const ResultTab: React.FC<ResultTabProps> = ({ children, input, handleInput, out
       tab2: (
         <div className="flex items-center justify-center">
           <div className="w-4/5">
-            <div className="h-28 overflow-auto text-inherit border rounded-lg">
+            <div className="h-28 overflow-auto text-inherit border rounded-lg pt-1 px-3">
               {/*<div dangerouslySetInnerHTML={{ __html: result.status_html }} />*/}
               <div dangerouslySetInnerHTML={{ __html: result.summary_html }} />
             </div>
@@ -68,21 +68,35 @@ const ResultTab: React.FC<ResultTabProps> = ({ children, input, handleInput, out
         </div>
       ),
     }),
-    [handleInput, input, output, result.summary_html]
+    [handleInput, input, result.summary_html, selfResult.summary_html]
   );
 
-  const { connect: wsConnect } = useWebSocket(`ws://43.139.233.159/record-detail-conn?domainId=system&rid=${wsRid}`, {
+  const { connect: wsSelfConnect } = useWebSocket(
+    `ws://43.139.233.159/record-detail-conn?domainId=system&rid=${selfRid}`,
+    {
+      manual: true,
+      onMessage: (message: WebSocketEventMap["message"]) => {
+        setSelfResult(JSON.parse(message.data));
+      },
+    }
+  );
+  useEffect(() => {
+    if (selfRid) {
+      wsSelfConnect();
+    }
+  }, [wsSelfConnect, selfRid]);
+
+  const { connect: wsConnect } = useWebSocket(`ws://43.139.233.159/record-detail-conn?domainId=system&rid=${rid}`, {
     manual: true,
     onMessage: (message: WebSocketEventMap["message"]) => {
       setResult(JSON.parse(message.data));
     },
   });
-
   useEffect(() => {
-    if (wsRid) {
+    if (rid) {
       wsConnect();
     }
-  }, [wsConnect, wsRid]);
+  }, [wsConnect, rid]);
 
   const onTabChange = (key: string) => {
     setActiveTabKey(key);

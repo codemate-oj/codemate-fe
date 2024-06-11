@@ -19,7 +19,8 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
   const [selectedLanguage, setSelectedLanguage] = useState("c++");
   const [code, setCode] = useState("//lang: c++");
   const [input, setInput] = useState("");
-  const [wsRid, setWsRid] = useState("");
+  const [selfRid, setSelfRid] = useState("");
+  const [rid, setRid] = useState("");
 
   useEffect(() => {
     setInput(localStorage.getItem(`${pid}-self-test-input`) ?? "");
@@ -46,7 +47,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
         },
       }
     );
-    setWsRid(data.rid ?? "");
+    setSelfRid(data.rid ?? "");
   };
 
   const handleTest = async () => {
@@ -60,7 +61,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
         },
       }
     );
-    setWsRid(data.rid ?? "");
+    setRid(data.rid ?? "");
   };
 
   const exit = () => {
@@ -126,7 +127,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
           <div className="w-[50%]"></div>
           <Divider type="vertical" className="!h-full" />
           <div className="flex-1">
-            <ResultTab input={input} handleInput={handleInput} output={""} wsRid={wsRid}>
+            <ResultTab input={input} handleInput={handleInput} rid={rid} selfRid={selfRid}>
               {onlineEditorHeader.map((item, index) => {
                 switch (item.type) {
                   case "select":
