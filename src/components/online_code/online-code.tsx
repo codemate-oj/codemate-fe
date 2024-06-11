@@ -2,7 +2,7 @@
 
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { Button, Divider, Radio, RadioChangeEvent, Spin } from "antd";
-import { useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import "allotment/dist/style.css";
 // @ts-expect-errorNEXTLINE 无类型声明
 import { language as cppLanguage } from "monaco-editor/esm/vs/basic-languages/cpp/cpp.js";
@@ -10,12 +10,25 @@ import { language as cppLanguage } from "monaco-editor/esm/vs/basic-languages/cp
 import { language as pythonLanguage } from "monaco-editor/esm/vs/basic-languages/python/python.js";
 import { languages } from "monaco-editor";
 import ResultTab from "@/components/online_code/result-tab";
+import { request } from "@/lib/request";
+import { usePathname } from "next/navigation";
 
-const OnlineCode = () => {
+interface OnlineCodeProps {
+  toggleOnlineCodeVisibility: () => void;
+}
+
+const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) => {
+  const pathname = usePathname();
   const editorInstance = useMonaco();
 
   const [selectedLanguage, setSelectedLanguage] = useState("c++");
   const [code, setCode] = useState("//lang: c++");
+  const [input, setInput] = useState("");
+  const [wsRid, setWsRid] = useState("");
+
+  const handleCode = (code: string | undefined) => {
+    setCode(code ?? "");
+  };
 
   const registerLanguage = useCallback(
     (language: string, rule: languages.IMonarchLanguage) => {
@@ -77,23 +90,73 @@ const OnlineCode = () => {
     }
   }, [editorInstance, registerLanguage, selectedLanguage]);
 
+  const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(e.target.value);
+  };
+
+  const handleSelfTest = async () => {
+    const pid = pathname.split("/").pop();
+    const lang = selectedLanguage === "c++" ? "cc.cc14o2" : selectedLanguage === "python" ? "py.py3" : "_";
+    const { data } = await request.post(
+      `/p/${pid}/submit` as "/p/{pid}/submit",
+      { lang, code, input },
+      {
+        transformData: (data) => {
+          return data;
+        },
+      }
+    );
+    setWsRid(data.rid ?? "");
+  };
+
+  const handleTest = async () => {
+    const pid = pathname.split("/").pop();
+    const lang = selectedLanguage === "c++" ? "cc.cc14o2" : selectedLanguage === "python" ? "py.py3" : "_";
+    const { data } = await request.post(
+      `/p/${pid}/submit` as "/p/{pid}/submit",
+      { lang, code: code },
+      {
+        transformData: (data) => {
+          return data;
+        },
+      }
+    );
+    setWsRid(data.rid ?? "");
+  };
+
+  const exit = () => {
+    toggleOnlineCodeVisibility();
+  };
+
   const onlineEditorHeader: {
-    label?: string;
     type?: "default" | "select";
+    content?: React.ReactNode;
     options?: string[];
     onSelectedChange?: (e: RadioChangeEvent) => void;
   }[] = [
     {
       type: "default",
-      label: "自测运行",
+      content: (
+        <Button className="mr-2 mb-2" onClick={handleSelfTest}>
+          自测运行
+        </Button>
+      ),
     },
     {
       type: "default",
-      label: "递交评测",
+      content: (
+        <Button className="mr-2 mb-2" onClick={handleTest}>
+          提交评测
+        </Button>
+      ),
     },
     {
       type: "default",
-      label: "退出",
+      content: (
+        <Button className="mr-2 mb-2" onClick={exit}>
+          退出
+        </Button>
+      ),
     },
     {
       type: "select",
@@ -115,11 +178,7 @@ const OnlineCode = () => {
           {onlineEditorHeader.map((item) => {
             switch (item.type) {
               case "default":
-                return (
-                  <Button key={item.label} className="mr-2 mb-2">
-                    {item.label}
-                  </Button>
-                );
+                return item.content;
             }
           })}
         </div>
@@ -128,7 +187,7 @@ const OnlineCode = () => {
           <div className="w-[50%]"></div>
           <Divider type="vertical" className="!h-full" />
           <div className="flex-1">
-            <ResultTab>
+            <ResultTab handleInput={handleInput} output={""} wsRid={wsRid}>
               {onlineEditorHeader.map((item, index) => {
                 switch (item.type) {
                   case "select":
@@ -146,7 +205,7 @@ const OnlineCode = () => {
                     );
                 }
               })}
-              <Editor language={selectedLanguage} value={code} loading={<Spin />} />
+              <Editor language={selectedLanguage} value={code} loading={<Spin />} onChange={handleCode} />
             </ResultTab>
           </div>
         </div>

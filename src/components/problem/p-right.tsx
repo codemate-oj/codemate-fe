@@ -13,15 +13,15 @@ interface PRightProps {}
 
 const PRight: React.FC<PRightProps> = (props) => {
   const {} = props;
-  const [showOnlineCode, setShowOnlineCode] = useState(false);
+  const [showOnlineCode, setShowOnlineCode] = useState(true);
 
-  const handleShowOnlineCode = () => {
-    setShowOnlineCode(true);
+  const toggleOnlineCodeVisibility = () => {
+    setShowOnlineCode(!showOnlineCode);
   };
   const list = [
     {
       content: (
-        <button onClick={handleShowOnlineCode} className="mr-2">
+        <button onClick={toggleOnlineCodeVisibility} className="mr-2">
           进入在线编程模式
         </button>
       ),
@@ -45,7 +45,7 @@ const PRight: React.FC<PRightProps> = (props) => {
             ) : (
               <>
                 {item.content}
-                {showOnlineCode && <OnlineCode />}
+                {showOnlineCode && <OnlineCode toggleOnlineCodeVisibility={toggleOnlineCodeVisibility} />}
               </>
             )}
           </div>
