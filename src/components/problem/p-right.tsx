@@ -13,7 +13,7 @@ interface PRightProps {}
 
 const PRight: React.FC<PRightProps> = (props) => {
   const {} = props;
-  const [showOnlineCode, setShowOnlineCode] = useState(true);
+  const [showOnlineCode, setShowOnlineCode] = useState(false);
 
   const toggleOnlineCodeVisibility = () => {
     setShowOnlineCode(!showOnlineCode);

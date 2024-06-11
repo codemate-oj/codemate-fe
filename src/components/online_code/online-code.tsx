@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Divider, Radio, RadioChangeEvent } from "antd";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import "allotment/dist/style.css";
 import ResultTab from "@/components/online_code/result-tab";
 import { request } from "@/lib/request";
@@ -14,22 +14,28 @@ interface OnlineCodeProps {
 
 const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) => {
   const pathname = usePathname();
+  const pid = pathname.split("/").pop();
 
   const [selectedLanguage, setSelectedLanguage] = useState("c++");
   const [code, setCode] = useState("//lang: c++");
   const [input, setInput] = useState("");
   const [wsRid, setWsRid] = useState("");
 
+  useEffect(() => {
+    setInput(localStorage.getItem(`${pid}-self-test-input`) ?? "");
+  }, [pid]);
+
   const handleCode = (code: string | undefined) => {
     setCode(code ?? "");
+    localStorage.setItem(`${pid}-${selectedLanguage}`, code ?? "");
   };
 
   const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
+    localStorage.setItem(`${pid}-self-test-input`, e.target.value ?? "");
   };
 
   const handleSelfTest = async () => {
-    const pid = pathname.split("/").pop();
     const lang = selectedLanguage === "c++" ? "cc.cc14o2" : selectedLanguage === "python" ? "py.py3" : "_";
     const { data } = await request.post(
       `/p/${pid}/submit` as "/p/{pid}/submit",
@@ -44,7 +50,6 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
   };
 
   const handleTest = async () => {
-    const pid = pathname.split("/").pop();
     const lang = selectedLanguage === "c++" ? "cc.cc14o2" : selectedLanguage === "python" ? "py.py3" : "_";
     const { data } = await request.post(
       `/p/${pid}/submit` as "/p/{pid}/submit",
@@ -99,7 +104,8 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
         const value = e.target.value;
         const lang = value?.toLocaleLowerCase();
         setSelectedLanguage(lang);
-        setCode(`//lang: ${lang}`);
+        const lastCode = localStorage.getItem(`${pid}-${lang}`);
+        setCode(lastCode ?? `//lang: ${lang}`);
       },
     },
   ];
@@ -120,7 +126,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
           <div className="w-[50%]"></div>
           <Divider type="vertical" className="!h-full" />
           <div className="flex-1">
-            <ResultTab handleInput={handleInput} output={""} wsRid={wsRid}>
+            <ResultTab input={input} handleInput={handleInput} output={""} wsRid={wsRid}>
               {onlineEditorHeader.map((item, index) => {
                 switch (item.type) {
                   case "select":

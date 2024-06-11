@@ -10,12 +10,13 @@ const tabList = [
 
 interface ResultTabProps {
   children: React.ReactNode;
+  input: string;
   handleInput: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   output: string;
   wsRid: string;
 }
 
-const ResultTab: React.FC<ResultTabProps> = ({ children, handleInput, output, wsRid }) => {
+const ResultTab: React.FC<ResultTabProps> = ({ children, input, handleInput, output, wsRid }) => {
   const [activeTabKey, setActiveTabKey] = useState<string>("tab1");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [collapseKey, setCollapseKey] = useState<string>("");
@@ -37,6 +38,7 @@ const ResultTab: React.FC<ResultTabProps> = ({ children, handleInput, output, ws
               <Input.TextArea
                 className="!h-28 overflow-auto"
                 allowClear
+                value={input}
                 onChange={handleInput}
                 autoSize={{ minRows: 4 }}
               />
@@ -66,7 +68,7 @@ const ResultTab: React.FC<ResultTabProps> = ({ children, handleInput, output, ws
         </div>
       ),
     }),
-    [handleInput, output, result.summary_html]
+    [handleInput, input, output, result.summary_html]
   );
 
   const { connect: wsConnect } = useWebSocket(`ws://43.139.233.159/record-detail-conn?domainId=system&rid=${wsRid}`, {
