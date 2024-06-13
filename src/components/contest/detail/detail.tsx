@@ -4,20 +4,10 @@ import { request } from "@/lib/request";
 import { useRequest } from "ahooks";
 import ContestDetailTop from "./contest-detail-top";
 import ContestDetailContent from "./contest-detail-content";
-import { getTimeDiffByHour } from "@/lib/utils";
+import { getDetailState, getTimeDiffByHour } from "@/lib/utils";
 import ContestDetailFooter from "./contest-detail-footer";
 import ContestDetailRight from "./contest-detail-right";
-const getDetailState = (props: { beginAt: string; endAt: string; checkinBeginAt?: string; checkinEndAt?: string }) => {
-  const { endAt, checkinBeginAt, checkinEndAt } = props;
-  const nowDate = new Date();
-  const endDate = new Date(endAt);
-  const checkinBeginDate = new Date(checkinBeginAt as string);
-  const checkinEndDate = new Date(checkinEndAt as string);
-  if (nowDate < checkinBeginDate) return "预告中";
-  else if (nowDate < checkinEndDate) return "可报名";
-  else if (nowDate < endDate) return "进行中";
-  else return "已结束";
-};
+
 interface PropsType {
   tid: string;
 }
@@ -89,7 +79,7 @@ const ContestDetail: React.FC<PropsType> = (props) => {
               tid={tid}
             />
           </div>
-          <ContestDetailRight tag={tag} nickname={String(data?.udict[owner].nickname) || ""} state={state} />
+          <ContestDetailRight tag={tag} nickname={String(data?.udict[owner].nickname) || ""} state={state} tid={tid} />
         </div>
       )}
     </div>

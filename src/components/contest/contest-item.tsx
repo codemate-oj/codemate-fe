@@ -73,8 +73,9 @@ const Item: React.FC<ItemProps> = (props) => {
             报名时间：{!checkinBeginAt ? "---" : formatTime(checkinBeginAt)} --{" "}
             {!checkinEndAt ? "---" : formatTime(checkinEndAt)}
           </p>
-          <p className="text-sm font-normal text-[#3D3D3D]">
-            比赛时间：{beginAt.slice(0, 16).replace("T", " ")} -- {endAt.slice(0, 16).replace("T", " ")}
+          <p className="font-normal text-sm text-[#3D3D3D]">
+            比赛时间：{!beginAt ? "---" : formatTime(beginAt)} -- {!endAt ? "---" : formatTime(endAt)}
+            {/* {beginAt.slice(0, 16).replace("T", " ")} -- {endAt.slice(0, 16).replace("T", " ")} */}
           </p>
           <span className="absolute right-0 top-2">
             <Link href={`/contest/${_id}`}>
