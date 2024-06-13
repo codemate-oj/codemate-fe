@@ -1,12 +1,15 @@
 import { CollapseProps } from "antd";
+import { useRouter } from "next/navigation";
 import React from "react";
 interface ContestDetailRightPropsType {
   tag: string[];
   nickname: string;
   state: string;
+  tid: string;
 }
 const ContestDetailRight: React.FC<ContestDetailRightPropsType> = (props) => {
-  const { nickname, state } = props;
+  const { nickname, state, tid } = props;
+  const router = useRouter();
   const items: CollapseProps["items"] = [
     {
       key: "1",
@@ -36,7 +39,16 @@ const ContestDetailRight: React.FC<ContestDetailRightPropsType> = (props) => {
     {
       key: "6",
       label: "比赛排名",
-      children: <span className="text-[#FF7D37] cursor-pointer">本次比赛完整排名</span>,
+      children: (
+        <span
+          className="text-[#FF7D37] cursor-pointer"
+          onClick={() => {
+            router.push(`/contest/${tid}/scoreboard`);
+          }}
+        >
+          本次比赛完整排名
+        </span>
+      ),
     },
   ];
   return (
