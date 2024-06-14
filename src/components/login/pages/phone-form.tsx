@@ -20,9 +20,16 @@ interface IProps {
   description?: string;
   buttonText?: string;
   onSubmit?: (value: string, ticket: string, randStr: string) => void;
+  loading?: boolean;
 }
 
-const PhoneForm: React.FC<IProps> = ({ title = "请输入手机号码", description, buttonText = "提交", onSubmit }) => {
+const PhoneForm: React.FC<IProps> = ({
+  title = "请输入手机号码",
+  description,
+  buttonText = "提交",
+  onSubmit,
+  loading,
+}) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -65,7 +72,7 @@ const PhoneForm: React.FC<IProps> = ({ title = "请输入手机号码", descript
               }}
             />
 
-            <Button type="submit" className="block w-full" disabled={!verifyPassed}>
+            <Button type="submit" className="block w-full" disabled={!verifyPassed} loading={loading}>
               {buttonText ?? "下一步"}
             </Button>
           </div>

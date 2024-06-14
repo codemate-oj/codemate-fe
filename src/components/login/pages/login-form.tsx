@@ -31,7 +31,7 @@ const LoginForm = () => {
     } catch (e) {
       console.error(e);
       if (e instanceof HydroError) {
-        setErrorText("用户名或密码错误");
+        setErrorText(e.message);
       }
     }
   });

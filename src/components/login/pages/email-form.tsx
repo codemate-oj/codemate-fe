@@ -20,9 +20,10 @@ interface IProps {
   description?: string;
   buttonText?: string;
   onSubmit?: (value: string, ticket: string, randStr: string) => void;
+  loading?: boolean;
 }
 
-const EmailForm: React.FC<IProps> = ({ title = "请输入邮箱", description, buttonText = "提交", onSubmit }) => {
+const EmailForm: React.FC<IProps> = ({ title = "请输入邮箱", description, buttonText = "提交", onSubmit, loading }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,7 +65,7 @@ const EmailForm: React.FC<IProps> = ({ title = "请输入邮箱", description, b
                 setVerifyPassed(true);
               }}
             />
-            <Button type="submit" className="block w-full" disabled={!verifyPassed}>
+            <Button type="submit" className="block w-full" disabled={!verifyPassed} loading={loading}>
               {buttonText ?? "下一步"}
             </Button>
           </div>

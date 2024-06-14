@@ -14,6 +14,8 @@ import { FormUserRoleSelect } from "@/components/form/user-role-select";
 import { UserRole } from "@/constants/misc";
 import PasswordCreateInput from "@/components/form/password-create-input";
 import { createPasswordSchema } from "@/lib/form";
+import { useLockFn } from "ahooks";
+import { request } from "@/lib/request";
 
 const formSchema = z
   .object({
@@ -46,6 +48,23 @@ const UserInfoForm = () => {
     },
   });
 
+  const handleSubmit = useLockFn(async (values: z.infer<typeof formSchema>) => {
+    if (!currentContext) throw new Error("TokenId not found in context.");
+    await request.post(`/register/${currentContext.token}` as "/register/{tokenId}", {
+      uname: values.uname,
+      password: values.password,
+      verifyCode: values.verifyCode,
+      nationality: values.location[0],
+      regionCode: values.location[1] ?? "",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      userRole: values.userRole as any,
+      //@ts-expect-error 后端类型未添加
+      nickname: values.nickname,
+    });
+
+    window.location.reload();
+  });
+
   return (
     <div className="flex flex-col gap-4">
       <div className="w-fit px-1">
@@ -53,7 +72,7 @@ const UserInfoForm = () => {
       </div>
       <div className="text-sm text-[#9E9E9E]">验证码已发送至：{currentContext?.sendTo}</div>
       <Form {...form}>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={form.handleSubmit(handleSubmit)}>
           <FormInput name="verifyCode" type="text" placeholder="请输入验证码" required />
           <FormInput
             required

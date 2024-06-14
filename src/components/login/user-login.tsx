@@ -50,11 +50,10 @@ const UserLogin = () => {
             <Button
               variant="outline"
               onClick={() =>
-                // store.dialogJumpTo("choose-verify", {
-                //   title: "请选择注册方式",
-                //   category: "register",
-                // })
-                store.dialogJumpTo("user-info")
+                store.dialogJumpTo("choose-verify", {
+                  title: "请选择注册方式",
+                  category: "register",
+                })
               }
             >
               注册
