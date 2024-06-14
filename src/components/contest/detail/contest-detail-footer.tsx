@@ -56,7 +56,7 @@ const DetailStateApply: React.FC<{
           target="_blankss"
           className="ml-2 py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary"
         >
-          查看题目
+          开始做题
         </Link>
       );
     } else {
