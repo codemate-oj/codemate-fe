@@ -1,5 +1,4 @@
 import PageTitle from "@/components/common/page-title";
-import NavigationTabs from "@/components/user/navigation-tabs";
 import { type Metadata } from "next";
 import React from "react";
 
@@ -15,10 +14,7 @@ const UserCenterLayout = ({
   return (
     <div className="m-auto max-w-screen-lg pb-10">
       <PageTitle>我的空间</PageTitle>
-      <div className="flex gap-x-8">
-        <NavigationTabs />
-        <div className="flex-1">{children}</div>
-      </div>
+      {children}
     </div>
   );
 };
