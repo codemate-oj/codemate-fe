@@ -8,6 +8,7 @@ const TreeSelector: React.FC = () => {
   return (
     <FilerTabsTree
       data={TOP_FILTER}
+      selectedPath={["5"]}
       onChange={(value) => {
         const key = value.join("-");
         setTags(key);

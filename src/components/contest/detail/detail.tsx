@@ -48,18 +48,15 @@ const ContestDetail: React.FC<PropsType> = (props) => {
     tag: [""],
     owner: "",
   };
-  const defaultTsdocData = {
-    attend: 1 | 0,
-  };
   const { title, attend, rule, beginAt, endAt, content, tag, owner } = (data || { tdoc: deafultTdocData }).tdoc;
-  const { attend: isApply } = (data || { tsdoc: defaultTsdocData }).tsdoc;
+  const tsdoc = data?.tsdoc;
   const state = getDetailState({
     checkinBeginAt: data?.tdoc?.checkinBeginAt,
     checkinEndAt: data?.tdoc?.checkinEndAt,
     beginAt: beginAt,
     endAt: endAt,
   });
-
+  const isApply = Boolean(tsdoc?.attend);
   return (
     <div>
       {loading ? (
@@ -72,7 +69,7 @@ const ContestDetail: React.FC<PropsType> = (props) => {
               attend={attend}
               rule={rule}
               time={getTimeDiffByHour(endAt, beginAt)}
-              isApply={isApply == 1 ? true : false}
+              isApply={isApply}
               checkinBeginAt={data?.tdoc?.checkinBeginAt}
               checkinEndAt={data?.tdoc?.checkinEndAt}
               beginAt={beginAt}
@@ -82,7 +79,7 @@ const ContestDetail: React.FC<PropsType> = (props) => {
             <ContestDetailContent content={content} />
             <ContestDetailFooter
               title={title}
-              isApply={isApply == 1 ? true : false}
+              isApply={isApply}
               state={state}
               checkinEndAt={data?.tdoc?.checkinEndAt}
               tid={tid}

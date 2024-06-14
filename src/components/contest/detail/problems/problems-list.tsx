@@ -10,7 +10,7 @@ interface PropsType {
 }
 const ProblemsList: React.FC<PropsType> = (props) => {
   const { tid } = props;
-  const { data, loading } = useRequest(async () => {
+  const { data, loading, refresh } = useRequest(async () => {
     const { data } = await request.get(`/contest/${tid as "{tid}"}/problems`, {
       transformData: ({ data }) => {
         return { data };
@@ -22,6 +22,12 @@ const ProblemsList: React.FC<PropsType> = (props) => {
       psdict: data.psdict,
     };
   });
+  const visibilitychangeEvent = () => {
+    if (!document.hidden) {
+      refresh();
+    }
+  };
+  document.addEventListener("visibilitychange", visibilitychangeEvent);
   const plist = data?.pdict;
   const plistKeys = Object.keys(plist || {});
   const psdict = data?.psdict;
