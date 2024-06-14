@@ -8,7 +8,7 @@ const ProblemCommitState: React.FC<PropsType> = (porps) => {
   const { state, score } = porps;
   const stateText = STATUS_TEXTS[state as StatusType];
 
-  const textColor = score == 100 ? "[rgb(42,198,73)]" : "red";
+  const textColor = score == 100 ? "text-green-400" : "text-red-500";
   const borderColor = score == 100 ? " border-green-500 " : " ";
 
   return (
@@ -18,7 +18,7 @@ const ProblemCommitState: React.FC<PropsType> = (porps) => {
       {score == 100 ? (
         <>
           <CheckOutlined />
-          <span className={`text-${textColor}-500`}>
+          <span className={textColor}>
             &nbsp;
             {score}
             &nbsp;
@@ -27,14 +27,14 @@ const ProblemCommitState: React.FC<PropsType> = (porps) => {
       ) : (
         <>
           <CloseOutlined />
-          <span className={`text-${textColor}-500`}>
+          <span className={textColor}>
             &nbsp;
             {score}
             &nbsp;
           </span>
         </>
       )}
-      {stateText}
+      {<span className={textColor}>{stateText}</span>}
     </div>
   );
 };

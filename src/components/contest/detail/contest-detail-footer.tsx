@@ -1,7 +1,6 @@
 "use client";
 import { request } from "@/lib/request";
-import { Button, Modal } from "antd";
-import { useRouter } from "next/navigation";
+import { Modal } from "antd";
 import { CheckOutlined, ExportOutlined } from "@ant-design/icons";
 import CountdownTimer from "./count-down";
 import { useState } from "react";
@@ -11,14 +10,8 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import LoginRegisterModal from "@/components/login/login-register-modal";
 
 const handleClickApply = async (tid: string, setIsOpen: () => void) => {
-  // const { data } =
   await request.post(`/contest/${tid as "{tid}"}`, { operation: "attend" });
-  // if(data){
-
-  // }
   setIsOpen();
-  // console.log(data);
-
   return 0;
 };
 const DetailStateApply: React.FC<{
@@ -28,16 +21,20 @@ const DetailStateApply: React.FC<{
   tid: string;
   click: () => void;
 }> = (props) => {
-  const router = useRouter();
   const { isLogin, isApply, state, tid, click } = props;
   if (state == "预告中") {
     return <></>;
   } else if (state == "可报名") {
-    if (isApply) return <span>已报名</span>;
+    if (isApply)
+      return (
+        <span className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary cursor-pointer">
+          已报名
+        </span>
+      );
     else
       return (
         <span
-          className="cursor-pointer rounded-lg border border-[#FF7D37] bg-[#FF7D37] px-4 py-2 text-sm font-normal text-white"
+          className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary cursor-pointer"
           onClick={() => {
             if (!isLogin) {
               store.dialogJumpTo("login");
@@ -54,30 +51,41 @@ const DetailStateApply: React.FC<{
   } else if (state == "进行中") {
     if (isApply) {
       return (
-        <span
-          className="cursor-pointer rounded-lg border border-[#FF7D37] bg-[#FF7D37] px-4 py-2 text-sm font-normal text-white"
-          onClick={() => router.push(`/contest/${tid}/problems`)}
+        <Link
+          href={`/contest/${tid}/problems`}
+          target="_blankss"
+          className="ml-2 py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary"
         >
           查看题目
-        </span>
+        </Link>
       );
     } else {
-      if (isApply) {
-        return (
-          <span className="cursor-not-allowed rounded-lg border border-[#FF7D37] bg-[#FF7D37] px-4 py-2 text-sm font-normal text-white">
-            查看结果
-          </span>
-        );
-      }
-      return (
-        <span className="cursor-not-allowed rounded-lg border border-[#FF7D37] bg-[#FF7D37] px-4 py-2 text-sm font-normal text-white">
-          报名已结束
-        </span>
-      );
+      <span
+        className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary cursor-pointer"
+        onClick={() => {
+          if (!isLogin) {
+            store.dialogJumpTo("login");
+            return;
+          }
+          handleClickApply(tid, () => {
+            click();
+          });
+        }}
+      >
+        马上报名
+      </span>;
     }
   } else {
     if (isApply) {
-      return <Button>查看结果</Button>;
+      return (
+        <Link
+          href={`/contest/${tid}/problems`}
+          target="_blankss"
+          className="ml-2 py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary"
+        >
+          查看题单
+        </Link>
+      );
     } else {
       return (
         <span className="cursor-not-allowed rounded-lg border border-[#706f6e] bg-[#706f6e] px-4 py-2 text-sm font-normal text-white">
@@ -94,8 +102,8 @@ const ContestDetailFooter: React.FC<{
   tid: string;
   checkinEndAt?: string;
 }> = (props) => {
-  const route = useRouter();
   const { isApply, state, tid, checkinEndAt, title } = props;
+
   const [isOpen, setIsOpen] = useState(false);
   const handleOpenChange = (open: boolean) => {
     store.isDialogShow.set(open);
@@ -123,7 +131,7 @@ const ContestDetailFooter: React.FC<{
         }
         centered={true}
         footer={() => (
-          <Link href={"/contest"} className="rounded-md bg-[#FF7D37] px-4 py-2 text-base font-normal text-white">
+          <Link href={"/contest"} className="text-white bg-primary px-4 py-2 text-base font-normal rounded-md">
             返回首页
           </Link>
         )}
@@ -154,18 +162,10 @@ const ContestDetailFooter: React.FC<{
         />
         <button
           onClick={() => store.dialogJumpTo("login")}
-          className="ml-2 cursor-pointer rounded-lg border border-[#ffa54c] bg-[#fb9c3c] px-4 py-2 text-sm font-normal text-white"
+          className="ml-2 py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary cursor-pointer"
         >
           <ExportOutlined />
-          分享
-        </button>
-        <button
-          onClick={() => {
-            route.push(`/contest/${tid}/problems`);
-          }}
-          className="ml-2 cursor-pointer rounded-lg border border-[#ffa54c] bg-[#fb9c3c] px-4 py-2 text-sm font-normal text-white"
-        >
-          题单
+          &nbsp; 分享
         </button>
       </div>
     </div>

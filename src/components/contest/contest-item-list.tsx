@@ -42,7 +42,6 @@ const ContestItemList: React.FC = () => {
       refreshDeps: [searchParams, page],
     }
   );
-
   return (
     <div className={"pt-3"}>
       {loading ? (
