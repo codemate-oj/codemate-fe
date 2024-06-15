@@ -9,6 +9,7 @@ const nextConfig = {
         },
       ];
     }
+    return [];
   },
   images: {
     dangerouslyAllowSVG: true, // 允许Image提供SVG而非img
