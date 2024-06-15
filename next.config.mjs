@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   rewrites: async () => {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === "development" || process.env.IS_VERCEL) {
       return [
         {
           source: "/api/:path*",
-          destination: `${process.env.API_URL ?? "https://beta.aioj.net/api/"}:path*`,
+          destination: `${process.env.API_URL ?? "https://api.aioj.net/"}:path*`,
         },
       ];
     }
