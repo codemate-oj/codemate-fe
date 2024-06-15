@@ -12,10 +12,7 @@ export const useUrlParamState = (key: string, defaultValue?: string) => {
       _setValue(val);
       const newParams = new URLSearchParams(searchParams);
       newParams.set(key, val);
-      router.push(
-        //@ts-expect-error 开启了静态路由后会报错
-        `${pathname}?${newParams.toString()}`
-      );
+      router.push(`${pathname}?${newParams.toString()}`);
     },
     [key, pathname, router, searchParams]
   );

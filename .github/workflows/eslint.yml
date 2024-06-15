@@ -28,3 +28,6 @@ jobs:
 
       - name: Run ESLint
         run: pnpm lint # 假设你在 package.json 中定义了 "lint" 脚本
+
+      - name: Run TypeScript Compiler
+        run: pnpm tsc --noEmit
