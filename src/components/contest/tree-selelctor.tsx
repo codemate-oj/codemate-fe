@@ -4,13 +4,13 @@ import FilerTabsTree from "@/components/common/filter-tabs-tree";
 import TOP_FILTER from "@/constants/contest-top-filter";
 import { useUrlParamState } from "@/hooks/useUrlParamState";
 const TreeSelector: React.FC = () => {
-  const [, setTags] = useUrlParamState("tags");
+  const [tags, setTags] = useUrlParamState("tags");
   return (
     <FilerTabsTree
       data={TOP_FILTER}
+      selectedPath={tags ? tags.split(",") : undefined}
       onChange={(value) => {
-        const key = value.join("-");
-        setTags(key);
+        setTags(value.join(","));
       }}
     />
   );
