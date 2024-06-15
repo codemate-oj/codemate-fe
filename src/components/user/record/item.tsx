@@ -15,9 +15,9 @@ interface ItemProps extends ItemDataType {
 
 export const Item: React.FC<ItemProps> = ({ pid, name, time, isFault, timePrefix }) => {
   return (
-    <div className="w-full py-3 text-[#3d3d3d] flex items-center">
+    <div className="flex w-full items-center py-3 text-[#3d3d3d]">
       <span className="min-w-[120px]">{pid}</span>
-      <span className="flex-1 flex items-center">
+      <span className="flex flex-1 items-center">
         {name}
         {isFault && (
           <Image src="/svg/train-error-icon.svg" width={12} height={12} alt="fault" className="ml-5 h-[12px]" />

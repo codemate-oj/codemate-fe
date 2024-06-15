@@ -32,14 +32,14 @@ interface IProps {
 
 const UserVerify: React.FC<IProps> = ({ accepts, value, onChange }) => {
   return (
-    <div className="w-full flex gap-4">
+    <div className="flex w-full gap-4">
       {accepts?.map((item, index) => (
         <button
           key={item.text}
           type="button"
           onClick={() => onChange?.(index)}
           className={cn(
-            "flex-1 flex flex-col gap-5 items-center p-8 text-[#797979] rounded-lg border border-[#797979]",
+            "flex flex-1 flex-col items-center gap-5 rounded-lg border border-[#797979] p-8 text-[#797979]",
             { "border-primary text-primary": value === index }
           )}
         >

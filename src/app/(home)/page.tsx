@@ -84,12 +84,12 @@ const HomePage = async () => {
     <>
       <PageTitle>修炼场</PageTitle>
       <AsideLangSelector options={sideTabs} />
-      <div className="w-full flex">
+      <div className="flex w-full">
         <div className="md:w-[90vw] lg:w-[60vw] 4xl:max-w-7xl">
           <TreeSelector treeData={filterTree} />
           <ProblemListTable />
         </div>
-        <div className="w-[0px] lg:w-[400px] overflow-hidden  ml-[14px]">
+        <div className="ml-[14px] w-[0px] overflow-hidden lg:w-[400px]">
           <BulletinBoard data={bulletinCardData}></BulletinBoard>
         </div>
       </div>

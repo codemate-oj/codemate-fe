@@ -18,7 +18,7 @@ const ProblemListMask: React.FC<React.PropsWithChildren<ProblemListMaskProps>> =
   return (
     <div className={"relative"}>
       {!ishasPermission && (
-        <div className="absolute inset-0 bg-gray-200 bg-opacity-80 flex items-center justify-center z-10 flex-col">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-gray-200 bg-opacity-80">
           <Icon icon="ic:outline-lock" width={40} height={40} className="mb-4" />
           当前题单未解锁
           <Button

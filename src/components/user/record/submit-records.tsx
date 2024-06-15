@@ -24,7 +24,7 @@ const tableColumns: TableProps["columns"] = [
     dataIndex: "tags",
     render(value) {
       return (
-        <div className="flex gap-1 flex-wrap">
+        <div className="flex flex-wrap gap-1">
           {value.map((tag: string) => (
             <Tag key={tag}>{tag.toUpperCase()}</Tag>
           ))}
@@ -134,7 +134,7 @@ const SubmitRecords = () => {
       />
       <Table columns={tableColumns} loading={loading} pagination={false} dataSource={data?.list ?? []} />
       {!loading && (
-        <div className="w-full text-center mt-8">
+        <div className="mt-8 w-full text-center">
           <Button onClick={loadMore} disabled={noMore} loading={loadingMore}>
             {noMore ? "没有更多记录" : "加载更多"}
           </Button>

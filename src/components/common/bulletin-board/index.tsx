@@ -21,7 +21,7 @@ const BulletinItem = (props: BullltinItemProps) => {
       <Link className={`text-gray-900 hover:text-[#FF7D37]`} target="_blank" href={href}>
         {title}
       </Link>
-      <div className="flex flex-col text-[#B9B9B9] text-sm mt-[32px]">
+      <div className="mt-[32px] flex flex-col text-sm text-[#B9B9B9]">
         <span>{dayjs(postTime).format("YYYY-M-D HH:mm")}</span>
       </div>
     </div>
