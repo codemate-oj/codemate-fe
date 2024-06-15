@@ -1441,7 +1441,7 @@ export interface paths {
       };
     };
   };
-  "/bulletin/list": {
+  "/bulletin": {
     /** 查询公告列表 */
     get: {
       parameters: {

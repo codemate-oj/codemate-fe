@@ -57,7 +57,7 @@ function getFilterInfo() {
 }
 
 function getBulletinCardData() {
-  return request.get("/bulletin/list", {
+  return request.get("/bulletin", {
     params: {
       page: 1,
       limit: 3,
