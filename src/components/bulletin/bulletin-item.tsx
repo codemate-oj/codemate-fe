@@ -29,23 +29,23 @@ const BulletinItem: React.FC<ItemProps> = (props) => {
   return (
     <>
       {searchParams.get("tags") === "平台公告" && (
-        <div className={`flex ${isChildrenExpend ? "h-auto" : "h-20"} overflow-hidden mb-8`}>
-          <div className="flex-1 relative">
+        <div className={`flex ${isChildrenExpend ? "h-auto" : "h-20"} mb-8 overflow-hidden`}>
+          <div className="relative flex-1">
             <div className="title">
-              <span onClick={() => toDetail(_id)} className="font-bold text-lg cursor-pointer">
+              <span onClick={() => toDetail(_id)} className="cursor-pointer text-lg font-bold">
                 {title}
               </span>
-              <span className="absolute right-16 py-1 px-4 text-sm text-[#B9B9B9]">
+              <span className="absolute right-16 px-4 py-1 text-sm text-[#B9B9B9]">
                 {time.toLocaleDateString().replace("/", "年").replace("/", "月")}日 {time.toLocaleTimeString()}
               </span>
-              <span className="absolute right-0 py-1 px-4 text-sm text-[#FF7D37]">置顶</span>
+              <span className="absolute right-0 px-4 py-1 text-sm text-[#FF7D37]">置顶</span>
             </div>
-            <div className="tags flex mt-2">
+            <div className="tags mt-2 flex">
               <div className="rule flex-1 pr-24">
-                <span className="font-normal text-sm text-[#797979]">{content}</span>
+                <span className="text-sm font-normal text-[#797979]">{content}</span>
               </div>
               <div
-                className="lang flex-2 pt-6 pr-2 cursor-pointer"
+                className="lang flex-2 cursor-pointer pr-2 pt-6"
                 onClick={() => setIsChildrenExpend(!isChildrenExpend)}
               >
                 {!isChildrenExpend ? (
@@ -60,40 +60,40 @@ const BulletinItem: React.FC<ItemProps> = (props) => {
       )}
       {searchParams.get("tags") === "行业新闻" && (
         <div className="flex h-24">
-          <div className="flex-1 relative">
+          <div className="relative flex-1">
             <div className="title">
-              <span onClick={() => toDetail(_id)} className="font-bold text-lg cursor-pointer">
+              <span onClick={() => toDetail(_id)} className="cursor-pointer text-lg font-bold">
                 {title}
               </span>
-              <span className="absolute right-0 py-1 px-4 text-sm text-[#B9B9B9]">
+              <span className="absolute right-0 px-4 py-1 text-sm text-[#B9B9B9]">
                 {time.toLocaleDateString().replace("/", "年").replace("/", "月")}日 {time.toLocaleTimeString()}
               </span>
             </div>
-            <div className="tags flex mt-2">
+            <div className="tags mt-2 flex">
               <div className="rule flex-1">
-                <span className="font-normal text-sm text-[#797979]">关键词：</span>
+                <span className="text-sm font-normal text-[#797979]">关键词：</span>
               </div>
             </div>
           </div>
         </div>
       )}
       {searchParams.get("tags") === "神犇驾到" && (
-        <div className="flex h-52 mb-8 overflow-hidden">
+        <div className="mb-8 flex h-52 overflow-hidden">
           <div className="mr-5">
             <Image src={""} alt="" width={225} height={250} />
           </div>
-          <div className="flex-1 relative justify-around">
+          <div className="relative flex-1 justify-around">
             <div className="title">
-              <span onClick={() => toDetail(_id)} className="font-bold text-lg cursor-pointer">
+              <span onClick={() => toDetail(_id)} className="cursor-pointer text-lg font-bold">
                 {title}
               </span>
-              <span className="absolute right-0 py-1 px-4 text-sm text-[#B9B9B9]">
+              <span className="absolute right-0 px-4 py-1 text-sm text-[#B9B9B9]">
                 {time.toLocaleDateString().replace("/", "年").replace("/", "月")}日
               </span>
             </div>
-            <div className="tags flex mt-2">
+            <div className="tags mt-2 flex">
               <div className="rule flex-1">
-                <span className="font-normal text-sm text-[#797979] line-clamp-6">{content}</span>
+                <span className="line-clamp-6 text-sm font-normal text-[#797979]">{content}</span>
               </div>
             </div>
             <footer className="relative">

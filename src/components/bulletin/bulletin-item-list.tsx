@@ -5,28 +5,25 @@ import { request } from "@/lib/request";
 import { useRequest } from "ahooks";
 import BulletinItem from "./bulletin-item";
 import Skeleton from "@/components/ui/skeleton";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Pagination } from "antd";
 import LinkBtn from "../common/link-btn";
 
 const BulletinItemList: React.FC = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [page, setPage] = useUrlParamState("page", "1");
 
-  const toDetial = useCallback(
-    (id: string) => {
-      router.push(`/bulletin/${id}`);
-    },
-    [router]
-  );
+  const toDetail = useCallback((id: string) => {
+    // router.push(`/bulletin/${id}`);
+    window.open(`/bulletin/${id}`);
+  }, []);
 
   const { data: itemListData, loading } = useRequest(
     async () => {
       const { data } = await request.get("/bulletin", {
         params: {
           page: Number(page),
-          tags: searchParams.get("tags") || undefined,
+          tags: searchParams.get("tags") ?? undefined,
         },
         transformData: (data) => {
           return data;
@@ -43,7 +40,6 @@ const BulletinItemList: React.FC = () => {
       refreshDeps: [searchParams, page],
     }
   );
-
   return (
     <div className={"pt-3"}>
       {loading ? (
@@ -54,14 +50,14 @@ const BulletinItemList: React.FC = () => {
             return (
               <BulletinItem
                 toDetail={(id: string) => {
-                  toDetial(id);
+                  toDetail(id);
                 }}
                 key={item._id}
                 item={item}
               />
             );
           })}
-          <div className={"text-center mb-4"}>
+          <div className={"mb-4 text-center"}>
             <Pagination
               defaultCurrent={Number(page)}
               pageSize={20}
