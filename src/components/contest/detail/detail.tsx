@@ -51,6 +51,7 @@ const ContestDetail: React.FC<PropsType> = (props) => {
   const defaultTsdocData = {
     attend: 1 | 0,
   };
+  //@ts-expect-error TODO: 后端类型更新
   const { title, attend, rule, beginAt, endAt, content, tag, owner } = (data || { tdoc: deafultTdocData }).tdoc;
   const { attend: isApply } = (data || { tsdoc: defaultTsdocData }).tsdoc;
   const state = getDetailState({
