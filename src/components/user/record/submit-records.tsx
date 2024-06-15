@@ -2,7 +2,7 @@
 import { TagRenderer } from "@/components/common/filter-tabs-tree";
 import Tag from "@/components/ui/tag";
 import { STATUS_ACCEPTED } from "@/constants/judge-status";
-import { useUrlParam } from "@/hooks/useUrl";
+import { useUrlParamState } from "@/hooks/useUrlParamState";
 import { request } from "@/lib/request";
 import { cn, getTimeDiffFromNow } from "@/lib/utils";
 import loginStore from "@/store/login";
@@ -24,7 +24,7 @@ const tableColumns: TableProps["columns"] = [
     dataIndex: "tags",
     render(value) {
       return (
-        <div className="flex gap-1 flex-wrap">
+        <div className="flex flex-wrap gap-1">
           {value.map((tag: string) => (
             <Tag key={tag}>{tag.toUpperCase()}</Tag>
           ))}
@@ -66,7 +66,8 @@ export const getRecords = (lang?: string, page = 1, full = false, uid = loginSto
     params: {
       uidOrName: String(uid),
       page,
-      lang: lang,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      lang: lang as any,
       full,
     },
     transformData: ({ data }) => {
@@ -91,17 +92,18 @@ export const getRecords = (lang?: string, page = 1, full = false, uid = loginSto
 };
 
 const SubmitRecords = () => {
-  const [activeKey, setActiveKey] = useUrlParam("category", {
-    defaultValue: "objective",
-  });
+  const [activeKey, setActiveKey] = useUrlParamState("category", "objective");
 
   const { data, loadingMore, loading, loadMore, noMore } = useInfiniteScroll(
     async (_data) => {
       const current = _data?.currentPage ?? 1;
-      const rdocs = (await getRecords(activeKey === "objective" ? "_" : undefined, current, true)).filter((r) => {
-        if (activeKey === "objective") return true;
-        return r.lang !== "_";
-      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const rdocs = (await getRecords(activeKey === "objective" ? ("_" as any) : undefined, current, true)).filter(
+        (r) => {
+          if (activeKey === "objective") return true;
+          return r.lang !== "_";
+        }
+      );
       if (rdocs.length === 0) {
         return {
           list: [],
@@ -132,7 +134,7 @@ const SubmitRecords = () => {
       />
       <Table columns={tableColumns} loading={loading} pagination={false} dataSource={data?.list ?? []} />
       {!loading && (
-        <div className="w-full text-center mt-8">
+        <div className="mt-8 w-full text-center">
           <Button onClick={loadMore} disabled={noMore} loading={loadingMore}>
             {noMore ? "没有更多记录" : "加载更多"}
           </Button>

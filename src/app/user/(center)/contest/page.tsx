@@ -1,7 +1,12 @@
+import NotLogin from "@/components/error/not-login";
 import React from "react";
 
 const UserContestPage = () => {
-  return <div>个人比赛</div>;
+  return (
+    <div>
+      <NotLogin />
+    </div>
+  );
 };
 
 export default UserContestPage;

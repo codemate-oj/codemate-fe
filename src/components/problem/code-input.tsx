@@ -36,21 +36,21 @@ const CodeInput: React.FC<CodeInputProps> = ({ langs, pid }) => {
   return (
     <>
       <div className="flex flex-col">
-        <span className="text-2xl font-bold my-4">请答题</span>
-        <span className="text-gray-500 mb-4">选择编译器</span>
+        <span className="my-4 text-2xl font-bold">请答题</span>
+        <span className="mb-4 text-gray-500">选择编译器</span>
         <div className="mb-4">
           {langs.map((lang) => (
             <Button
               key={lang}
               variant={"outline"}
-              className={`mr-2 mb-2 justify-start  ${selectedLang === lang ? "border-primary border-2  text-primary hover:text-primary  mr-2 hover:bg-accent/30" : ""}`}
+              className={`mb-2 mr-2 justify-start ${selectedLang === lang ? "mr-2 border-2 border-primary text-primary hover:bg-accent/30 hover:text-primary" : ""}`}
               onClick={() => handleLangChange(lang)}
             >
               {AVAILABLE_LANG_MAP[lang as langType]}
             </Button>
           ))}
         </div>
-        <Textarea className="mb-8 pr-4 min-h-[500px]" value={code} onChange={(e) => handleCodeChange(e.target.value)} />
+        <Textarea className="mb-8 min-h-[500px] pr-4" value={code} onChange={(e) => handleCodeChange(e.target.value)} />
       </div>
     </>
   );

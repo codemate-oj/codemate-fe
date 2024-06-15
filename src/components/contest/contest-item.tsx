@@ -29,7 +29,7 @@ const Item: React.FC<ItemProps> = (props) => {
   const { title, rule, beginAt, endAt, attend, tag, _id, checkinBeginAt, checkinEndAt, imageURL } = item;
   return (
     <div className="flex h-48">
-      <div onClick={() => toDetail(_id)} className="w-80 h-40 mr-8 relative overflow-hidden cursor-pointer">
+      <div onClick={() => toDetail(_id)} className="relative mr-8 h-40 w-80 cursor-pointer overflow-hidden">
         <ContestState
           isApply={Boolean(tsdict[_id])}
           beginAt={beginAt}
@@ -41,39 +41,39 @@ const Item: React.FC<ItemProps> = (props) => {
 
         <Image src={remoteUrl(imageURL as string)} alt="loading" width={320} height={160} />
       </div>
-      <div className="flex-1 relative">
+      <div className="relative flex-1">
         <div className="title">
-          <span onClick={() => toDetail(_id)} className="font-bold text-lg cursor-pointer">
+          <span onClick={() => toDetail(_id)} className="cursor-pointer text-lg font-bold">
             {title}
           </span>
-          <span className="absolute right-0 bg-[#F1F1F1] py-1 px-4 rounded-l-3xl text-sm">专项赛</span>
+          <span className="absolute right-0 rounded-l-3xl bg-[#F1F1F1] px-4 py-1 text-sm">专项赛</span>
         </div>
-        <div className="tags flex mt-2">
+        <div className="tags mt-2 flex">
           <div className="rule flex-1">
-            <p className="font-normal text-lg">{rule}</p>
-            <span className="font-normal text-sm text-[#797979]">赛制</span>
+            <p className="text-lg font-normal">{rule}</p>
+            <span className="text-sm font-normal text-[#797979]">赛制</span>
           </div>
           <div className="time flex-1">
-            <p className="font-normal text-lg">{getTimeDiffByHour(endAt, beginAt)}小时</p>
-            <span className="font-normal text-sm text-[#797979]">时长</span>
+            <p className="text-lg font-normal">{getTimeDiffByHour(endAt, beginAt)}小时</p>
+            <span className="text-sm font-normal text-[#797979]">时长</span>
           </div>
           <div className="attend flex-1">
-            <p className="font-normal text-lg">{attend}人</p>
-            <span className="font-normal text-sm text-[#797979]">已报名</span>
+            <p className="text-lg font-normal">{attend}人</p>
+            <span className="text-sm font-normal text-[#797979]">已报名</span>
           </div>
           <div className="lang flex-1">
-            <p className="font-normal text-lg text-[#FF7D37]">
+            <p className="text-lg font-normal text-[#FF7D37]">
               {tag ? (tag.length !== 1 ? "多种语言" : PROGRAMMING_LANGS[tag[0]] || "多种语言") : "多种语言"}
             </p>
-            <span className="font-normal text-sm text-[#797979]">语言</span>
+            <span className="text-sm font-normal text-[#797979]">语言</span>
           </div>
         </div>
         <footer className="relative mt-6">
-          <p className="font-normal text-sm text-[#3D3D3D]">
+          <p className="text-sm font-normal text-[#3D3D3D]">
             报名时间：{!checkinBeginAt ? "---" : formatTime(checkinBeginAt)} --{" "}
             {!checkinEndAt ? "---" : formatTime(checkinEndAt)}
           </p>
-          <p className="font-normal text-sm text-[#3D3D3D]">
+          <p className="text-sm font-normal text-[#3D3D3D]">
             比赛时间：{beginAt.slice(0, 16).replace("T", " ")} -- {endAt.slice(0, 16).replace("T", " ")}
           </p>
           <span className="absolute right-0 top-2">

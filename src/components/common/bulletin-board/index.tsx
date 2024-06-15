@@ -8,7 +8,7 @@ import "./styles.css";
 export interface BullltinItemProps {
   id: string;
   title: string;
-  postTime: string;
+  postTime: number;
   href: NavItemType["href"];
 }
 
@@ -18,10 +18,10 @@ const BulletinItem = (props: BullltinItemProps) => {
 
   return (
     <div className="mb-3">
-      <Link className={`text-gray-900 hover:text-[#FF7D37]`} href={href}>
+      <Link className={`text-gray-900 hover:text-[#FF7D37]`} target="_blank" href={href}>
         {title}
       </Link>
-      <div className="flex flex-col text-[#B9B9B9] text-sm mt-[32px]">
+      <div className="mt-[32px] flex flex-col text-sm text-[#B9B9B9]">
         <span>{dayjs(postTime).format("YYYY-M-D HH:mm")}</span>
       </div>
     </div>
@@ -64,7 +64,13 @@ const Index = (props: BulletinBoardProps) => {
   });
 
   return (
-    <Collapse className="bulletin-board-ekko" defaultActiveKey={["1"]} ghost items={items} expandIconPosition="end" />
+    <Collapse
+      className="bulletin-board-ekko"
+      defaultActiveKey={data.map((item) => item.key)}
+      ghost
+      items={items}
+      expandIconPosition="end"
+    />
   );
 };
 

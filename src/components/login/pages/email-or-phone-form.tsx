@@ -8,41 +8,57 @@ import store from "@/store/login";
 import EmailForm from "./email-form";
 import PhoneForm from "./phone-form";
 import { request } from "@/lib/request";
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const sendCode = async (payload: string, type: "phone" | "mail") => {
-  const _body =
-    type === "phone"
-      ? {
-          phone: payload,
-        }
-      : {
-          mail: payload,
-        };
-  // @ts-expect-error 后端还没有添加该类型
-  const { data } = await request.post("/register", _body);
-  const _slices = data.url.split("/");
-  return _slices[_slices.length - 1] ?? "";
-};
+import { useRequest } from "ahooks";
 
 const EmailOrPhoneForm = () => {
   const [agreed, setAgreed] = useState(false);
   const formContext = store.useCurrentContext();
   const isEmail = formContext?.category === VERIFY_OPTIONS.EMAIL;
 
-  const handleSubmit = async (value: string) => {
-    setAgreed(true);
-    switch (formContext?.purpose) {
-      case "register":
-        store.dialogJumpTo("user-info", {
-          sendTo: value,
-        });
-        break;
-      default:
-        break;
+  const { runAsync: handleSubmit, loading } = useRequest(
+    async (value: string, ticket: string, randStr: string) => {
+      setAgreed(true);
+      let token: string;
+      if (isEmail) {
+        token = await request.post(
+          "/register/email-code",
+          {
+            mail: value,
+            ticket,
+            randStr,
+          },
+          {
+            transformData: ({ data }) => data.tokenId,
+          }
+        );
+      } else {
+        token = await request.post(
+          "/register/sms-code",
+          {
+            phoneNumber: value,
+            ticket,
+            randStr,
+          },
+          {
+            transformData: ({ data }) => data.tokenId,
+          }
+        );
+      }
+      switch (formContext?.purpose) {
+        case "register":
+          store.dialogJumpTo("user-info", {
+            sendTo: value,
+            token,
+          });
+          break;
+        default:
+          break;
+      }
+    },
+    {
+      manual: true,
     }
-  };
-
+  );
   return (
     <div className="flex flex-col">
       {isEmail ? (
@@ -51,6 +67,7 @@ const EmailOrPhoneForm = () => {
           description={formContext?.description}
           buttonText={formContext?.buttonText}
           onSubmit={handleSubmit}
+          loading={loading}
         />
       ) : (
         <PhoneForm
@@ -58,6 +75,7 @@ const EmailOrPhoneForm = () => {
           description={formContext?.description}
           buttonText={formContext?.buttonText}
           onSubmit={handleSubmit}
+          loading={loading}
         />
       )}
 

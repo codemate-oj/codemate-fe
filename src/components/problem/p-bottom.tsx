@@ -31,10 +31,10 @@ const PBottom: React.FC<PBottomProps> = (props) => {
       <Button className="mr-2" onClick={handleSubmit}>
         {type == "scratch" ? "开始答题" : "确认提交"}
       </Button>
-      <Button variant={"outline"} className="border-primary  text-primary hover:text-primary  mr-2 hover:bg-accent/20">
+      <Button variant={"outline"} className="mr-2 border-primary text-primary hover:bg-accent/20 hover:text-primary">
         上一题
       </Button>
-      <Button variant={"outline"} className="border-primary   text-primary hover:text-primary  mr-2 hover:bg-accent/30">
+      <Button variant={"outline"} className="mr-2 border-primary text-primary hover:bg-accent/30 hover:text-primary">
         下一题
       </Button>
       <Button variant={"outline"} className="mr-2 hover:bg-accent/30">
@@ -46,7 +46,7 @@ const PBottom: React.FC<PBottomProps> = (props) => {
       <Button variant={"outline"} className="mr-2 hover:bg-accent/30">
         重新选题
       </Button>
-      <Button className="bg-blue-500 hover:bg-blue-500/90 mr-2">分享</Button>
+      <Button className="mr-2 bg-blue-500 hover:bg-blue-500/90">分享</Button>
       <Button className="mr-2">PK邀请</Button>
     </div>
   );

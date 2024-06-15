@@ -6,7 +6,7 @@ import { Form } from "antd";
 import { CustomInput, CustomMutiSelect, CustomSelect, CustomTextarea } from "@/components/problem/formily-items"; // 导入自定义组件
 import ObjectiveBottom from "@/components/problem/objective-bottom";
 import { debounce } from "lodash";
-import { objectToYaml } from "@/lib/objectToYaml";
+import { objectToYaml } from "@/lib/form";
 import { request } from "@/lib/request";
 import { useCodeLangContext } from "@/providers/code-lang-provider";
 

@@ -26,18 +26,18 @@ const ActivateError: React.FC = () => {
 
   return (
     <div>
-      <div className="w-full bg-[#FF7D37] h-12 rounded-t-lg flex text-2xl pt-3 pl-3 text-white">
-        <Icon icon="ic:outline-warning-amber" className="text-white text-3xl mr-3" />
+      <div className="flex h-12 w-full rounded-t-lg bg-[#FF7D37] pl-3 pt-3 text-2xl text-white">
+        <Icon icon="ic:outline-warning-amber" className="mr-3 text-3xl text-white" />
         输入错误
       </div>
       <div className="px-8 pb-6">
-        <div className="space-y-3 my-3">
+        <div className="my-3 space-y-3">
           <p>亲爱的用户：</p>
-          <article className="indent-7 space-y-3">
+          <article className="space-y-3 indent-7">
             <p>请仔细核对无误后再次输入！</p>
           </article>
         </div>
-        <div className="w-full flex justify-around">
+        <div className="flex w-full justify-around">
           <Button className="w-4/12" onClick={reInput}>
             再次输入
           </Button>

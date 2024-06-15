@@ -43,7 +43,7 @@ const FaultList = () => {
         )}
       />
       {!loading && (
-        <div className="w-full text-center mt-8">
+        <div className="mt-8 w-full text-center">
           <Button onClick={loadMore} disabled={noMore} loading={loadingMore}>
             {noMore ? "没有更多记录" : "加载更多"}
           </Button>
