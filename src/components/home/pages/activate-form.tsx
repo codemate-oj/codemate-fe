@@ -68,25 +68,25 @@ const ActivateForm: React.FC = () => {
 
   return (
     <div>
-      <div className="w-full bg-[#FF7D37] h-12 rounded-t-lg flex text-2xl pt-3 pl-3 text-white">
-        <Icon icon="ic:outline-info" className="text-white text-3xl mr-3" />
+      <div className="flex h-12 w-full rounded-t-lg bg-[#FF7D37] pl-3 pt-3 text-2xl text-white">
+        <Icon icon="ic:outline-info" className="mr-3 text-3xl text-white" />
         激活提醒
       </div>
       <div className="px-8 pb-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
-            <div className="space-y-3 my-3">
+            <div className="my-3 space-y-3">
               <p>亲爱的用户：</p>
-              <article className="indent-7 space-y-3">
+              <article className="space-y-3 indent-7">
                 <p>{transformContent(currentContext.content)}专属题库内容需要使用【激活码】激活后才能开始练习。</p>
                 <p>如果您已获得激活码，请直接输入。如果希望获得激活码，请联系客服。</p>
               </article>
             </div>
             <div className="flex justify-between">
-              <div className="flex flex-col w-7/12">
+              <div className="flex w-7/12 flex-col">
                 <FormInput name="activationCode" type="text" placeholder="请正确输入激活码" />
                 {errorText && (
-                  <p className="mt-3 px-1 flex gap-x-2 items-center text-sm text-red-500">
+                  <p className="mt-3 flex items-center gap-x-2 px-1 text-sm text-red-500">
                     <Icon inline icon="ic:baseline-error" />
                     {errorText}
                   </p>
@@ -96,10 +96,10 @@ const ActivateForm: React.FC = () => {
                 联系客服
               </Button>
             </div>
-            <p className="mt-3 mb-4 px-1 flex gap-x-2 items-center text-sm text-[#FF7D37]">
+            <p className="mb-4 mt-3 flex items-center gap-x-2 px-1 text-sm text-[#FF7D37]">
               特别提醒：请注意区分字母大小写和仔细核对数字！
             </p>
-            <div className="w-full flex justify-around">
+            <div className="flex w-full justify-around">
               <Button className="w-4/12" type="submit">
                 去提交
               </Button>

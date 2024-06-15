@@ -27,12 +27,12 @@ const columns: TableColumnsType<DataType> = [
     dataIndex: "title",
     key: "title",
     width: "18%",
-    render: (_, { title }) => <span className="font-bold text-sm">{title}</span>,
+    render: (_, { title }) => <span className="text-sm font-bold">{title}</span>,
   },
   {
     title: () => (
       <>
-        <span className="font-bold text-sm mr-3">算法标签</span>
+        <span className="mr-3 text-sm font-bold">算法标签</span>
         <Switch defaultChecked />
       </>
     ),
@@ -43,7 +43,7 @@ const columns: TableColumnsType<DataType> = [
       <>
         {record.tag?.map((tag: string) => {
           return (
-            <Tag color={"volcano"} key={tag} className="!text-primary !bg-orange-50 !leading-4">
+            <Tag color={"volcano"} key={tag} className="!bg-orange-50 !leading-4 !text-primary">
               {tag.toUpperCase()}
             </Tag>
           );

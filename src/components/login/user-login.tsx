@@ -41,7 +41,7 @@ const UserLogin = () => {
 
   if (!userContext) {
     return (
-      <Dialog modal={true} open={isDialogShow} onOpenChange={handleOpenChange}>
+      <Dialog open={isDialogShow} onOpenChange={handleOpenChange}>
         <div className="flex gap-x-5">
           <DialogTrigger asChild>
             <Button onClick={() => store.dialogJumpTo("login")}>登录</Button>

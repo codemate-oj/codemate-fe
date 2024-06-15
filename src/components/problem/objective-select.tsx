@@ -31,7 +31,7 @@ export const ObjectiveSelect = (props: ObjectiveInputProps) => {
   };
 
   return (
-    <div className="flex flex-col w-1/2">
+    <div className="flex w-1/2 flex-col">
       <div>
         <span className="text-primary">【题目描述】</span>
         {props.title}

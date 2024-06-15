@@ -1,12 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   rewrites: async () => {
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${process.env.API_URL ?? "https://www.aioj.net/"}:path*`,
-      },
-    ];
+    if (process.env.NODE_ENV === "development") {
+      return [
+        {
+          source: "/api/:path*",
+          destination: `${process.env.API_URL ?? "https://www.aioj.net/"}:path*`,
+        },
+      ];
+    }
   },
   images: {
     dangerouslyAllowSVG: true, // 允许Image提供SVG而非img

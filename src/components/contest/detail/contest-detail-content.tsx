@@ -7,8 +7,8 @@ const ContestDetailContent: React.FC<PropsType> = (props) => {
   const { content } = props;
   return (
     <div className="flex justify-between">
-      <div className="w-full ">
-        <div className={"text-lg font-bold mb-4"}>比赛内容</div>
+      <div className="w-full">
+        <div className={"mb-4 text-lg font-bold"}>比赛内容</div>
         <MarkdownRenderer markdown={content} className="prose-pdetail" />
       </div>
     </div>

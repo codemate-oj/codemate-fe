@@ -45,8 +45,8 @@ export const TagRenderer: React.FC<FilterTabsTreeRendererProps> = ({ data, selec
         return (
           <button
             key={key}
-            className={cn("block text-sm rounded-[8px] px-[5px] py-[3px] text-[#797979]", {
-              "bg-primary text-white font-bold": isActive,
+            className={cn("block rounded-[8px] px-[5px] py-[3px] text-sm text-[#797979]", {
+              "bg-primary font-bold text-white": isActive,
             })}
             onClick={() => {
               onChange?.(key);
@@ -68,7 +68,7 @@ export const TextRenderer: React.FC<FilterTabsTreeRendererProps> = ({ data, sele
         return (
           <button
             key={key}
-            className={cn("block text-sm px-[5px] py-[3px] text-[#797979]", {
+            className={cn("block px-[5px] py-[3px] text-sm text-[#797979]", {
               "text-primary": isActive,
             })}
             onClick={() => {

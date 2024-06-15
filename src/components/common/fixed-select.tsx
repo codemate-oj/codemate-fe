@@ -44,7 +44,7 @@ const SelectItem = ({
     );
   };
   return (
-    <div className={"relative h-11 mt-1"}>
+    <div className={"relative mt-1 h-11"}>
       <Button
         type={isSelected ? "primary" : "default"}
         style={{
@@ -86,7 +86,7 @@ const FixedSelectGroup = ({
     onSelect && onSelect(i.value);
   };
   return (
-    <div key={i.value} className="flex flex-col ">
+    <div key={i.value} className="flex flex-col">
       <SelectItem
         label={i.label}
         isSelected={isSelected}
@@ -116,7 +116,7 @@ const FixedSelect = ({
   onSelect,
 }: FixedSelectProps & { isChildren?: boolean; selected: string; setSelected: Dispatch<SetStateAction<string>> }) => {
   return (
-    <div className={isChildren ? "" : "fixed z-10 w-40 -left-5 top-45"}>
+    <div className={isChildren ? "" : "top-45 fixed -left-5 z-10 w-40"}>
       {options?.map((i, index) => (
         <FixedSelectGroup
           i={i}

@@ -65,8 +65,8 @@ const ContestDetail: React.FC<PropsType> = (props) => {
       {loading ? (
         <Loading />
       ) : (
-        <div className="flex pb-16 space-x-10 justify-between">
-          <div className="flex-1 mt-6">
+        <div className="flex justify-between space-x-10 pb-16">
+          <div className="mt-6 flex-1">
             <ContestDetailTop
               title={title}
               attend={attend}

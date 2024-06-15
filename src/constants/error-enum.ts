@@ -3,6 +3,7 @@ export const enum ERROR_TYPE {
   VALIDATION_ERROR = 1,
   USER_NOT_FOUND_ERROR = 2,
   USER_ALREADY_EXISTS_ERROR = 3,
+  INVALID_PASSWORD_ERROR = 4,
 }
 
 interface ErrorInfo {
@@ -23,5 +24,8 @@ export const ERROR_MAP: Record<ERROR_TYPE, ErrorInfo> = {
   },
   [ERROR_TYPE.USER_ALREADY_EXISTS_ERROR]: {
     text: "用户{0}已存在",
+  },
+  [ERROR_TYPE.INVALID_PASSWORD_ERROR]: {
+    text: "密码错误",
   },
 };

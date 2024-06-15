@@ -17,7 +17,7 @@ export const ObjectiveInput = (props: ObjectiveInputProps) => {
     setSelectedIndex(index);
   };
   return (
-    <div className="flex flex-col w-1/2">
+    <div className="flex w-1/2 flex-col">
       {props.options.map((option, index) => (
         <Button
           key={index}

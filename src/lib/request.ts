@@ -25,7 +25,7 @@ export const alovaInstance = createAlova({
   baseURL: process.env.NEXT_PUBLIC_API_URL ?? BASE_URL,
   statesHook: ReactHook,
   timeout: 5000,
-  localCache: DISABLE_CACHE ? null : { GET: 60000 },
+  localCache: DISABLE_CACHE ? null : { GET: 60000 }, // 默认GET缓存60s
   requestAdapter: LOCAL_MOCK ? mockAdapter : GlobalFetch(),
   beforeRequest(method) {
     if (IS_DEV) {
@@ -110,6 +110,7 @@ export const request = {
         ...(config.headers ?? {}),
       },
       mode: "cors",
+      next: { revalidate: 60 }, // 设置静态请求缓存时间为60秒，可以过滤一些高频请求
     });
   },
   post: <P extends PathsHavingMethod<"post">, R = any>(
