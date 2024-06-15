@@ -37,7 +37,7 @@ const DetailStateApply: React.FC<{
     else
       return (
         <span
-          className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-[#FF7D37] bg-[#FF7D37] cursor-pointer"
+          className="cursor-pointer rounded-lg border border-[#FF7D37] bg-[#FF7D37] px-4 py-2 text-sm font-normal text-white"
           onClick={() => {
             if (!isLogin) {
               store.dialogJumpTo("login");
@@ -55,7 +55,7 @@ const DetailStateApply: React.FC<{
     if (isApply) {
       return (
         <span
-          className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-[#FF7D37] bg-[#FF7D37] cursor-pointer"
+          className="cursor-pointer rounded-lg border border-[#FF7D37] bg-[#FF7D37] px-4 py-2 text-sm font-normal text-white"
           onClick={() => router.push(`/contest/${tid}/problems`)}
         >
           查看题目
@@ -64,13 +64,13 @@ const DetailStateApply: React.FC<{
     } else {
       if (isApply) {
         return (
-          <span className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-[#FF7D37] bg-[#FF7D37] cursor-not-allowed">
+          <span className="cursor-not-allowed rounded-lg border border-[#FF7D37] bg-[#FF7D37] px-4 py-2 text-sm font-normal text-white">
             查看结果
           </span>
         );
       }
       return (
-        <span className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-[#FF7D37] bg-[#FF7D37] cursor-not-allowed">
+        <span className="cursor-not-allowed rounded-lg border border-[#FF7D37] bg-[#FF7D37] px-4 py-2 text-sm font-normal text-white">
           报名已结束
         </span>
       );
@@ -80,7 +80,7 @@ const DetailStateApply: React.FC<{
       return <Button>查看结果</Button>;
     } else {
       return (
-        <span className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-[#706f6e] bg-[#706f6e] cursor-not-allowed">
+        <span className="cursor-not-allowed rounded-lg border border-[#706f6e] bg-[#706f6e] px-4 py-2 text-sm font-normal text-white">
           报名已结束
         </span>
       );
@@ -107,7 +107,7 @@ const ContestDetailFooter: React.FC<{
   const isDialogShow = store.isDialogShow.use();
   //TODO: 待处理登录问题
   return (
-    <div className={"flex justify-between mt-8"}>
+    <div className={"mt-8 flex justify-between"}>
       <Dialog modal={true} open={isDialogShow} onOpenChange={handleOpenChange}>
         <DialogContent className="max-w-[400px]">
           <LoginRegisterModal>{currentDialogPage?.component}</LoginRegisterModal>
@@ -122,7 +122,7 @@ const ContestDetailFooter: React.FC<{
         }
         centered={true}
         footer={() => (
-          <Link href={"/contest"} className="text-white bg-[#FF7D37] px-4 py-2 text-base font-normal rounded-md">
+          <Link href={"/contest"} className="rounded-md bg-[#FF7D37] px-4 py-2 text-base font-normal text-white">
             返回首页
           </Link>
         )}
@@ -153,7 +153,7 @@ const ContestDetailFooter: React.FC<{
         />
         <span
           onClick={() => store.dialogJumpTo("login")}
-          className="ml-2 py-2 px-4 text-sm font-normal rounded-lg text-white border border-[#ffa54c] bg-[#fb9c3c] cursor-pointer"
+          className="ml-2 cursor-pointer rounded-lg border border-[#ffa54c] bg-[#fb9c3c] px-4 py-2 text-sm font-normal text-white"
         >
           <ExportOutlined />
           分享

@@ -71,9 +71,9 @@ const Page = () => {
   ];
   return (
     <>
-      <div className="w-full flex">
-        <div className="w-[50%] h-32"></div>
-        <div className="flex-1 h-32">
+      <div className="flex w-full">
+        <div className="h-32 w-[50%]"></div>
+        <div className="h-32 flex-1">
           {onlineEditorHeader.map((item, index) => {
             const className = "mr-2 mb-2";
             switch (item.type) {

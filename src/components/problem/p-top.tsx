@@ -39,24 +39,24 @@ const PTop: React.FC<PTopProps> = (props) => {
 
   return (
     <div>
-      <div className="flex items-center mb-4">
-        <div className="text-[2rem] font-bold  ">{pid} ：</div>
-        <div className="text-[2rem] font-bold mr-7">{title}</div>
+      <div className="mb-4 flex items-center">
+        <div className="text-[2rem] font-bold">{pid} ：</div>
+        <div className="mr-7 text-[2rem] font-bold">{title}</div>
         <Button
           onClick={isCollect ? () => collect() : () => disCollect()}
           variant={"outline"}
-          className="border-primary border   text-primary hover:text-primary  mr-2 hover:bg-accent/30"
+          className="mr-2 border border-primary text-primary hover:bg-accent/30 hover:text-primary"
         >
           收藏
         </Button>
         <Button
           variant={"outline"}
-          className="border-blue-500 text-blue-500  hover:text-blue-500  border  hover:bg-accent/30 "
+          className="border border-blue-500 text-blue-500 hover:bg-accent/30 hover:text-blue-500"
         >
           加入题单
         </Button>
       </div>
-      <div className="flex bg-[#F9F9F9] justify-around py-2 font-yahei text-[#797979]">
+      <div className="flex justify-around bg-[#F9F9F9] py-2 font-yahei text-[#797979]">
         {list.map((item) => {
           if (!item.value) return null;
           if (item.name == "知识点")

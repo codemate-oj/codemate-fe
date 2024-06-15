@@ -61,7 +61,7 @@ const ContestItemList: React.FC = () => {
               />
             );
           })}
-          <div className={"text-center mb-4"}>
+          <div className={"mb-4 text-center"}>
             <Pagination
               defaultCurrent={Number(page)}
               pageSize={20}

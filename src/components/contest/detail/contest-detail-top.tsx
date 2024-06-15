@@ -20,20 +20,20 @@ const ContestDetailTop: React.FC<PropsType> = (props) => {
 
   return (
     <div className="mb-10">
-      <div className="header relative flex justify-between ">
-        <div className="title font-bold text-2xl">比赛:{title}</div>
-        <div className="text-[#FF7D37] font-bold text-2xl">参赛人数：{attend}人</div>
+      <div className="header relative flex justify-between">
+        <div className="title text-2xl font-bold">比赛:{title}</div>
+        <div className="text-2xl font-bold text-[#FF7D37]">参赛人数：{attend}人</div>
       </div>
 
       <div className="footor mt-6">
-        <div className="text-base text-[#797979]  flex justify-between">
+        <div className="flex justify-between text-base text-[#797979]">
           <div>
-            <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 text-center">
+            <span className="min-w-40 bg-[rgb(249,249,249)] px-9 py-2 text-center">
               语言：{tag ? (tag.length !== 1 ? "多种语言" : PROGRAMMING_LANGS[tag[0]] || "多种语言") : "多种语言"}
             </span>
-            <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 text-center">赛制：{rule}</span>
-            <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 text-center">阶段：初赛</span>
-            <span className="bg-[rgb(249,249,249)] min-w-40 py-2 px-9 text-center">时长：{time} 小时</span>
+            <span className="min-w-40 bg-[rgb(249,249,249)] px-9 py-2 text-center">赛制：{rule}</span>
+            <span className="min-w-40 bg-[rgb(249,249,249)] px-9 py-2 text-center">阶段：初赛</span>
+            <span className="min-w-40 bg-[rgb(249,249,249)] px-9 py-2 text-center">时长：{time} 小时</span>
           </div>
           <div>
             <ContestState

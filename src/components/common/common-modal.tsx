@@ -22,7 +22,7 @@ const CommonModal: React.FC = () => {
 
   return (
     <Dialog open={isModalShow} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-[500px] p-0 border-0">{currentContext?.component}</DialogContent>
+      <DialogContent className="max-w-[500px] border-0 p-0">{currentContext?.component}</DialogContent>
     </Dialog>
   );
 };
