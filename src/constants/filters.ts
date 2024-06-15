@@ -12,7 +12,7 @@ export enum ContestTagEnum {
   "粤澳信息学创新大赛",
 }
 
-const labelValueMap: TreeItem[] = [
+export const contestFilterTreeData: TreeItem[] = [
   {
     label: "全部",
     key: "",
@@ -63,4 +63,24 @@ const labelValueMap: TreeItem[] = [
     ],
   },
 ];
-export default labelValueMap;
+
+export const enum BulletinTagEnum {
+  "平台公告" = "平台公告",
+  "行业新闻" = "行业新闻",
+  "神犇驾到" = "神犇驾到",
+}
+
+export const bulletinFilterTreeData: TreeItem[] = [
+  {
+    label: "平台公告",
+    key: String(BulletinTagEnum["平台公告"]),
+  },
+  {
+    label: "行业新闻",
+    key: String(BulletinTagEnum["行业新闻"]),
+  },
+  {
+    label: "神犇驾到",
+    key: String(BulletinTagEnum["神犇驾到"]),
+  },
+];
