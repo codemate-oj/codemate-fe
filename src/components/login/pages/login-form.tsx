@@ -62,13 +62,13 @@ const LoginForm = () => {
       </form>
       <div className="mt-4 flex w-full justify-between">
         <Button
-          onClick={() =>
-            store.dialogJumpTo("choose-verify", {
-              title: "找回密码",
-              description: "请选择找回密码的方式",
-              hideLogo: true,
-            })
-          }
+          onClick={() => {
+            // store.dialogJumpTo("choose-verify", {
+            //   title: "找回密码",
+            //   description: "请选择找回密码的方式",
+            //   hideLogo: true,
+            // });
+          }}
           type="button"
           variant="link"
           className="text-[#9E9E9E]"
