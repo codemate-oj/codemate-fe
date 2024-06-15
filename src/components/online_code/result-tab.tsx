@@ -51,7 +51,8 @@ const ResultTab: React.FC<ResultTabProps> = ({ children, input, handleInput, rid
           </div>
           <div className="w-2/5">
             输出：
-            <div className="h-28 border border-[#d9d9d9] rounded-lg overflow-auto text-inherit pt-1 px-3">
+            <div className="h-28 overflow-auto rounded-lg border border-[#d9d9d9] px-3 pt-1 text-inherit">
+              <div dangerouslySetInnerHTML={{ __html: selfResult.status_html }} />
               <div dangerouslySetInnerHTML={{ __html: selfResult.summary_html }} />
             </div>
           </div>
@@ -60,15 +61,15 @@ const ResultTab: React.FC<ResultTabProps> = ({ children, input, handleInput, rid
       tab2: (
         <div className="flex items-center justify-center">
           <div className="w-4/5">
-            <div className="h-28 overflow-auto text-inherit border rounded-lg pt-1 px-3">
-              {/*<div dangerouslySetInnerHTML={{ __html: result.status_html }} />*/}
+            <div className="h-28 overflow-auto rounded-lg border px-3 pt-1 text-inherit">
+              <div dangerouslySetInnerHTML={{ __html: result.status_html }} />
               <div dangerouslySetInnerHTML={{ __html: result.summary_html }} />
             </div>
           </div>
         </div>
       ),
     }),
-    [handleInput, input, result.summary_html, selfResult.summary_html]
+    [handleInput, input, result.status_html, result.summary_html, selfResult.status_html, selfResult.summary_html]
   );
 
   const { connect: wsSelfConnect } = useWebSocket(

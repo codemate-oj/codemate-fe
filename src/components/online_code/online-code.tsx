@@ -7,6 +7,7 @@ import ResultTab from "@/components/online_code/result-tab";
 import { request } from "@/lib/request";
 import { usePathname } from "next/navigation";
 import CodeEditor from "@/components/online_code/code-editor";
+import SubmitRecord from "@/components/online_code/submit-record";
 
 interface OnlineCodeProps {
   toggleOnlineCodeVisibility: () => void;
@@ -21,6 +22,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
   const [input, setInput] = useState("");
   const [selfRid, setSelfRid] = useState("");
   const [rid, setRid] = useState("");
+  const [updateRecord, setUpdateRecord] = useState(0);
 
   useEffect(() => {
     setInput(localStorage.getItem(`${pid}-self-test-input`) ?? "");
@@ -48,13 +50,14 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
       }
     );
     setSelfRid(data.rid ?? "");
+    setUpdateRecord(updateRecord + 1);
   };
 
   const handleTest = async () => {
     const lang = selectedLanguage === "c++" ? "cc.cc14o2" : selectedLanguage === "python" ? "py.py3" : "_";
     const { data } = await request.post(
       `/p/${pid}/submit` as "/p/{pid}/submit",
-      { lang, code: code },
+      { lang, code },
       {
         transformData: (data) => {
           return data;
@@ -62,6 +65,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
       }
     );
     setRid(data.rid ?? "");
+    setUpdateRecord(updateRecord + 1);
   };
 
   const exit = () => {
@@ -77,7 +81,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
     {
       type: "default",
       content: (
-        <Button className="mr-2 mb-2" onClick={handleSelfTest}>
+        <Button className="mb-2 mr-2" onClick={handleSelfTest}>
           自测运行
         </Button>
       ),
@@ -85,7 +89,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
     {
       type: "default",
       content: (
-        <Button className="mr-2 mb-2" onClick={handleTest}>
+        <Button className="mb-2 mr-2" onClick={handleTest}>
           提交评测
         </Button>
       ),
@@ -93,7 +97,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
     {
       type: "default",
       content: (
-        <Button className="mr-2 mb-2" onClick={exit}>
+        <Button className="mb-2 mr-2" onClick={exit}>
           退出
         </Button>
       ),
@@ -113,8 +117,8 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
 
   return (
     <>
-      <div className="w-full h-screen fixed inset-0 z-50 bg-white">
-        <div className="w-full flex h-[10vh] items-center justify-center">
+      <div className="fixed inset-0 z-50 h-screen w-full bg-white">
+        <div className="flex h-[10vh] w-full items-center justify-center">
           {onlineEditorHeader.map((item) => {
             switch (item.type) {
               case "default":
@@ -123,7 +127,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
           })}
         </div>
         <Divider className="!m-0" />
-        <div className="w-full flex h-[80vh]">
+        <div className="flex h-[70vh] w-full">
           <div className="w-[50%]"></div>
           <Divider type="vertical" className="!h-full" />
           <div className="flex-1">
@@ -150,7 +154,9 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
           </div>
         </div>
         <Divider className="!m-0" />
-        <div className="w-full flex h-[10vh]"></div>
+        <div className="flex h-[20vh] w-full justify-center">
+          <SubmitRecord updateRecord={updateRecord} />
+        </div>
       </div>
     </>
   );
