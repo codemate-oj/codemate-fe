@@ -22,16 +22,38 @@ const DetailStateApply: React.FC<{
   click: () => void;
 }> = (props) => {
   const { isLogin, isApply, state, tid, click } = props;
-  if (state == "预告中") {
-    return <></>;
-  } else if (state == "可报名") {
-    if (isApply)
+  if (isApply) {
+    if (state == "进行中") {
+      return (
+        <Link
+          href={`/contest/${tid}/problems`}
+          target="_blankss"
+          className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary"
+        >
+          开始做题
+        </Link>
+      );
+    } else if (state == "已结束") {
+      return (
+        <Link
+          href={`/contest/${tid}/problems`}
+          target="_blankss"
+          className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary"
+        >
+          查看结果
+        </Link>
+      );
+    } else {
       return (
         <span className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary cursor-pointer">
           已报名
         </span>
       );
-    else
+    }
+  } else {
+    if (state == "预告中") {
+      return <></>;
+    } else if (state == "可报名" || state == "进行中") {
       return (
         <span
           className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary cursor-pointer"
@@ -47,44 +69,6 @@ const DetailStateApply: React.FC<{
         >
           马上报名
         </span>
-      );
-  } else if (state == "进行中") {
-    if (isApply) {
-      return (
-        <Link
-          href={`/contest/${tid}/problems`}
-          target="_blankss"
-          className="ml-2 py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary"
-        >
-          开始做题
-        </Link>
-      );
-    } else {
-      <span
-        className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary cursor-pointer"
-        onClick={() => {
-          if (!isLogin) {
-            store.dialogJumpTo("login");
-            return;
-          }
-          handleClickApply(tid, () => {
-            click();
-          });
-        }}
-      >
-        马上报名
-      </span>;
-    }
-  } else {
-    if (isApply) {
-      return (
-        <Link
-          href={`/contest/${tid}/problems`}
-          target="_blankss"
-          className="ml-2 py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary"
-        >
-          查看题单
-        </Link>
       );
     } else {
       return (
@@ -160,13 +144,13 @@ const ContestDetailFooter: React.FC<{
             setIsOpen(true);
           }}
         />
-        <button
+        <span
           onClick={() => store.dialogJumpTo("login")}
           className="ml-2 py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary cursor-pointer"
         >
           <ExportOutlined />
           &nbsp; 分享
-        </button>
+        </span>
       </div>
     </div>
   );
