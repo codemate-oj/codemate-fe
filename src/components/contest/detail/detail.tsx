@@ -51,6 +51,7 @@ const ContestDetail: React.FC<PropsType> = (props) => {
   const defaultTsdocData = {
     attend: 1 | 0,
   };
+  //@ts-expect-error TODO: 后端类型更新
   const { title, attend, rule, beginAt, endAt, content, tag, owner } = (data || { tdoc: deafultTdocData }).tdoc;
   const { attend: isApply } = (data || { tsdoc: defaultTsdocData }).tsdoc;
   const state = getDetailState({
@@ -65,8 +66,8 @@ const ContestDetail: React.FC<PropsType> = (props) => {
       {loading ? (
         <Loading />
       ) : (
-        <div className="flex pb-16 space-x-10 justify-between">
-          <div className="flex-1 mt-6">
+        <div className="flex justify-between space-x-10 pb-16">
+          <div className="mt-6 flex-1">
             <ContestDetailTop
               title={title}
               attend={attend}

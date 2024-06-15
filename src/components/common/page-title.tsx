@@ -7,7 +7,7 @@ interface IProps {
 
 const PageTitle: React.FC<React.PropsWithChildren<IProps>> = ({ hideLogo, children }) => {
   return (
-    <div className="flex gap-x-4 text-xl leading-5 text-[#3D3D3D] py-8">
+    <div className="flex gap-x-4 py-8 text-xl leading-5 text-[#3D3D3D]">
       {!hideLogo && <UnderlinedText>CODEMATE</UnderlinedText>}
       <h2>{children}</h2>
     </div>

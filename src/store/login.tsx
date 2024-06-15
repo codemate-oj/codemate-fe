@@ -112,6 +112,7 @@ const loginStore = store(
     // 登陆成功后刷新整个页面
     window.location.reload();
   },
+
   logout: async () => {
     await request.post("/logout");
     store.user.assign(null);
@@ -145,6 +146,16 @@ const loginStore = store(
     const stack = store.dialogContextStack.get();
     if (stack.length <= 1) return null;
     return stack[stack.length - 2];
+  },
+  showLoginDialog: () => {
+    store.isDialogShow.set(true);
+    const ctx: DialogPageContext = {
+      pageName: "login",
+      ...DialogStatusMap["login"],
+    };
+    store.set((draft) => {
+      draft.dialogContextStack.push(ctx);
+    });
   },
 }));
 

@@ -24,11 +24,10 @@ export interface paths {
              * @example 18012345678
              */
             uname: string;
-            /**
-             * @description Recaptcha 等验证码返回的 token
-             * @example 123456
-             */
-            verifyToken?: string;
+            /** @description captcha 验证成功的票据 */
+            ticket: string;
+            /** @description 本次验证的随机串，后续票据校验时需传递该参数 */
+            randStr: string;
           };
         };
       };
@@ -347,7 +346,8 @@ export interface paths {
   "/tagsFilter/modify": {
     /**
      * 修改标签筛选器
-     * @description 修改标签筛选器
+     * @description 修改标签筛选器；
+     * ** 这会影响所有题目标签在前端的可见性！ **
      */
     post: {
       parameters: {
@@ -830,7 +830,7 @@ export interface paths {
             "application/json": {
               UserContext: components["schemas"]["UserContext"];
               UiContext: components["schemas"]["UiContext"];
-              roots: components["schemas"]["SystemProblemList Recursive"][];
+              roots: components["schemas"]["SystemProblemList%20Recursive"][];
             };
           };
         };
@@ -977,10 +977,12 @@ export interface paths {
             /** @example 12345678900 */
             phoneNumber: string;
             /**
-             * @description Recaptcha 等验证码返回的 token
+             * @description captcha 验证成功的票据
              * @example 123456
              */
-            verifyToken?: string;
+            ticket: string;
+            /** @description 本次验证的随机串，后续票据校验时需传递该参数 */
+            randStr: string;
           };
         };
       };
@@ -1441,7 +1443,7 @@ export interface paths {
       };
     };
   };
-  "/bulletin/list": {
+  "/bulletin": {
     /** 查询公告列表 */
     get: {
       parameters: {
@@ -1523,10 +1525,12 @@ export interface paths {
             /** @example {% mock 'email' %} */
             mail: string;
             /**
-             * @description Recaptcha 等验证码返回的 token
+             * @description captcha 验证成功的票据
              * @example 123456
              */
-            verifyToken?: string;
+            ticket: string;
+            /** @description 本次验证的随机串，后续票据校验时需传递该参数 */
+            randStr: string;
           };
         };
       };
@@ -1902,6 +1906,55 @@ export interface paths {
     };
   };
   "/login": {
+    /** 使用sid续约登录 */
+    get: {
+      parameters: {
+        query?: {
+          /**
+           * @description Cookie中返回的SessionID
+           * @example U81Z9oOEONRlynLYIoRPVn13Sj10l3Om
+           */
+          sid?: string;
+        };
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
     /**
      * 用户名&密码登录
      * @description 使用用户名和密码登录
@@ -2053,7 +2106,7 @@ export interface paths {
       };
     };
   };
-  "/bulletin/detail/{bid}": {
+  "/bulletin/{bid}": {
     /** 获取公告详情 */
     get: {
       parameters: {
@@ -2312,10 +2365,23 @@ export interface paths {
       requestBody?: {
         content: {
           "application/x-www-form-urlencoded": {
+            /**
+             * @description 操作名，Hydro特有的post魔法
+             * @example update
+             * @constant
+             */
+            operation: "update";
+            /** @example 测试公告 */
             title: string;
-            /** @description In markdown */
+            /**
+             * @description In markdown
+             * @example 123456
+             */
             content: string;
-            /** @description 标签，用英文逗号 "," 分割 */
+            /**
+             * @description 标签，用英文逗号 "," 分割
+             * @example a,b,c
+             */
             tags: string;
           };
         };
@@ -2327,6 +2393,7 @@ export interface paths {
             "application/json": {
               UserContext: components["schemas"]["UserContext"];
               UiContext: components["schemas"]["UiContext"];
+              success: boolean;
               /** @description 新添加的公告 ID */
               docId: string;
             };
@@ -2357,68 +2424,7 @@ export interface paths {
       };
     };
   };
-  "/bulletin/tags/edit": {
-    /**
-     * 修改公告标签
-     * @description 修改公告标签 (覆盖)
-     */
-    post: {
-      parameters: {
-        header?: {
-          /** @example application/json */
-          Accept?: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/x-www-form-urlencoded": {
-            /**
-             * @description 用英文半角逗号分割
-             * @example a,b,c
-             */
-            tags: string;
-          };
-        };
-      };
-      responses: {
-        /** @description 成功 */
-        200: {
-          content: {
-            "application/json": {
-              UserContext: components["schemas"]["UserContext"];
-              UiContext: components["schemas"]["UiContext"];
-              success: boolean;
-              /** @description 修改后的tags(应该与你传入的相同) */
-              bulletinTags: string[];
-            };
-          };
-        };
-        /** @description Forbidden */
-        403: {
-          content: {
-            "application/json": {
-              /** @description 错误信息 */
-              error: components["schemas"]["Error"];
-              UiContext: components["schemas"]["UiContext"];
-              UserContext: components["schemas"]["UserContext"];
-            };
-          };
-        };
-        /** @description Not Found */
-        404: {
-          content: {
-            "application/json": {
-              /** @description 错误信息 */
-              error: components["schemas"]["Error"];
-              UiContext: components["schemas"]["UiContext"];
-              UserContext: components["schemas"]["UserContext"];
-            };
-          };
-        };
-      };
-    };
-  };
-  "/bulletin/delete/{bid}": {
+  "/bulletin/{bid}/edit": {
     /** 删除公告 */
     post: {
       parameters: {
@@ -2427,7 +2433,20 @@ export interface paths {
           Accept?: string;
         };
         path: {
+          /** @example 6660c5b2a19931b7d9bfd231 */
           bid: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /**
+             * @description 操作名，Hydro特有的post魔法
+             * @example delete
+             * @constant
+             */
+            operation: "delete";
+          };
         };
       };
       responses: {
@@ -2479,7 +2498,7 @@ export interface components {
        */
       parent: string;
       /** 子节点数组 */
-      children: components["schemas"]["SystemProblemList Recursive"][];
+      children: components["schemas"]["SystemProblemList%20Recursive"][];
       /** @description ObjectID */
       _id: string;
       /** @description ObjectID */

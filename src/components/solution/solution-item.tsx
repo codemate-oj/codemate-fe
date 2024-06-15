@@ -21,32 +21,32 @@ const SolutionItem: React.FC<SolutionTopProps> = (props) => {
           <Button
             variant={"outline"}
             //改h而不是leading
-            className="leading-[0.3rem] ml-10 py-[0.1rem] px-4 h-8  border-primary border   text-primary hover:text-primary  mr-2 hover:bg-accent/30"
+            className="ml-10 mr-2 h-8 border border-primary px-4 py-[0.1rem] leading-[0.3rem] text-primary hover:bg-accent/30 hover:text-primary"
           >
             收藏
           </Button>
         </div>
       </div>
-      <div className="flex mb-10">
+      <div className="mb-10 flex">
         {userLink.map((item, index) => (
-          <span key={index} className="mr-2 text-sm font-yahei text-[#797979] hover:text-primary">
+          <span key={index} className="mr-2 font-yahei text-sm text-[#797979] hover:text-primary">
             {item.name}
           </span>
         ))}
       </div>
-      <div className="flex flex-col mb-5">
+      <div className="mb-5 flex flex-col">
         <span>本章考察知识点</span>
-        <span className="text-[#797979]   font-yahei">本章考察知识点</span>
+        <span className="font-yahei text-[#797979]">本章考察知识点</span>
       </div>{" "}
       <div>
         <span className="mb-4 inline-block">选题辨识度分析</span>
-        <div className=" bg-primary/10 pr-5 pl-10 py-7 flex flex-col text-primary">
+        <div className="flex flex-col bg-primary/10 py-7 pl-10 pr-5 text-primary">
           <span>【易错选项】</span>
           <span className="mt-5">【易错选项分析】 </span>
           <span className="mt-5">【其他选项分析】</span>
         </div>
       </div>
-      <div className="flex flex-col mt-2">
+      <div className="mt-2 flex flex-col">
         <span>特别提醒</span>
         <span className="text-red-600">特别提醒</span>
       </div>

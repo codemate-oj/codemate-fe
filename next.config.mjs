@@ -1,12 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   rewrites: async () => {
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${process.env.API_URL ?? "https://www.aioj.net/"}:path*`,
-      },
-    ];
+    if (process.env.NODE_ENV === "development" || process.env.IS_VERCEL) {
+      return [
+        {
+          source: "/api/:path*",
+          destination: `${process.env.API_URL ?? "https://api.aioj.net/"}:path*`,
+        },
+      ];
+    }
+    return [];
   },
   images: {
     dangerouslyAllowSVG: true, // 允许Image提供SVG而非img
@@ -27,9 +30,6 @@ const nextConfig = {
         pathname: "/file/**",
       },
     ],
-  },
-  experimental: {
-    typedRoutes: true, // 为<Link />添加基于Routes的强类型
   },
   webpack: (config) => {
     config.module.rules.push({

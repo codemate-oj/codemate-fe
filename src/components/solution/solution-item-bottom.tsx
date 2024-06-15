@@ -127,7 +127,7 @@ const SolutionItemBottom: React.FC<SolutionItemBottomProps> = (props) => {
           <Button className="mr-2">再次作答</Button>
           <Button
             variant={"outline"}
-            className="border-primary  text-primary hover:text-primary  mr-2 hover:bg-accent/20"
+            className="mr-2 border-primary text-primary hover:bg-accent/20 hover:text-primary"
           >
             换题挑战
           </Button>

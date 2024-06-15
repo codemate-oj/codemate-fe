@@ -17,7 +17,7 @@ const SquareSideTabs: React.FC<IProps> = ({ items }) => {
           return (
             <li className="w-full" key={item.href.toString()}>
               <Link
-                className={cn("flex items-center w-full px-[20px] py-[14px] bg-[#F7F5F5]", {
+                className={cn("flex w-full items-center bg-[#F7F5F5] px-[20px] py-[14px]", {
                   "bg-primary text-white": item.isActive,
                 })}
                 href={item.href}

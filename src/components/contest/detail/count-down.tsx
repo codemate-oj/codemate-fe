@@ -26,7 +26,7 @@ const CountdownTimer: React.FC<{ time: number }> = ({ time }) => {
 
   return (
     <div>
-      报名倒计时：<span className="text-[#FF7D37] font-bold">{formatTime(countdown)}</span>
+      报名倒计时：<span className="font-bold text-[#FF7D37]">{formatTime(countdown)}</span>
     </div>
   );
 };

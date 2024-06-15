@@ -38,7 +38,7 @@ const ChooseVerifyForm = () => {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="pt-2 w-fit">
+      <div className="w-fit pt-2">
         <UnderlinedText>{currentContext?.title}</UnderlinedText>
       </div>
       {currentContext?.description && <div className="text-sm text-[#9E9E9E]">{currentContext?.description}</div>}
@@ -60,7 +60,7 @@ const ChooseVerifyForm = () => {
           },
         ]}
       />
-      <Button onClick={handleNextStep} className="w-full block">
+      <Button onClick={handleNextStep} className="block w-full">
         下一步
       </Button>
     </div>

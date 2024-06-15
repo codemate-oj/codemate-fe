@@ -1,7 +1,12 @@
+import UnderConstruction from "@/components/error/under-construction";
 import React from "react";
 
 const UserProblemListPage = () => {
-  return <div>个人题单</div>;
+  return (
+    <div>
+      <UnderConstruction />
+    </div>
+  );
 };
 
 export default UserProblemListPage;
