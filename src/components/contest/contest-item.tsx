@@ -59,8 +59,8 @@ const Item: React.FC<ItemProps> = (props) => {
             <span className="text-sm font-normal text-[#797979]">时长</span>
           </div>
           <div className="attend flex-1">
-            <p className="font-normal text-lg">{attend}人</p>
-            <span className="font-normal text-sm text-[#797979]">{isApply ? "已报名" : "未报名"}</span>
+            <p className="text-lg font-normal">{attend}人</p>
+            <span className="text-sm font-normal text-[#797979]">{isApply ? "已报名" : "未报名"}</span>
           </div>
           <div className="lang flex-1">
             <p className="text-lg font-normal text-[#FF7D37]">

@@ -13,7 +13,7 @@ const ProblemCommitState: React.FC<PropsType> = (porps) => {
 
   return (
     <div
-      className={`absolute font-medium top-0 left-0  w-full h-full border-l-4 border-opacity-50 flex items-center justify-center text-center text-${textColor} ${borderColor}`}
+      className={`absolute left-0 top-0 flex h-full w-full items-center justify-center border-l-4 border-opacity-50 text-center font-medium text-${textColor} ${borderColor}`}
     >
       {score == 100 ? (
         <>

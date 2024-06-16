@@ -28,7 +28,7 @@ const DetailStateApply: React.FC<{
         <Link
           href={`/contest/${tid}/problems`}
           target="_blankss"
-          className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary"
+          className="rounded-lg border border-primary bg-primary px-4 py-2 text-sm font-normal text-white"
         >
           开始做题
         </Link>
@@ -38,14 +38,14 @@ const DetailStateApply: React.FC<{
         <Link
           href={`/contest/${tid}/problems`}
           target="_blankss"
-          className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary"
+          className="rounded-lg border border-primary bg-primary px-4 py-2 text-sm font-normal text-white"
         >
           查看结果
         </Link>
       );
     } else {
       return (
-        <span className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary cursor-pointer">
+        <span className="cursor-pointer rounded-lg border border-primary bg-primary px-4 py-2 text-sm font-normal text-white">
           已报名
         </span>
       );
@@ -56,7 +56,7 @@ const DetailStateApply: React.FC<{
     } else if (state == "可报名" || state == "进行中") {
       return (
         <span
-          className="py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary cursor-pointer"
+          className="cursor-pointer rounded-lg border border-primary bg-primary px-4 py-2 text-sm font-normal text-white"
           onClick={() => {
             if (!isLogin) {
               store.dialogJumpTo("login");
@@ -115,7 +115,7 @@ const ContestDetailFooter: React.FC<{
         }
         centered={true}
         footer={() => (
-          <Link href={"/contest"} className="text-white bg-primary px-4 py-2 text-base font-normal rounded-md">
+          <Link href={"/contest"} className="rounded-md bg-primary px-4 py-2 text-base font-normal text-white">
             返回首页
           </Link>
         )}
@@ -146,7 +146,7 @@ const ContestDetailFooter: React.FC<{
         />
         <span
           onClick={() => store.dialogJumpTo("login")}
-          className="ml-2 py-2 px-4 text-sm font-normal rounded-lg text-white border border-primary bg-primary cursor-pointer"
+          className="ml-2 cursor-pointer rounded-lg border border-primary bg-primary px-4 py-2 text-sm font-normal text-white"
         >
           <ExportOutlined />
           &nbsp; 分享
