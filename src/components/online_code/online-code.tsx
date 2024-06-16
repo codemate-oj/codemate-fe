@@ -1,13 +1,14 @@
 "use client";
 
 import { Button, Divider, Radio, RadioChangeEvent } from "antd";
-import { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import "allotment/dist/style.css";
 import ResultTab from "@/components/online_code/result-tab";
 import { request } from "@/lib/request";
 import { usePathname } from "next/navigation";
 import CodeEditor from "@/components/online_code/code-editor";
 import SubmitRecord from "@/components/online_code/submit-record";
+import QuestionDetail from "@/components/online_code/question-detail";
 
 interface OnlineCodeProps {
   toggleOnlineCodeVisibility: () => void;
@@ -128,7 +129,9 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
         </div>
         <Divider className="!m-0" />
         <div className="flex h-[70vh] w-full">
-          <div className="w-[50%]"></div>
+          <div className="w-[50%] p-6">
+            <QuestionDetail />
+          </div>
           <Divider type="vertical" className="!h-full" />
           <div className="flex-1">
             <ResultTab input={input} handleInput={handleInput} rid={rid} selfRid={selfRid}>
