@@ -1,6 +1,7 @@
 "use client";
 import { request } from "@/lib/request";
 import { Modal } from "antd";
+import { Modal } from "antd";
 import { CheckOutlined, ExportOutlined } from "@ant-design/icons";
 import CountdownTimer from "./count-down";
 import { useState } from "react";
