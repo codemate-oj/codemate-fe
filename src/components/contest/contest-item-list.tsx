@@ -8,7 +8,7 @@ import Skeleton from "@/components/ui/skeleton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Pagination } from "antd";
 import LinkBtn from "../common/link-btn";
-import { ContestTagEnum } from "@/constants/contest-top-filter";
+import { ContestTagEnum } from "@/constants/filters";
 const ContestItemList: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
