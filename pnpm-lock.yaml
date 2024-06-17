@@ -333,33 +333,22 @@ packages:
     dev: true
 
   /@alloc/quick-lru@5.2.0:
-  /@alloc/quick-lru@5.2.0:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
   /@alova/mock@1.5.1:
-  /@alova/mock@1.5.1:
     resolution: {integrity: sha512-Ojt+hhn9ddexBWlWy2NeQn5SK+oOPPDJjvmJCV2Dg6W/NcBizdWur4pRjaUDskVB5CAhAewoZmGj4kStS5IkLw==}
     dev: false
-    dev: false
 
-  /@ampproject/remapping@2.3.0:
   /@ampproject/remapping@2.3.0:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
     dependencies:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
-    dependencies:
-      '@jridgewell/gen-mapping': 0.3.5
-      '@jridgewell/trace-mapping': 0.3.25
 
   /@ant-design/colors@7.0.2:
-  /@ant-design/colors@7.0.2:
     resolution: {integrity: sha512-7KJkhTiPiLHSu+LmMJnehfJ6242OCxSlR3xHVBecYxnMW8MS/878NXct1GqYARyL59fyeFdKRxXTfvR9SnDgJg==}
-    dependencies:
-      '@ctrl/tinycolor': 3.6.1
-    dev: false
     dependencies:
       '@ctrl/tinycolor': 3.6.1
     dev: false
@@ -15495,7 +15484,6 @@ snapshots:
     dependencies:
       tslib: 2.6.2
     dev: true
-    dev: true
     optional: true
   /@emotion/hash@0.8.0:
     resolution: {integrity: sha512-kBJtf7PH6aWwZ6fka3zQ0p6SBYzx4fl1LoZXE2RrnYST9Xljm7WfKJrU4g/Xr3Beg72MLrp1AWNUmuYJTL7Cow==}
@@ -15945,7 +15933,6 @@ snapshots:
     optionalDependencies:
       '@img/sharp-libvips-darwin-arm64': 1.0.2
     dev: true
-    dev: true
     optional: true
   /@img/sharp-darwin-x64@0.33.4:
     resolution: {integrity: sha512-0l7yRObwtTi82Z6ebVI2PnHT8EB2NxBgpK2MiKJZJ7cz32R4lxd001ecMhzzsZig3Yv9oclvqqdV93jo9hy+Dw==}
@@ -15955,7 +15942,6 @@ snapshots:
     requiresBuild: true
     optionalDependencies:
       '@img/sharp-libvips-darwin-x64': 1.0.2
-    dev: true
     dev: true
     optional: true
   /@img/sharp-libvips-darwin-arm64@1.0.2:
@@ -16038,7 +16024,6 @@ snapshots:
     optionalDependencies:
       '@img/sharp-libvips-linux-arm64': 1.0.2
     dev: true
-    dev: true
     optional: true
   /@img/sharp-linux-arm@0.33.4:
     resolution: {integrity: sha512-RUgBD1c0+gCYZGCCe6mMdTiOFS0Zc/XrN0fYd6hISIKcDUbAW5NtSQW9g/powkrXYm6Vzwd6y+fqmExDuCdHNQ==}
@@ -16049,7 +16034,6 @@ snapshots:
     requiresBuild: true
     optionalDependencies:
       '@img/sharp-libvips-linux-arm': 1.0.2
-    dev: true
     dev: true
     optional: true
   /@img/sharp-linux-s390x@0.33.4:
@@ -16062,7 +16046,6 @@ snapshots:
     optionalDependencies:
       '@img/sharp-libvips-linux-s390x': 1.0.2
     dev: true
-    dev: true
     optional: true
   /@img/sharp-linux-x64@0.33.4:
     resolution: {integrity: sha512-GoR++s0XW9DGVi8SUGQ/U4AeIzLdNjHka6jidVwapQ/JebGVQIpi52OdyxCNVRE++n1FCLzjDovJNozif7w/Aw==}
@@ -16073,7 +16056,6 @@ snapshots:
     requiresBuild: true
     optionalDependencies:
       '@img/sharp-libvips-linux-x64': 1.0.2
-    dev: true
     dev: true
     optional: true
   /@img/sharp-linuxmusl-arm64@0.33.4:
@@ -16086,7 +16068,6 @@ snapshots:
     optionalDependencies:
       '@img/sharp-libvips-linuxmusl-arm64': 1.0.2
     dev: true
-    dev: true
     optional: true
   /@img/sharp-linuxmusl-x64@0.33.4:
     resolution: {integrity: sha512-uCPTku0zwqDmZEOi4ILyGdmW76tH7dm8kKlOIV1XC5cLyJ71ENAAqarOHQh0RLfpIpbV5KOpXzdU6XkJtS0daw==}
@@ -16098,7 +16079,6 @@ snapshots:
     optionalDependencies:
       '@img/sharp-libvips-linuxmusl-x64': 1.0.2
     dev: true
-    dev: true
     optional: true
   /@img/sharp-wasm32@0.33.4:
     resolution: {integrity: sha512-Bmmauh4sXUsUqkleQahpdNXKvo+wa1V9KhT2pDA4VJGKwnKMJXiSTGphn0gnJrlooda0QxCtXc6RX1XAU6hMnQ==}
@@ -16107,7 +16087,6 @@ snapshots:
     requiresBuild: true
     dependencies:
       '@emnapi/runtime': 1.2.0
-    dev: true
     dev: true
     optional: true
   /@img/sharp-win32-ia32@0.33.4:
@@ -16132,9 +16111,7 @@ snapshots:
     dependencies:
       string-width: 5.1.2
       string-width-cjs: /string-width@4.2.3
-      string-width-cjs: /string-width@4.2.3
       strip-ansi: 7.1.0
-      strip-ansi-cjs: /strip-ansi@6.0.1
       strip-ansi-cjs: /strip-ansi@6.0.1
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: /wrap-ansi@7.0.0
@@ -17125,7 +17102,7 @@ snapshots:
       picomatch: 2.3.1
       pkg-dir: 5.0.0
       prettier: 3.2.5
-      prettier-fallback: /prettier@3.2.5
+      prettier-fallback: prettier@3.2.5
       pretty-hrtime: 1.0.3
       resolve-from: 5.0.0
       semver: 7.6.2
@@ -19075,7 +19052,6 @@ snapshots:
       color-name: 1.1.4
       simple-swizzle: 0.2.2
     dev: true
-    dev: true
     optional: true
   /color@4.2.3:
     resolution: {integrity: sha512-1rXeuUUiGGrykh+CeBdu5Ie7OJwinCgQY0bc7GCRxy5xVHy+moaqkpL/jqQq0MtQOeYcrqEz4abc5f0KtU7W4A==}
@@ -19084,7 +19060,6 @@ snapshots:
     dependencies:
       color-convert: 2.0.1
       color-string: 1.9.1
-    dev: true
     dev: true
     optional: true
   /colorette@2.0.20:
@@ -23948,7 +23923,6 @@ snapshots:
       '@img/sharp-win32-ia32': 0.33.4
       '@img/sharp-win32-x64': 0.33.4
     dev: true
-    dev: true
     optional: true
   /shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
@@ -23977,7 +23951,6 @@ snapshots:
     requiresBuild: true
     dependencies:
       is-arrayish: 0.3.2
-    dev: true
     dev: true
     optional: true
   /sisteransi@1.0.5:
