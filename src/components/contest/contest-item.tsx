@@ -73,7 +73,7 @@ const Item: React.FC<ItemProps> = (props) => {
             报名时间：{!checkinBeginAt ? "---" : formatTime(checkinBeginAt)} --{" "}
             {!checkinEndAt ? "---" : formatTime(checkinEndAt)}
           </p>
-          <p className="font-normal text-sm text-[#3D3D3D]">
+          <p className="text-sm font-normal text-[#3D3D3D]">
             比赛时间：{!beginAt ? "---" : formatTime(beginAt)} -- {!endAt ? "---" : formatTime(endAt)}
             {/* {beginAt.slice(0, 16).replace("T", " ")} -- {endAt.slice(0, 16).replace("T", " ")} */}
           </p>

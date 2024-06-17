@@ -41,7 +41,7 @@ const ContestDetailRight: React.FC<ContestDetailRightPropsType> = (props) => {
       label: "比赛排名",
       children: (
         <span
-          className="text-[#FF7D37] cursor-pointer"
+          className="cursor-pointer text-[#FF7D37]"
           onClick={() => {
             router.push(`/contest/${tid}/scoreboard`);
           }}
