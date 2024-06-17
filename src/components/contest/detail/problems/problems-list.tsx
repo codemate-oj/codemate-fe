@@ -17,8 +17,11 @@ const ProblemsList: React.FC<PropsType> = (props) => {
       },
     });
     return {
+      //@ts-expect-error 后端类型更新
       pdict: data.pdict,
+      //@ts-expect-error 后端类型更新
       rdocs: data.rdocs,
+      //@ts-expect-error 后端类型更新
       psdict: data.psdict,
     };
   });
@@ -54,14 +57,14 @@ const ProblemsList: React.FC<PropsType> = (props) => {
     }
     return res;
   });
-  const evaluaRecords = rdocs?.map((item) => {
+  const evaluaRecords = rdocs?.map((item: { [key: string]: string | number }) => {
     return {
       key: item._id,
       score: item.score,
       status: item.status,
       title: plist[item.pid].title,
       time: parseInt(String(item.time)),
-      memory: (item.memory / 1024).toFixed(1),
+      memory: ((item.memory as number) / 1024).toFixed(1),
       language: item.lang,
       last_commit: item.judgeAt,
     };
