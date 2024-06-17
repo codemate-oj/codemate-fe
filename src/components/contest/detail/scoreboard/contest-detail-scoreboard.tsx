@@ -14,15 +14,16 @@ interface ScoreboardProps {
 const Scoreboard: React.FC<ScoreboardProps> = (props) => {
   const { tid } = props;
   const { data, loading } = useRequest(async () => {
+    //@ts-expect-error 后端类型未添加
     const { data } = await request.get(`/contest/${tid as "{tid}"}/scoreboard`, {
       transformData: ({ data }) => {
         return { data };
       },
     });
     return {
-      rows: data.rows,
-      tdoc: data.tdoc,
-      udict: data.udict,
+      rows: data?.rows,
+      tdoc: data?.tdoc,
+      udict: data?.udict,
     };
   });
   const { title, attend, beginAt, endAt } = data?.tdoc || {};
@@ -34,7 +35,7 @@ const Scoreboard: React.FC<ScoreboardProps> = (props) => {
     endAt: endAt,
   });
   const tableColumns = data?.rows[0];
-  const tableData = rows?.map((item, index: number) => {
+  const tableData = rows?.map((item: { [key: string]: string }[], index: number) => {
     const record: { [key: string]: string } = {};
     let count = 0;
     item.forEach((k) => {
