@@ -69,8 +69,16 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
     setUpdateRecord(updateRecord + 1);
   };
 
+  const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    setIsVisible(true); // 组件挂载后设置为可见，触发动画
+  }, []);
+
   const exit = () => {
-    toggleOnlineCodeVisibility();
+    setIsVisible(false);
+    setTimeout(() => {
+      toggleOnlineCodeVisibility();
+    }, 500);
   };
 
   const onlineEditorHeader: {
@@ -117,7 +125,9 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
   ];
 
   return (
-    <div className="fixed inset-0 z-50 h-screen w-full bg-white">
+    <div
+      className={`slide-up fixed inset-0 z-50 h-screen w-full overflow-hidden bg-white transition-transform duration-500 ${isVisible ? "translate-y-0" : "translate-y-full"}`}
+    >
       <div className="flex h-[10vh] w-full items-center justify-center">
         {onlineEditorHeader.map((item) => {
           switch (item.type) {
