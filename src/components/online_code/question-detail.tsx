@@ -5,7 +5,12 @@ import media from "@/lib/unified/media";
 import React, { useEffect, useState } from "react";
 import { request } from "@/lib/request";
 import { usePathname } from "next/navigation";
-import MarkdownRenderer from "@/components/common/markdown-renderer";
+import dynamic from "next/dynamic";
+import { Spin } from "antd";
+
+const MarkdownRenderer = dynamic(() => import("@/components/common/markdown-renderer"), {
+  loading: () => <Spin />,
+});
 
 function getProblemDetail(pid: string) {
   return request.get(`/p/${pid}` as "/p/{pid}", {
