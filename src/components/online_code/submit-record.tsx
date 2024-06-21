@@ -123,12 +123,13 @@ const SubmitRecord: React.FC<SubmitRecordProps> = ({ updateRecord }) => {
   return (
     <div>
       <Table
+        size={"middle"}
         columns={tableColumns}
         loading={loading}
         dataSource={tableData}
         pagination={false}
         virtual
-        scroll={{ y: 110 }}
+        scroll={{ y: 130 }}
         onScroll={handleScroll}
       />
     </div>

@@ -117,23 +117,23 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
   ];
 
   return (
-    <>
-      <div className="fixed inset-0 z-50 h-screen w-full bg-white">
-        <div className="flex h-[10vh] w-full items-center justify-center">
-          {onlineEditorHeader.map((item) => {
-            switch (item.type) {
-              case "default":
-                return item.content;
-            }
-          })}
+    <div className="fixed inset-0 z-50 h-screen w-full bg-white">
+      <div className="flex h-[10vh] w-full items-center justify-center">
+        {onlineEditorHeader.map((item) => {
+          switch (item.type) {
+            case "default":
+              return item.content;
+          }
+        })}
+      </div>
+      <Divider className="!m-0" />
+      <div className="flex h-[90vh] w-full">
+        <div className="w-[50%] p-6">
+          <QuestionDetail />
         </div>
-        <Divider className="!m-0" />
-        <div className="flex h-[70vh] w-full">
-          <div className="w-[50%] p-6">
-            <QuestionDetail />
-          </div>
-          <Divider type="vertical" className="!h-full" />
-          <div className="flex-1">
+        <Divider type="vertical" className="!h-full" />
+        <div className="w-[50%]">
+          <div className="h-[70vh] flex-1">
             <ResultTab input={input} handleInput={handleInput} rid={rid} selfRid={selfRid}>
               {onlineEditorHeader.map((item, index) => {
                 switch (item.type) {
@@ -155,13 +155,13 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
               <CodeEditor selectedLanguage={selectedLanguage} code={code} handleCode={handleCode} />
             </ResultTab>
           </div>
-        </div>
-        <Divider className="!m-0" />
-        <div className="flex h-[20vh] w-full justify-center">
-          <SubmitRecord updateRecord={updateRecord} />
+          <Divider className="!m-0" />
+          <div className="flex h-[20vh] w-full justify-center">
+            <SubmitRecord updateRecord={updateRecord} />
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

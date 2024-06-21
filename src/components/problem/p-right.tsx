@@ -16,7 +16,7 @@ const PRight: React.FC<PRightProps> = (props) => {
   const [showOnlineCode, setShowOnlineCode] = useState(false);
 
   const toggleOnlineCodeVisibility = () => {
-    setShowOnlineCode(!showOnlineCode);
+    setShowOnlineCode((prevShowOnlineCode) => !prevShowOnlineCode);
   };
   const list = [
     {
