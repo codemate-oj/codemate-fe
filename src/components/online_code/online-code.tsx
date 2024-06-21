@@ -18,7 +18,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
   const pathname = usePathname();
   const pid = pathname.split("/").pop();
 
-  const [selectedLanguage, setSelectedLanguage] = useState("c++");
+  const [selectedLanguage, setSelectedLanguage] = useState("cpp");
   const [code, setCode] = useState("//lang: c++");
   const [input, setInput] = useState("");
   const [selfRid, setSelfRid] = useState("");
@@ -40,7 +40,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
   };
 
   const handleSelfTest = async () => {
-    const lang = selectedLanguage === "c++" ? "cc.cc14o2" : selectedLanguage === "python" ? "py.py3" : "_";
+    const lang = selectedLanguage === "cpp" ? "cc.cc14o2" : selectedLanguage === "python" ? "py.py3" : "_";
     const { data } = await request.post(
       `/p/${pid}/submit` as "/p/{pid}/submit",
       { lang, code, input },
@@ -55,7 +55,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
   };
 
   const handleTest = async () => {
-    const lang = selectedLanguage === "c++" ? "cc.cc14o2" : selectedLanguage === "python" ? "py.py3" : "_";
+    const lang = selectedLanguage === "cpp" ? "cc.cc14o2" : selectedLanguage === "python" ? "py.py3" : "_";
     const { data } = await request.post(
       `/p/${pid}/submit` as "/p/{pid}/submit",
       { lang, code },
@@ -108,10 +108,10 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
       options: ["C++", "Python"],
       onSelectedChange: (e: RadioChangeEvent) => {
         const value = e.target.value;
-        const lang = value?.toLocaleLowerCase();
+        const lang = value === "C++" ? "cpp" : value?.toLocaleLowerCase();
         setSelectedLanguage(lang);
         const lastCode = localStorage.getItem(`${pid}-${lang}`);
-        setCode(lastCode ?? `//lang: ${lang}`);
+        setCode(lastCode ?? `//lang: ${value}`);
       },
     },
   ];

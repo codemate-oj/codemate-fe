@@ -65,8 +65,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ selectedLanguage, code, handleC
 
   useEffect(() => {
     switch (selectedLanguage) {
-      case "c++":
-        registerLanguage("c++", cppLanguage);
+      case "cpp":
+        registerLanguage("cpp", cppLanguage);
         break;
       case "python":
         registerLanguage("python", pythonLanguage);
