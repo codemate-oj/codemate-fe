@@ -715,6 +715,22 @@ export default defineMock({
                 rejudged: false,
                 files: {},
               },
+              {
+                _id: "666e1fcd1cd5b29804ff1d30",
+                status: 1,
+                uid: 2,
+                lang: "py.py3",
+                pid: 1,
+                domainId: "system",
+                score: 100,
+                time: 46.025999,
+                memory: 10288,
+                judger: 1,
+                judgeAt: "2024-06-21T23:12:14.569Z",
+                rejudged: false,
+                files: {},
+                progress: 50,
+              },
             ],
           };
         case 2:

@@ -65,7 +65,7 @@ const getRecords = (page = 1, pid: string, uid = loginStore.user.get()?._id ?? 0
           result: record.status,
           score: record.score,
           lang: record.lang,
-          duration: record.time,
+          duration: Number(record.time.toFixed(3)),
           memory: record.memory,
           submitAt: new Date(record.judgeAt),
         };
