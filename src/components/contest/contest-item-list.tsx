@@ -8,6 +8,7 @@ import Skeleton from "@/components/ui/skeleton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Pagination } from "antd";
 import LinkBtn from "../common/link-btn";
+import { ContestTagEnum } from "@/constants/filters";
 const ContestItemList: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -20,11 +21,13 @@ const ContestItemList: React.FC = () => {
   );
   const { data: itemListData, loading } = useRequest(
     async () => {
+      const tags = searchParams.get("tags")?.split(",").filter(Boolean) ?? [];
       const { data } = await request.get("/contest", {
         params: {
           page: Number(page),
-          tags: searchParams.get("tags") || undefined,
-          category: searchParams.get("category") as "incoming" | "ready" | "ongoing" | "done" | undefined,
+          tags: tags ? tags.map((tag) => ContestTagEnum[Number(tag)]).join(",") : undefined,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          category: searchParams.get("category") as any,
         },
         transformData: (data) => {
           return data;

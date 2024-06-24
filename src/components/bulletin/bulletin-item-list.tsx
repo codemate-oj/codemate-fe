@@ -53,6 +53,7 @@ const BulletinItemList: React.FC = () => {
                   toDetail(id);
                 }}
                 key={item._id}
+                // @ts-expect-error 没正确定义类型
                 item={item}
               />
             );
