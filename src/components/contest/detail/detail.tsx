@@ -4,20 +4,10 @@ import { request } from "@/lib/request";
 import { useRequest } from "ahooks";
 import ContestDetailTop from "./contest-detail-top";
 import ContestDetailContent from "./contest-detail-content";
-import { getTimeDiffByHour } from "@/lib/utils";
+import { getDetailState, getTimeDiffByHour } from "@/lib/utils";
 import ContestDetailFooter from "./contest-detail-footer";
 import ContestDetailRight from "./contest-detail-right";
-const getDetailState = (props: { beginAt: string; endAt: string; checkinBeginAt?: string; checkinEndAt?: string }) => {
-  const { endAt, checkinBeginAt, checkinEndAt } = props;
-  const nowDate = new Date();
-  const endDate = new Date(endAt);
-  const checkinBeginDate = new Date(checkinBeginAt as string);
-  const checkinEndDate = new Date(checkinEndAt as string);
-  if (nowDate < checkinBeginDate) return "预告中";
-  else if (nowDate < checkinEndDate) return "可报名";
-  else if (nowDate < endDate) return "进行中";
-  else return "已结束";
-};
+
 interface PropsType {
   tid: string;
 }
@@ -48,19 +38,16 @@ const ContestDetail: React.FC<PropsType> = (props) => {
     tag: [""],
     owner: "",
   };
-  const defaultTsdocData = {
-    attend: 1 | 0,
-  };
   //@ts-expect-error TODO: 后端类型更新
   const { title, attend, rule, beginAt, endAt, content, tag, owner } = (data || { tdoc: deafultTdocData }).tdoc;
-  const { attend: isApply } = (data || { tsdoc: defaultTsdocData }).tsdoc;
+  const tsdoc = data?.tsdoc;
   const state = getDetailState({
     checkinBeginAt: data?.tdoc?.checkinBeginAt,
     checkinEndAt: data?.tdoc?.checkinEndAt,
     beginAt: beginAt,
     endAt: endAt,
   });
-
+  const isApply = Boolean(tsdoc?.attend);
   return (
     <div>
       {loading ? (
@@ -73,7 +60,7 @@ const ContestDetail: React.FC<PropsType> = (props) => {
               attend={attend}
               rule={rule}
               time={getTimeDiffByHour(endAt, beginAt)}
-              isApply={isApply == 1 ? true : false}
+              isApply={isApply}
               checkinBeginAt={data?.tdoc?.checkinBeginAt}
               checkinEndAt={data?.tdoc?.checkinEndAt}
               beginAt={beginAt}
@@ -83,13 +70,13 @@ const ContestDetail: React.FC<PropsType> = (props) => {
             <ContestDetailContent content={content} />
             <ContestDetailFooter
               title={title}
-              isApply={isApply == 1 ? true : false}
+              isApply={isApply}
               state={state}
               checkinEndAt={data?.tdoc?.checkinEndAt}
               tid={tid}
             />
           </div>
-          <ContestDetailRight tag={tag} nickname={String(data?.udict[owner].nickname) || ""} state={state} />
+          <ContestDetailRight tag={tag} nickname={String(data?.udict[owner].nickname) || ""} state={state} tid={tid} />
         </div>
       )}
     </div>

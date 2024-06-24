@@ -113,3 +113,21 @@ export function formatTime(time: string) {
 
   return date.format("YYYY-MM-DD HH:mm");
 }
+
+//获取比赛状态
+export const getDetailState = (props: {
+  beginAt: string;
+  endAt: string;
+  checkinBeginAt?: string;
+  checkinEndAt?: string;
+}) => {
+  const { endAt, checkinBeginAt, checkinEndAt } = props;
+  const nowDate = new Date();
+  const endDate = new Date(endAt);
+  const checkinBeginDate = new Date(checkinBeginAt as string);
+  const checkinEndDate = new Date(checkinEndAt as string);
+  if (nowDate < checkinBeginDate) return "预告中";
+  else if (nowDate < checkinEndDate) return "可报名";
+  else if (nowDate < endDate) return "进行中";
+  else return "已结束";
+};
