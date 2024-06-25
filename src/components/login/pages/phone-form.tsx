@@ -10,6 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import VerifyButton from "@/components/common/verify-button";
+import { Icon } from "@iconify/react";
 
 const formSchema = z.object({
   phone: phoneSchema,
@@ -21,6 +22,7 @@ interface IProps {
   buttonText?: string;
   onSubmit?: (value: string, ticket: string, randStr: string) => void;
   loading?: boolean;
+  error?: string;
 }
 
 const PhoneForm: React.FC<IProps> = ({
@@ -29,6 +31,7 @@ const PhoneForm: React.FC<IProps> = ({
   buttonText = "提交",
   onSubmit,
   loading,
+  error: errorText,
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,6 +66,13 @@ const PhoneForm: React.FC<IProps> = ({
                 </FormItem>
               )}
             />
+
+            {errorText && (
+              <p className="flex items-center gap-x-2 px-1 text-sm text-red-500">
+                <Icon inline icon="ic:baseline-error" />
+                {errorText}
+              </p>
+            )}
             <VerifyButton
               className="mb-2"
               onVerifySuccess={(e) => {

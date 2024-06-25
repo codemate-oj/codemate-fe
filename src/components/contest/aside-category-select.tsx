@@ -2,22 +2,23 @@
 import React from "react";
 import FixedSelect from "@/components/common/fixed-select";
 import { useUrlParamState } from "@/hooks/useUrlParamState";
-enum CATEGORY {
-  "all" = "全部",
-  "incoming" = "预告中",
-  "ready" = "报名中",
-  "ongoing" = "比赛中",
-  "done" = "已结束",
-}
-type CATEGORYTYPE = "all" | "incoming" | "ready" | "ongoing" | "done";
+
+export const CATEGORY_MAP = {
+  "": "全部",
+  INCOMING: "预告中",
+  READY: "报名中",
+  ONGOING: "比赛中",
+  DONE: "已结束",
+};
+type CATEGORY_TYPE = keyof typeof CATEGORY_MAP;
 
 const AsideCategorySelector: React.FC = () => {
   const [category, setCategory] = useUrlParamState("category");
   return (
     <FixedSelect
-      options={Object.keys(CATEGORY).map((item) => {
+      options={Object.keys(CATEGORY_MAP).map((item) => {
         return {
-          label: CATEGORY[item as CATEGORYTYPE],
+          label: CATEGORY_MAP[item as CATEGORY_TYPE],
           value: item,
         };
       })}

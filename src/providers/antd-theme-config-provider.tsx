@@ -9,6 +9,7 @@ export const antdCustomTheme: AntdThemeProviderProps = {
   token: {
     colorPrimary: "#FF7D37",
     colorPrimaryBorder: "#FFFFFF",
+    colorLink: "unset",
   },
   components: {
     Button: {
