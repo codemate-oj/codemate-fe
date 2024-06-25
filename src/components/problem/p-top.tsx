@@ -1,7 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { request } from "@/lib/request";
+import { useLockFn } from "ahooks";
 
 interface PTopProps {
   nAccept?: number;
@@ -10,12 +11,18 @@ interface PTopProps {
   tag?: string[];
   title?: string;
   pid?: string;
+  docId?: number;
   uname?: string;
+  starred?: boolean;
 }
 
 const PTop: React.FC<PTopProps> = (props) => {
-  const { title, pid, tag, difficulty, nSubmit, nAccept, uname } = props;
-  const [isCollect, setIsCollect] = useState(true);
+  const { title, pid, tag, difficulty, nSubmit, nAccept, uname, docId, starred } = props;
+  const [isStarred, setIsStarred] = useState(false);
+
+  useEffect(() => {
+    if (starred !== undefined) setIsStarred(starred);
+  }, [starred]);
 
   const list = [
     { name: "知识点", value: tag },
@@ -24,18 +31,16 @@ const PTop: React.FC<PTopProps> = (props) => {
     { name: "AC", value: nAccept },
     { name: "上传者", value: uname },
   ];
-  const collect = async () => {
-    setIsCollect(false);
 
-    await request.post("/p", { operation: "star" as "unstar", pid: 1 });
-    // console.log(result, "11");
-  };
-  const disCollect = async () => {
-    setIsCollect(true);
+  const handleStar = useLockFn(async () => {
+    await request.post("/p", { operation: "star" as "unstar", pid: docId });
+    setIsStarred(true);
+  });
 
-    await request.post("/p", { operation: "unstar" as const, pid: 1 });
-    // console.log(result, "11");
-  };
+  const handleUnstar = useLockFn(async () => {
+    await request.post("/p", { operation: "unstar" as const, pid: docId });
+    setIsStarred(false);
+  });
 
   return (
     <div>
@@ -43,11 +48,14 @@ const PTop: React.FC<PTopProps> = (props) => {
         <div className="text-[2rem] font-bold">{pid} ：</div>
         <div className="mr-7 text-[2rem] font-bold">{title}</div>
         <Button
-          onClick={isCollect ? () => collect() : () => disCollect()}
+          onClick={() => {
+            if (isStarred) handleUnstar();
+            else handleStar();
+          }}
           variant={"outline"}
           className="mr-2 border border-primary text-primary hover:bg-accent/30 hover:text-primary"
         >
-          收藏
+          {isStarred ? "已收藏" : "收藏"}
         </Button>
         <Button
           variant={"outline"}

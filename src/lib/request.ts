@@ -36,10 +36,22 @@ export const alovaInstance = createAlova({
     if (!_acc) method.config.headers["Accept"] = "application/json";
     // 若有apifoxToken则添加到Header
     if (APIFOX_TOKEN) method.config.headers["apifoxToken"] = APIFOX_TOKEN;
-    // 去除config.params中的空值
     if (method.config.params) {
       Object.keys(method.config.params).forEach((key) => {
-        if (!method.config.params[key]) delete method.config.params[key];
+        // 去除config.params中的空值
+        const attr = method.config.params[key];
+        if (!attr) {
+          delete method.config.params[key];
+          return;
+        }
+        // // 处理非POD类型
+        // if (typeof attr === "object") {
+        //   if (Array.isArray(attr)) {
+        //     method.config.params[key] = attr.join(",");
+        //   } else {
+        //     method.config.params[key] = JSON.stringify(attr);
+        //   }
+        // }
       });
     }
   },

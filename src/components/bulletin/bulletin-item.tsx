@@ -11,7 +11,8 @@ interface BulletinItemProps {
   _id: string;
   content: string;
   owner: number;
-  postAt: number;
+  postAt: number | string;
+  updateAt: number | string;
 }
 
 interface ItemProps {
@@ -24,7 +25,7 @@ const BulletinItem: React.FC<ItemProps> = (props) => {
   const { title, _id, content, postAt } = item;
   const [isChildrenExpend, setIsChildrenExpend] = useState(false);
   const searchParams = useSearchParams();
-  const time = new Date(postAt);
+  const time = new Date(postAt ?? item.updateAt);
 
   return (
     <>

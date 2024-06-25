@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface SectionProps {
   icon: React.ReactNode;
@@ -45,7 +46,9 @@ const PageFooter = () => {
           title="觉醒台规则"
         >
           <li className="col-span-2">哪些行为一定不能做？</li>
-          <li>隐私协议</li>
+          <li>
+            <Link href={`/privacy`}>隐私协议</Link>
+          </li>
           <li>奖惩协议</li>
           <li>投诉建议</li>
         </FooterSection>
