@@ -62,7 +62,7 @@ const Scoreboard: React.FC<ScoreboardProps> = (props) => {
       <div>
         <ContestDetailRight
           tag={data?.tdoc.tag}
-          nickname={String(data?.udict[data?.tdoc.owner].nickname)}
+          nickname={String(data?.udict[data?.tdoc.owner]?.nickname)}
           state={state}
           tid={tid}
         />
