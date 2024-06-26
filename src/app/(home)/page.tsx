@@ -8,6 +8,7 @@ import TreeSelector from "@/components/home/tree-selector";
 import ProblemListTable from "@/components/home/problem-list-table";
 import { type Metadata } from "next";
 import PageTitle from "@/components/common/page-title";
+import SideLayout from "@/components/common/side-layout";
 
 export const metadata: Metadata = {
   title: "题库 - CODEMATE",
@@ -84,15 +85,10 @@ const HomePage = async () => {
     <>
       <PageTitle>修炼场</PageTitle>
       <AsideLangSelector options={sideTabs} />
-      <div className="flex w-full space-x-6">
-        <div className="flex-1">
-          <TreeSelector treeData={filterTree} />
-          <ProblemListTable />
-        </div>
-        <div className="hidden overflow-hidden lg:block lg:w-[250px] xl:w-[300px]">
-          <BulletinBoard data={bulletinCardData}></BulletinBoard>
-        </div>
-      </div>
+      <SideLayout sideComponent={<BulletinBoard data={bulletinCardData} />}>
+        <TreeSelector treeData={filterTree} />
+        <ProblemListTable />
+      </SideLayout>
     </>
   );
 };

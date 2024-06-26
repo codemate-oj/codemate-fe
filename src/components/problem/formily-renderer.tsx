@@ -4,11 +4,9 @@ import { createForm, onFormValuesChange } from "@formily/core";
 import { FormProvider, createSchemaField, ISchema } from "@formily/react";
 import { Form } from "antd";
 import { CustomInput, CustomMutiSelect, CustomSelect, CustomTextarea } from "@/components/problem/formily-items"; // 导入自定义组件
-import ObjectiveBottom from "@/components/problem/objective-bottom";
 import { debounce } from "lodash";
-import { objectToYaml } from "@/lib/form";
-import { request } from "@/lib/request";
-import { useCodeLangContext } from "@/providers/code-lang-provider";
+import { Button } from "../ui/button";
+import ActionBar from "./action-bar";
 
 const PID = window.location.pathname.split("/")[2];
 const CACHE_KEY = `answers-${PID}`;
@@ -61,31 +59,16 @@ interface FormilySchemaProps {
 }
 
 const FormilyRenderer: React.FC<FormilySchemaProps> = ({ schema, pid }) => {
-  const { lang } = useCodeLangContext();
-  const handleSubmit = async () => {
-    try {
-      const values = await form.submit();
-      const transformedCode = objectToYaml(values as { [key: string]: string | number });
-      const result = await request.post(
-        `/p/${pid}/submit` as "/p/{pid}/submit",
-        {
-          lang: lang,
-          // pretest: false,
-          code: transformedCode!,
-        }
-        // { ...forwardAuthClient() }
-      );
-
-      console.info(values, transformedCode, result);
-    } catch (err) {
-      console.error(err);
-    }
-  };
   return (
     <FormProvider form={form}>
       <Form layout="vertical">
         <SchemaField schema={schema} />
-        <ObjectiveBottom handleSubmit={handleSubmit} />
+        <div className="flex flex-wrap gap-2">
+          <div>
+            <Button>确认提交</Button>
+          </div>
+          <ActionBar pid={pid} />
+        </div>
       </Form>
     </FormProvider>
   );

@@ -11,6 +11,15 @@ interface IProps {
   onVerifyFail?: (error: ICaptchaResult) => void;
 }
 
+/**
+ * Captcha验证按钮
+ *
+ * @param {IProps} props - The component props.
+ * @param {string} props.className - The CSS class name for the button.
+ * @param {Function} props.onVerifyFail - The callback function to be called when verification fails.
+ * @param {Function} props.onVerifySuccess - The callback function to be called when verification succeeds.
+ * @return {JSX.Element} The rendered verification button component.
+ */
 const VerifyButton: React.FC<IProps> = ({ className, onVerifyFail, onVerifySuccess }) => {
   const [verifyPassed, setVerifyPassed] = useState(false);
   const handleClick = async () => {
