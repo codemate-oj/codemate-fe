@@ -43,9 +43,9 @@ export const ERROR_MAP: Record<ERROR_TYPE, ErrorInfo> = {
     text: "题单{0}中没有题目{1}",
   },
   [ERROR_TYPE.PROBLEM_HAS_NO_PREV_ERROR]: {
-    text: "题目{0}已经是第一题了",
+    text: "该题目已经是第一题了",
   },
   [ERROR_TYPE.PROBLEM_HAS_NO_NEXT_ERROR]: {
-    text: "题目{0}已经是最后一题了",
+    text: "该题目已经是最后一题了",
   },
 };
