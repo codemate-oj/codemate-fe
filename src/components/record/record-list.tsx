@@ -43,10 +43,12 @@ export const tableColumns: TableProps["columns"] = [
   {
     title: "时间",
     dataIndex: "time",
+    render: (value) => (value === 0 ? "-" : `${value.toFixed(1)} ms`),
   },
   {
     title: "内存",
     dataIndex: "memory",
+    render: (value) => (value === 0 ? "-" : `${(value / 1024).toFixed(2)} MiB`),
   },
   {
     title: "语言",
@@ -79,8 +81,8 @@ const RecordList = () => {
             score: record.score,
             problem: data.data.pdict[record.pid],
             submitBy: data.data.udict[record.uid],
-            time: record.time === 0 ? "-" : record.time,
-            memory: record.memory === 0 ? "-" : record.memory,
+            time: record.time,
+            memory: record.memory,
             lang: record.lang === "_" ? "客观题" : PROGRAMMING_LANGS[record.lang as keyof typeof PROGRAMMING_LANGS],
             submitAt: new ObjectId(record._id).getTimestamp(),
           }));
