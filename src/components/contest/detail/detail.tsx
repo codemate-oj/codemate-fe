@@ -38,7 +38,6 @@ const ContestDetail: React.FC<PropsType> = (props) => {
     tag: [""],
     owner: "",
   };
-  //@ts-expect-error TODO: 后端类型更新
   const { title, attend, rule, beginAt, endAt, content, tag, owner } = (data || { tdoc: deafultTdocData }).tdoc;
   const tsdoc = data?.tsdoc;
   const state = getDetailState({

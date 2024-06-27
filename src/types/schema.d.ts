@@ -497,10 +497,10 @@ export interface paths {
                 hidden?: boolean;
                 stats?: string;
                 difficulty?: number;
+                assign?: string[];
                 config: string | components["schemas"]["ProblemConfig"];
                 /** 摘要 */
                 brief: string;
-                assign?: string[];
               }[];
               /** 题目用户状态字典 */
               psdict: {
@@ -2256,6 +2256,7 @@ export interface paths {
               showScore: boolean;
               /** @description 是否可以查看记录详情 */
               canViewRecord: boolean;
+              rdocs: components["schemas"]["Record"][];
               [key: string]: Record<string, never>;
             };
           };

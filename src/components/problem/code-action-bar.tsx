@@ -16,11 +16,17 @@ const CodeActionBar: React.FC<IProps> = (props) => {
   const handleSubmit = async () => {
     const code = localStorage.getItem(`code-${pid}`) || "";
 
-    await request.post(`/p/${pid}/submit` as "/p/{pid}/submit", {
-      lang: lang,
-      pretest: false,
-      code: code,
-    });
+    const rid = await request.post(
+      `/p/${pid}/submit` as "/p/{pid}/submit",
+      {
+        lang: lang,
+        pretest: false,
+        code: code,
+      },
+      { transformData: (data) => data.data.rid }
+    );
+
+    window.open(`/record/${rid}`);
   };
 
   return (

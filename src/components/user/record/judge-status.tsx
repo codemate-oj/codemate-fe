@@ -1,3 +1,4 @@
+"use client";
 import { STATUS_ICONS, STATUS_TEXT_COLORS, STATUS_TEXTS, StatusType } from "@/constants/judge-status";
 import { Icon } from "@iconify/react";
 import React from "react";

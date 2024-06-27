@@ -1,7 +1,7 @@
 "use client";
 import { STATUS_TEXTS } from "@/constants/judge-status";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
-import { Button, Form, FormItemProps, Input, Select } from "antd";
+import { Button, Card, Form, FormItemProps, Input, Select } from "antd";
 import _ from "lodash";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
@@ -67,7 +67,7 @@ const RecordFilterForm: React.FC<IProps> = ({ onSubmit, loading }) => {
   }, []);
 
   return (
-    <div>
+    <Card>
       <Form form={form} layout="inline" className="gap-y-5" onKeyDown={(e) => e.key === "Enter" && handleSubmit()}>
         <FormItem label="由用户名或UID筛选" name="uidOrName">
           <Input />
@@ -91,7 +91,7 @@ const RecordFilterForm: React.FC<IProps> = ({ onSubmit, loading }) => {
         </Button>
         <Button onClick={() => form.resetFields()}>重置</Button>
       </div>
-    </div>
+    </Card>
   );
 };
 

@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import dayjs from "dayjs";
+import type { ObjectId } from "bson";
 
 /**
  * A function that combines and merges class names.
@@ -147,4 +148,9 @@ export function getScoreColor(score: number | string): string {
     "#93b127",
     "#25ad40",
   ][Math.floor((Number(score) || 0) / 10)];
+}
+
+export async function getTimeFromObjectId(ObjectId: ObjectId | string) {
+  const OID = (await import("bson")).ObjectId;
+  return new OID(ObjectId).getTimestamp();
 }
