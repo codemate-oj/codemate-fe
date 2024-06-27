@@ -37,20 +37,24 @@ const ActionBar: React.FC<IProps> = ({ pid }) => {
 
   return (
     <div className="space-x-2">
-      <Button
-        variant={"outline"}
-        onClick={() => handleJump("prev")}
-        className="border-primary text-primary hover:bg-accent/20 hover:text-primary"
-      >
-        上一题
-      </Button>
-      <Button
-        variant={"outline"}
-        onClick={() => handleJump("next")}
-        className="border-primary text-primary hover:bg-accent/30 hover:text-primary"
-      >
-        下一题
-      </Button>
+      {tid && (
+        <>
+          <Button
+            variant={"outline"}
+            onClick={() => handleJump("prev")}
+            className="border-primary text-primary hover:bg-accent/20 hover:text-primary"
+          >
+            上一题
+          </Button>
+          <Button
+            variant={"outline"}
+            onClick={() => handleJump("next")}
+            className="border-primary text-primary hover:bg-accent/30 hover:text-primary"
+          >
+            下一题
+          </Button>
+        </>
+      )}
       <Button variant={"outline"} className="hover:bg-accent/30">
         上难度
       </Button>

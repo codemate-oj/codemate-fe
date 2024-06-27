@@ -32,6 +32,15 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 21 100% 61%;
 
+    --success: #25ad40;
+    --fail: #fb5555;
+    --progress: #f39800;
+    --invalid: #9fa0a0;
+    --success-foreground: #ffffff; /* 示例前景色 */
+    --fail-foreground: #ffffff; /* 示例前景色 */
+    --progress-foreground: #ffffff; /* 示例前景色 */
+    --invalid-foreground: #000000; /* 示例前景色 */
+
     --radius: 0.5rem;
   }
 

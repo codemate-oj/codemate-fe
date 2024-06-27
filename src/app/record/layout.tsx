@@ -4,7 +4,7 @@ import React from "react";
 const RecordLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <>
-      <div className="m-auto max-w-[1200px] px-5 py-10 xl:px-0">{children}</div>
+      <div className="m-auto max-w-[1200px] py-10">{children}</div>
       <PageFooter />
     </>
   );

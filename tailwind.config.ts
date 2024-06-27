@@ -47,6 +47,22 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        success: {
+          DEFAULT: "var(--success)",
+          foreground: "var(--success-foreground)",
+        },
+        fail: {
+          DEFAULT: "var(--fail)",
+          foreground: "var(--fail-foreground)",
+        },
+        progress: {
+          DEFAULT: "var(--progress)",
+          foreground: "var(--progress-foreground)",
+        },
+        invalid: {
+          DEFAULT: "var(--invalid)",
+          foreground: "var(--invalid-foreground)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -156,6 +172,7 @@ const config = {
       },
     },
   },
+  safelist: ["text-success", "text-fail", "text-progress", "text-invalid"],
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography"), "tailwindcss/nesting"],
 } satisfies Config;
 

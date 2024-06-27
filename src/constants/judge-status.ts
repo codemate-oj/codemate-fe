@@ -1,4 +1,24 @@
-// Please note that accepted < others, rp system uses this feature.
+export const enum STATUS_ENUM {
+  STATUS_WAITING = 0,
+  STATUS_ACCEPTED,
+  STATUS_WRONG_ANSWER,
+  STATUS_TIME_LIMIT_EXCEEDED,
+  STATUS_MEMORY_LIMIT_EXCEEDED,
+  STATUS_OUTPUT_LIMIT_EXCEEDED,
+  STATUS_RUNTIME_ERROR,
+  STATUS_COMPILE_ERROR,
+  STATUS_SYSTEM_ERROR,
+  STATUS_CANCELED,
+  STATUS_ETC,
+  STATUS_JUDGING = 20,
+  STATUS_COMPILING,
+  STATUS_FETCHED,
+  STATUS_IGNORED = 30,
+  STATUS_FORMAT,
+}
+
+export type StatusType = STATUS_ENUM;
+
 export const STATUS_WAITING = 0 as const;
 export const STATUS_ACCEPTED = 1 as const;
 export const STATUS_WRONG_ANSWER = 2 as const;
@@ -13,10 +33,10 @@ export const STATUS_ETC = 10 as const;
 export const STATUS_JUDGING = 20 as const;
 export const STATUS_COMPILING = 21 as const;
 export const STATUS_FETCHED = 22 as const;
-export const STATUS_FORMAT = 31 as const;
 export const STATUS_IGNORED = 30 as const;
+export const STATUS_FORMAT = 31 as const;
 
-export const STATUS_TEXTS = {
+export const STATUS_TEXTS: Record<STATUS_ENUM, string> = {
   [STATUS_WAITING]: "Waiting",
   [STATUS_ACCEPTED]: "Accepted",
   [STATUS_WRONG_ANSWER]: "Wrong Answer",
@@ -37,7 +57,7 @@ export const STATUS_TEXTS = {
 
 export const STATUS_CODES = {
   [STATUS_WAITING]: "pending",
-  [STATUS_ACCEPTED]: "pass",
+  [STATUS_ACCEPTED]: "success",
   [STATUS_WRONG_ANSWER]: "fail",
   [STATUS_TIME_LIMIT_EXCEEDED]: "fail",
   [STATUS_MEMORY_LIMIT_EXCEEDED]: "fail",
@@ -84,4 +104,44 @@ export const STATUS_SCRATCHPAD_SHORT_TEXTS = {
   [STATUS_RUNTIME_ERROR]: "RTE",
 };
 
-export type StatusType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 20 | 21 | 22 | 30;
+export const STATUS_TEXT_COLORS: Record<STATUS_ENUM, string> = {
+  [STATUS_WAITING]: "invalid",
+  [STATUS_ACCEPTED]: "success",
+  [STATUS_WRONG_ANSWER]: "fail",
+  [STATUS_TIME_LIMIT_EXCEEDED]: "fail",
+  [STATUS_MEMORY_LIMIT_EXCEEDED]: "fail",
+  [STATUS_OUTPUT_LIMIT_EXCEEDED]: "fail",
+  [STATUS_RUNTIME_ERROR]: "fail",
+  [STATUS_COMPILE_ERROR]: "fail",
+  [STATUS_SYSTEM_ERROR]: "fail",
+  [STATUS_CANCELED]: "invalid",
+  [STATUS_ETC]: "fail",
+  [STATUS_JUDGING]: "progress",
+  [STATUS_COMPILING]: "progress",
+  [STATUS_FETCHED]: "progress",
+  [STATUS_IGNORED]: "invalid",
+  [STATUS_FORMAT]: "fail",
+};
+
+// 所有pass都用material-symbols:check
+// 所有fail都用material-symbols:close
+// 所有progress都用material-symbols:hourglass-bottom-rounded
+// 所有invalid都用material-symbols:close
+export const STATUS_ICONS: Record<STATUS_ENUM, string> = {
+  [STATUS_WAITING]: "material-symbols:schedule-outline-rounded",
+  [STATUS_ACCEPTED]: "material-symbols:check",
+  [STATUS_WRONG_ANSWER]: "material-symbols:close",
+  [STATUS_TIME_LIMIT_EXCEEDED]: "material-symbols:close",
+  [STATUS_MEMORY_LIMIT_EXCEEDED]: "material-symbols:close",
+  [STATUS_OUTPUT_LIMIT_EXCEEDED]: "material-symbols:close",
+  [STATUS_RUNTIME_ERROR]: "material-symbols:close",
+  [STATUS_COMPILE_ERROR]: "material-symbols:close",
+  [STATUS_SYSTEM_ERROR]: "material-symbols:close",
+  [STATUS_CANCELED]: "material-symbols:close",
+  [STATUS_ETC]: "material-symbols:close",
+  [STATUS_JUDGING]: "material-symbols:hourglass-bottom-rounded",
+  [STATUS_COMPILING]: "material-symbols:hourglass-bottom-rounded",
+  [STATUS_FETCHED]: "material-symbols:hourglass-bottom-rounded",
+  [STATUS_IGNORED]: "material-symbols:close",
+  [STATUS_FORMAT]: "material-symbols:close",
+};

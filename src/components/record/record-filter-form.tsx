@@ -2,7 +2,9 @@
 import { STATUS_TEXTS } from "@/constants/judge-status";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
 import { Button, Form, FormItemProps, Input, Select } from "antd";
-import React from "react";
+import _ from "lodash";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
 export interface RecordFilterFormType {
   uidOrName?: string;
@@ -41,12 +43,28 @@ interface IProps {
 
 const RecordFilterForm: React.FC<IProps> = ({ onSubmit, loading }) => {
   const [form] = Form.useForm<RecordFilterFormType>();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const handleSubmit = async () => {
     await form.validateFields();
     const values = form.getFieldsValue() as RecordFilterFormType;
+    const searchParams = new URLSearchParams(_.omitBy(values, _.isUndefined) as Record<string, string>);
+    router.push(`${pathname}?${searchParams.toString()}`);
     onSubmit?.(values);
   };
+
+  // 从url初始化参数
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const data: RecordFilterFormType = {};
+    params.forEach((value, key) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (value) data[key as keyof RecordFilterFormType] = value as any;
+    });
+    form.setFieldsValue(data);
+    onSubmit?.(data);
+  }, []);
 
   return (
     <div>
@@ -61,10 +79,10 @@ const RecordFilterForm: React.FC<IProps> = ({ onSubmit, loading }) => {
           <Input />
         </FormItem>
         <FormItem label="由题目语言筛选" name="lang" layout="horizontal">
-          <Select className="min-w-[150px]" options={langOptions} />
+          <Select className="min-w-[150px]" options={langOptions} allowClear />
         </FormItem>
         <FormItem label="由评测状态筛选" name="status">
-          <Select className="min-w-[200px]" options={statusOptions} />
+          <Select className="min-w-[200px]" options={statusOptions} allowClear />
         </FormItem>
       </Form>
       <div className="mt-5 flex w-full justify-end gap-x-2">
