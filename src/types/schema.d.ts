@@ -161,6 +161,11 @@ export interface paths {
            * @example 测试比赛
            */
           q?: string;
+          /**
+           * @description 只查看已参加的比赛
+           * @example true
+           */
+          attend?: boolean;
         };
         header?: {
           /** @example application/json */
@@ -493,6 +498,9 @@ export interface paths {
                 stats?: string;
                 difficulty?: number;
                 config: string | components["schemas"]["ProblemConfig"];
+                /** 摘要 */
+                brief: string;
+                assign?: string[];
               }[];
               /** 题目用户状态字典 */
               psdict: {
@@ -896,13 +904,11 @@ export interface paths {
     };
   };
   "/problem/starred": {
-    /** 查看已收藏题目 */
+    /** 获取收藏题目 */
     get: {
       parameters: {
         query?: {
-          /** @example 1 */
           page?: number;
-          /** @example 15 */
           pageSize?: number;
         };
         header?: {
@@ -915,22 +921,21 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              /** 题目ID */
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
               pids: number[];
-              /** 题目状态字典 */
-              psdict?: {
-                [key: string]: components["schemas"]["StatusBaseDoc"];
+              psdict: {
+                [key: string]: components["schemas"]["ProblemStatus"];
               };
-              /** 题目字典 */
-              pdict?: {
-                [key: string]: Record<string, never>;
+              pdict: {
+                [key: string]: components["schemas"]["Problem"];
               };
               page: number;
               pageSize: number;
+              /** @description 总数 */
               psdocCount: number;
+              /** @description 页数 */
               pageCount: number;
-              UiContext: components["schemas"]["UiContext"];
-              UserContext: components["schemas"]["UserContext"];
             };
           };
         };
@@ -1121,6 +1126,57 @@ export interface paths {
               pid: number;
               /** @description 是否有对应题目权限 */
               access: boolean;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/record/{rid}": {
+    /** 获取题目评测详情 */
+    get: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+        path: {
+          rid: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              udoc: components["schemas"]["User"];
+              rdoc: components["schemas"]["Record"];
+              pdoc: components["schemas"]["Problem"];
+              tdoc?: components["schemas"]["Contest"] | null;
             };
           };
         };
@@ -1624,6 +1680,8 @@ export interface paths {
                 };
                 assign?: string[];
                 config: string | components["schemas"]["ProblemConfig"];
+                /** 摘要 */
+                brief: string;
               };
               udoc: components["schemas"]["User"];
               /**
@@ -1751,6 +1809,8 @@ export interface paths {
                  * @description 仅用于作业
                  */
                 penaltySince?: string;
+                /** 拥有者UID */
+                owner: number;
               };
               /**
                * 比赛所有者信息
@@ -2175,8 +2235,28 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              UserContext: components["schemas"]["UserContext"];
+              pdict: {
+                [key: string]: components["schemas"]["Problem"];
+              };
+              psdict: {
+                [key: string]: components["schemas"]["ProblemStatus"];
+              };
+              udict: {
+                [key: string]: components["schemas"]["User"];
+              };
+              rdict: {
+                [key: string]: components["schemas"]["Record"];
+              };
+              tdoc: components["schemas"]["Contest"];
+              tsdoc: components["schemas"]["ContestStatus"];
+              tcdocs: string[];
               UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+              /** @description 是否展示得分 */
+              showScore: boolean;
+              /** @description 是否可以查看记录详情 */
+              canViewRecord: boolean;
+              [key: string]: Record<string, never>;
             };
           };
         };
@@ -2538,6 +2618,8 @@ export interface components {
        * @description 若只分配给特定小组，则只有特定组有权限访问（与权限组结合）
        */
       assign?: string[];
+      /** 拥有者UID */
+      owner: number;
     };
     BulletinDoc: {
       _id: string;
@@ -2726,6 +2808,8 @@ export interface components {
        * @description 仅用于作业
        */
       penaltySince?: string;
+      /** 拥有者UID */
+      owner: number;
       /**
        * 比赛标签
        * @description 用于筛选比赛
@@ -2865,6 +2949,8 @@ export interface components {
       };
       assign?: string[];
       config: string | components["schemas"]["ProblemConfig"];
+      /** 摘要 */
+      brief: string;
     };
     ProblemConfig: {
       redirect?: string[];
@@ -2926,6 +3012,8 @@ export interface components {
        * @description 若只分配给特定小组，则只有特定组有权限访问（与权限组结合）
        */
       assign?: string[];
+      /** 拥有者UID */
+      owner: number;
     };
     FileInfo: {
       _id: string;
@@ -3025,6 +3113,8 @@ export interface components {
        * @description 仅用于作业
        */
       penaltyRules?: Record<string, never>;
+      /** 拥有者UID */
+      owner: number;
     };
     Error: {
       /** 错误信息 */
@@ -3154,7 +3244,7 @@ export interface components {
       scope: string;
       domains: string[];
       pinnedDomains: string[];
-      id: string;
+      _id: number;
     };
   };
   responses: never;

@@ -9,13 +9,12 @@ const StarredList = () => {
   const { data, loadingMore, loading, loadMore, noMore } = useInfiniteScroll(
     async (d) => {
       const current = d?.currentPage ?? 1;
-      //@ts-expect-error 后端还没有添加该类型
-      const { pdocs } = await request.get("/problem/starred", {
+      const pdocs = await request.get("/problem/starred", {
         params: {
           page: current,
         },
         transformData(data) {
-          return data.data;
+          return Object.keys(data.data.pdict).map((key) => data.data.pdict[key]);
         },
       });
       if (pdocs.length === 0) {

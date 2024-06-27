@@ -142,8 +142,6 @@ const ProblemListTable = () => {
         onRow={(record) => {
           return {
             onClick: () => {
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-expect-error
               runCheckProblemPermission({ pid: record.pid, assign: record.assign, title: record.title });
             },
           };
@@ -157,12 +155,10 @@ const ProblemListTable = () => {
                 borderBottom: "0.1rem dashed #F1F1F1",
               }}
             >
-              {/* @ts-expect-error 后端类型更新 */}
               {record?.brief}
             </div>
           ),
           expandedRowClassName: () => "!text-grey",
-          // @ts-expect-error 后端类型更新
           expandedRowKeys: data?.pdocs?.filter((item) => Boolean(item.brief))?.map((item) => item.pid),
           expandIcon: () => <></>,
         }}
