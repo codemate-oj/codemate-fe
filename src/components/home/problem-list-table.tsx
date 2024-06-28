@@ -1,5 +1,5 @@
 "use client";
-import { Switch, Table, TableColumnsType, Tag } from "antd";
+import { Table, TableColumnsType, Tag } from "antd";
 import React from "react";
 import Image from "next/image";
 import { useUrlParamState } from "@/hooks/useUrlParamState";
@@ -20,25 +20,25 @@ const columns: TableColumnsType<DataType> = [
     title: "编号",
     dataIndex: "pid",
     key: "pid",
-    width: "10%",
+    width: "100px",
   },
   {
     title: "题目名称",
     dataIndex: "title",
     key: "title",
-    width: "18%",
+    width: "150px",
     render: (_, { title }) => <span className="text-sm font-bold">{title}</span>,
   },
   {
     title: () => (
       <>
         <span className="mr-3 text-sm font-bold">算法标签</span>
-        <Switch defaultChecked />
+        {/* <Switch defaultChecked /> */}
       </>
     ),
     key: "tag",
     dataIndex: "tag",
-    width: "40%",
+    ellipsis: true,
     render: (_, record) => (
       <>
         {record.tag?.map((tag: string) => {
@@ -54,11 +54,12 @@ const columns: TableColumnsType<DataType> = [
   {
     title: "难度",
     key: "difficulty",
-    dataIndex: "difficulty",
-    width: "12%",
+    hidden: true,
     render: (_, record) => (
       <div className="flex gap-1">
-        {new Array(Number(record?.difficulty ?? 0)).map((_, index) => (
+        {new Array(
+          Number(record?.difficulty ?? Math.round(Math.max(Math.min(record?.nSubmit / (record?.nAccept + 1), 10), 1)))
+        ).map((_, index) => (
           <Image src="/svg/star.svg" alt="" key={index} width={15} height={15} />
         ))}
       </div>
@@ -68,26 +69,21 @@ const columns: TableColumnsType<DataType> = [
     title: "尝试",
     key: "nSubmit",
     dataIndex: "nSubmit",
-    width: "5%",
+    width: "100px",
   },
   {
     title: "AC率",
     key: "nAccept",
-    dataIndex: "nAccept",
-    width: "5%",
+    render: (_, record) => `${((record.nAccept / record.nSubmit) * 100).toFixed(1)}%`,
+    width: "100px",
   },
   {
     title: "热度",
-    key: "difficulty",
-    dataIndex: "difficulty",
-    width: "15%",
+    key: "hot",
     render: (_, record) => (
-      <div className="flex gap-1">
-        {new Array(Number(record?.difficulty ?? 0)).map((_, index) => (
-          <Image src="/img/fire.png" alt="" key={index} width={15} height={15}></Image>
-        ))}
-      </div>
+      <div className="flex gap-1">{"🔥".repeat(Math.min(Math.floor(record.nSubmit / 20), 6))}</div>
     ),
+    width: "100px",
   },
 ];
 
@@ -146,8 +142,6 @@ const ProblemListTable = () => {
         onRow={(record) => {
           return {
             onClick: () => {
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-expect-error
               runCheckProblemPermission({ pid: record.pid, assign: record.assign, title: record.title });
             },
           };
@@ -161,11 +155,11 @@ const ProblemListTable = () => {
                 borderBottom: "0.1rem dashed #F1F1F1",
               }}
             >
-              {record?.title}
+              {record?.brief}
             </div>
           ),
           expandedRowClassName: () => "!text-grey",
-          expandedRowKeys: data?.pdocs?.map((item) => item.pid),
+          expandedRowKeys: data?.pdocs?.filter((item) => Boolean(item.brief))?.map((item) => item.pid),
           expandIcon: () => <></>,
         }}
         pagination={{

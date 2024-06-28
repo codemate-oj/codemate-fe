@@ -8,7 +8,7 @@ interface Props {
 }
 
 const TreeSelector: React.FC<Props> = ({ treeData }) => {
-  const [tid, setTid] = useUrlParamState("tid");
+  const [tid, setTid] = useUrlParamState("tid", "66200c489cd74d3e4c931302");
 
   const selectedTreePath = useMemo(() => {
     if (!treeData || !tid) return [];

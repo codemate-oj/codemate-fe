@@ -11,7 +11,7 @@ interface BulletinItemProps {
   _id: string;
   content: string;
   owner: number;
-  postAt: number;
+  postAt: number | string;
 }
 
 interface ItemProps {

@@ -27,11 +27,12 @@ interface ItemProps {
 const Item: React.FC<ItemProps> = (props) => {
   const { item, tsdict, toDetail } = props;
   const { title, rule, beginAt, endAt, attend, tag, _id, checkinBeginAt, checkinEndAt, imageURL } = item;
+  const isApply = Boolean(tsdict[_id]?.attend);
   return (
     <div className="flex h-48">
       <div onClick={() => toDetail(_id)} className="relative mr-8 h-40 w-80 cursor-pointer overflow-hidden">
         <ContestState
-          isApply={Boolean(tsdict[_id])}
+          isApply={isApply}
           beginAt={beginAt}
           endAt={endAt}
           checkinBeginAt={checkinBeginAt}
@@ -59,7 +60,7 @@ const Item: React.FC<ItemProps> = (props) => {
           </div>
           <div className="attend flex-1">
             <p className="text-lg font-normal">{attend}人</p>
-            <span className="text-sm font-normal text-[#797979]">已报名</span>
+            <span className="text-sm font-normal text-[#797979]">{isApply ? "已报名" : "未报名"}</span>
           </div>
           <div className="lang flex-1">
             <p className="text-lg font-normal text-[#FF7D37]">
@@ -77,7 +78,7 @@ const Item: React.FC<ItemProps> = (props) => {
             比赛时间：{beginAt.slice(0, 16).replace("T", " ")} -- {endAt.slice(0, 16).replace("T", " ")}
           </p>
           <span className="absolute right-0 top-2">
-            <Link href={`/contest/${_id}`}>
+            <Link href={`/contest/${_id}`} target="_blank">
               <Button>查看详情</Button>
             </Link>
           </span>

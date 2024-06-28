@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface SectionProps {
   icon: React.ReactNode;
@@ -45,7 +46,9 @@ const PageFooter = () => {
           title="觉醒台规则"
         >
           <li className="col-span-2">哪些行为一定不能做？</li>
-          <li>隐私协议</li>
+          <li>
+            <Link href={`/privacy`}>隐私协议</Link>
+          </li>
           <li>奖惩协议</li>
           <li>投诉建议</li>
         </FooterSection>
@@ -72,8 +75,16 @@ const PageFooter = () => {
         <ul className="m-auto flex max-w-screen-2xl justify-end gap-4">
           <li>故障反馈</li>
           <li>用户条款</li>
-          <li>评测队列</li>
-          <li>服务状态</li>
+          <li>
+            <Link href="/record" target="_blank">
+              评测队列
+            </Link>
+          </li>
+          <li>
+            <a href="https://api.aioj.net/status" target="_blank">
+              服务状态
+            </a>
+          </li>
           {process.env.NEXT_PUBLIC_BEIAN && (
             <li>
               <a href="https://beian.miit.gov.cn/" target="_blank">
