@@ -75,7 +75,7 @@ const getRecords = (page = 1, pid: string, uid = loginStore.user.get()?._id ?? 0
 };
 
 interface SubmitRecordProps {
-  updateRecord: number;
+  updateRecord: string;
 }
 
 const SubmitRecord: React.FC<SubmitRecordProps> = ({ updateRecord }) => {

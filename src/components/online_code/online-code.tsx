@@ -7,7 +7,6 @@ import ResultTab from "@/components/online_code/result-tab";
 import { request } from "@/lib/request";
 import { usePathname } from "next/navigation";
 import CodeEditor from "@/components/online_code/code-editor";
-import SubmitRecord from "@/components/online_code/submit-record";
 import QuestionDetail from "@/components/online_code/question-detail";
 
 interface OnlineCodeProps {
@@ -39,6 +38,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
     localStorage.setItem(`${pid}-self-test-input`, e.target.value ?? "");
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSelfTest = async () => {
     const lang = selectedLanguage === "cpp" ? "cc.cc14o2" : selectedLanguage === "python" ? "py.py3" : "_";
     const { data } = await request.post(
@@ -87,14 +87,14 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
     options?: string[];
     onSelectedChange?: (e: RadioChangeEvent) => void;
   }[] = [
-    {
-      type: "default",
-      content: (
-        <Button className="mb-2 mr-2" onClick={handleSelfTest}>
-          自测运行
-        </Button>
-      ),
-    },
+    // {
+    //   type: "default",
+    //   content: (
+    //     <Button className="mb-2 mr-2" onClick={handleSelfTest}>
+    //       自测运行
+    //     </Button>
+    //   ),
+    // },
     {
       type: "default",
       content: (
@@ -119,7 +119,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
         const lang = value === "C++" ? "cpp" : value?.toLocaleLowerCase();
         setSelectedLanguage(lang);
         const lastCode = localStorage.getItem(`${pid}-${lang}`);
-        setCode(lastCode ?? `//lang: ${value}`);
+        setCode(lastCode ?? `${value === "cpp" ? "//lang: cpp" : "#lang: python"}`);
       },
     },
   ];
@@ -143,7 +143,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
         </div>
         <Divider type="vertical" className="!h-full" />
         <div className="w-[50%]">
-          <div className="h-[70vh] flex-1">
+          <div className="h-[90vh] flex-1">
             <ResultTab input={input} handleInput={handleInput} rid={rid} selfRid={selfRid}>
               {onlineEditorHeader.map((item, index) => {
                 switch (item.type) {
@@ -165,10 +165,10 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
               <CodeEditor selectedLanguage={selectedLanguage} code={code} handleCode={handleCode} />
             </ResultTab>
           </div>
-          <Divider className="!m-0" />
-          <div className="flex h-[20vh] w-full justify-center">
-            <SubmitRecord updateRecord={updateRecord} />
-          </div>
+          {/*<Divider className="!m-0" />*/}
+          {/*<div className="flex h-[20vh] w-full justify-center">*/}
+          {/*  <SubmitRecord updateRecord={updateRecord} />*/}
+          {/*</div>*/}
         </div>
       </div>
     </div>

@@ -1,10 +1,11 @@
 import { Allotment, AllotmentHandle } from "allotment";
-import { Collapse, Tabs, Input } from "antd";
+import { Collapse, Divider, Tabs } from "antd";
 import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useWebSocket } from "ahooks";
+import SubmitRecord from "@/components/online_code/submit-record";
 
 const tabList = [
-  { key: "tab1", label: "自测结果" },
+  // { key: "tab1", label: "自测结果" },
   { key: "tab2", label: "评测结果" },
 ];
 
@@ -17,10 +18,10 @@ interface ResultTabProps {
 }
 
 const ResultTab: React.FC<ResultTabProps> = ({ children, input, handleInput, rid, selfRid }) => {
-  const [activeTabKey, setActiveTabKey] = useState<string>("tab1");
+  const [activeTabKey, setActiveTabKey] = useState<string>("tab2");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [collapseKey, setCollapseKey] = useState<string>("");
-  const [position, setPosition] = useState<string>("40%");
+  const [position, setPosition] = useState<string>("60%");
   const paneRef = useRef<AllotmentHandle>(null);
   const [result, setResult] = useState<{ status: number; status_html: string; summary_html: string }>({
     status: 0,
@@ -35,41 +36,47 @@ const ResultTab: React.FC<ResultTabProps> = ({ children, input, handleInput, rid
 
   const contentList: Record<string, React.ReactNode> = useMemo(
     () => ({
-      tab1: (
-        <div className="flex items-center justify-around">
-          <div className="w-2/5">
-            输入：
-            <div className="h-28 rounded-lg">
-              <Input.TextArea
-                className="!h-28 overflow-auto"
-                allowClear
-                value={input}
-                onChange={handleInput}
-                autoSize={{ minRows: 4 }}
-              />
-            </div>
-          </div>
-          <div className="w-2/5">
-            输出：
-            <div className="h-28 overflow-auto rounded-lg border border-[#d9d9d9] px-3 pt-1 text-inherit">
-              <div dangerouslySetInnerHTML={{ __html: selfResult.status_html }} />
-              <div dangerouslySetInnerHTML={{ __html: selfResult.summary_html }} />
-            </div>
-          </div>
-        </div>
-      ),
+      // tab1: (
+      //   <div className="flex items-center justify-around">
+      //     <div className="w-2/5">
+      //       输入：
+      //       <div className="h-28 rounded-lg">
+      //         <Input.TextArea
+      //           className="!h-28 overflow-auto"
+      //           allowClear
+      //           value={input}
+      //           onChange={handleInput}
+      //           autoSize={{ minRows: 4 }}
+      //         />
+      //       </div>
+      //     </div>
+      //     <div className="w-2/5">
+      //       输出：
+      //       <div className="h-28 overflow-auto rounded-lg border border-[#d9d9d9] px-3 pt-1 text-inherit">
+      //         <div dangerouslySetInnerHTML={{ __html: selfResult.status_html }} />
+      //         <div dangerouslySetInnerHTML={{ __html: selfResult.summary_html }} />
+      //       </div>
+      //     </div>
+      //   </div>
+      // ),
       tab2: (
-        <div className="flex items-center justify-center">
-          <div className="w-4/5">
-            <div className="h-28 overflow-auto rounded-lg border px-3 pt-1 text-inherit">
-              <div dangerouslySetInnerHTML={{ __html: result.status_html }} />
-              <div dangerouslySetInnerHTML={{ __html: result.summary_html }} />
+        <div>
+          <div className="flex items-center justify-center">
+            <div className="w-4/5">
+              <div className="h-28 overflow-auto rounded-lg border px-3 pt-1 text-inherit">
+                <div dangerouslySetInnerHTML={{ __html: result.status_html }} />
+                <div dangerouslySetInnerHTML={{ __html: result.summary_html }} />
+              </div>
             </div>
+          </div>
+          <Divider />
+          <div className="flex h-[20vh] w-full justify-center">
+            <SubmitRecord updateRecord={rid} />
           </div>
         </div>
       ),
     }),
-    [handleInput, input, result.status_html, result.summary_html, selfResult.status_html, selfResult.summary_html]
+    [rid, handleInput, input, result.status_html, result.summary_html, selfResult.status_html, selfResult.summary_html]
   );
 
   const { connect: wsSelfConnect } = useWebSocket(
