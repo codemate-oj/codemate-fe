@@ -58,7 +58,7 @@ const UserInfoForm = () => {
       regionCode: values.location[1] ?? "",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       userRole: values.userRole as any,
-      //@ts-expect-error 后端类型未添加
+      // @ts-expect-error 后端API未更新
       nickname: values.nickname,
     });
 

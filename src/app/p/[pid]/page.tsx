@@ -1,7 +1,7 @@
 import PageTitle from "@/components/common/page-title";
 import PTop from "@/components/problem/p-top";
 import PRight from "@/components/problem/p-right";
-import PBottom from "@/components/problem/p-bottom";
+import CodeActionBar from "@/components/problem/code-action-bar";
 import CodeInput from "@/components/problem/code-input";
 import { request } from "@/lib/request";
 
@@ -133,12 +133,12 @@ const Page = async ({ params }: Props) => {
               {pType === "default" && (
                 <>
                   <CodeInput langs={langs as langType[]} pid={params.pid} />
-                  <PBottom type={pType} pid={params.pid} />
+                  <CodeActionBar type={pType} pid={params.pid} />
                 </>
               )}
             </div>
             <div className="w-1/5 pl-5">
-              <PRight />
+              <PRight pid={params.pid} />
             </div>
           </div>
         </div>

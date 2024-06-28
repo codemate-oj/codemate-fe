@@ -2,3 +2,9 @@ Field {0} validation failed.: 1
 User {0} not found.: 2
 User {0} already exists.: 3
 Invalid password for user {0}.: 4
+Problem list {0} not found.: 5
+You are not allowed to visit private list {0}.: 6
+Problem {0} not found in list {1}.: 7
+Problem {0} is the last one in list {1}.: 8
+Problem {0} is the first one in list {1}.: 9
+Problem {0} is not activated.: 10
