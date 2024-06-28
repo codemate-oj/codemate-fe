@@ -25,11 +25,16 @@ export const alovaInstance = createAlova({
   baseURL: process.env.NEXT_PUBLIC_API_URL ?? BASE_URL,
   statesHook: ReactHook,
   timeout: 5000,
-  localCache: DISABLE_CACHE ? null : { GET: 60000 }, // 默认GET缓存60s
+  localCache: DISABLE_CACHE ? null : { GET: 10000 }, // 默认GET缓存60s
   requestAdapter: LOCAL_MOCK ? mockAdapter : GlobalFetch(),
   beforeRequest(method) {
+    // 默认swr周期：60s
     if (IS_DEV) {
       console.info(`[alova] ${method.type} ${method.url}`);
+      // 开发模式下禁用缓存
+      method.config.cache = "no-store";
+    } else {
+      method.config.next = { revalidate: 30 };
     }
     // 缺省状态下默认添加 Accept: application/json
     const _acc = method.config.headers["Accept"];
