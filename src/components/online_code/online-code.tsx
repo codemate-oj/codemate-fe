@@ -22,6 +22,10 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility
   const [updateRecord, setUpdateRecord] = useState(0);
 
   useEffect(() => {
+    const lastCode = localStorage.getItem(`${pid}-${selectedLanguage}`);
+    setCode(lastCode ?? `${selectedLanguage === "cpp" ? "//lang: cpp" : "#lang: python"}`);
+  }, [pid, selectedLanguage]);
+  useEffect(() => {
     setInput(localStorage.getItem(`${pid}-self-test-input`) ?? "");
   }, [pid]);
 
@@ -71,8 +75,6 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility
     setTimeout(() => {
       setIsVisible(true); // 加载完成后触发动画
     }, 50); // 短暂延迟以确保加载完成
-    const lastCode = localStorage.getItem(`${pid}-${selectedLanguage}`);
-    setCode(lastCode ?? `${selectedLanguage === "cpp" ? "//lang: cpp" : "#lang: python"}`);
   }, []);
   const exit = () => {
     setIsVisible(false);
@@ -119,7 +121,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility
         const lang = value === "C++" ? "cpp" : value?.toLocaleLowerCase();
         setSelectedLanguage(lang);
         const lastCode = localStorage.getItem(`${pid}-${lang}`);
-        setCode(lastCode ?? `${value === "cpp" ? "//lang: cpp" : "#lang: python"}`);
+        setCode(lastCode ?? `${lang === "cpp" ? "//lang: cpp" : "#lang: python"}`);
       },
     },
   ];
