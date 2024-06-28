@@ -13,6 +13,11 @@ interface CodeEditorProps {
   handleCode: (code: string | undefined) => void;
 }
 
+const isRegistered = {
+  cpp: false,
+  python: false,
+};
+
 const CodeEditor: React.FC<CodeEditorProps> = ({ selectedLanguage, code, handleCode }) => {
   const editorInstance = useMonaco();
 
@@ -58,23 +63,20 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ selectedLanguage, code, handleC
         });
         editorInstance.languages.register({ id: language });
         editorInstance.languages.setMonarchTokensProvider(language, rule);
+        isRegistered[language as "cpp" | "python"] = true;
       }
     },
     [editorInstance]
   );
 
   useEffect(() => {
-    switch (selectedLanguage) {
-      case "cpp":
-        registerLanguage("cpp", cppLanguage);
-        break;
-      case "python":
-        registerLanguage("python", pythonLanguage);
-        break;
-      default:
-        break;
+    if (!isRegistered["cpp"]) {
+      registerLanguage("cpp", cppLanguage);
     }
-  }, [editorInstance, registerLanguage, selectedLanguage]);
+    if (!isRegistered["python"]) {
+      registerLanguage("python", pythonLanguage);
+    }
+  }, [editorInstance, registerLanguage]);
 
   return <Editor language={selectedLanguage} value={code} loading={<Spin />} onChange={handleCode} />;
 };

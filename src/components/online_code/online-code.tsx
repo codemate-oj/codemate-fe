@@ -129,7 +129,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
     <div
       className={`slide-up fixed inset-0 z-50 h-screen w-full overflow-hidden bg-white transition-transform duration-500 ${isVisible ? "translate-y-0" : "translate-y-full"}`}
     >
-      <div className="z-10 flex h-[10vh] w-full items-center justify-center">
+      <div className="flex h-[10vh] w-full items-center justify-center">
         {onlineEditorHeader.map((item) => {
           switch (item.type) {
             case "default":
@@ -150,7 +150,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
                 switch (item.type) {
                   case "select":
                     return (
-                      <div className="m-2 inline-block hover:text-black" key={index}>
+                      <div className="m-2 inline-block text-black hover:text-black" key={index}>
                         选择语言&nbsp;
                         <Radio.Group onChange={item.onSelectedChange} defaultValue={item?.options?.[0]}>
                           {item?.options?.map((i) => (
