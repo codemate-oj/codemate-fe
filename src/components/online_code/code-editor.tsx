@@ -78,7 +78,15 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ selectedLanguage, code, handleC
     }
   }, [editorInstance, registerLanguage]);
 
-  return <Editor language={selectedLanguage} value={code} loading={<Spin />} onChange={handleCode} />;
+  return (
+    <Editor
+      language={selectedLanguage}
+      value={code}
+      loading={<Spin />}
+      onChange={handleCode}
+      options={{ fixedOverflowWidgets: true }}
+    />
+  );
 };
 
 export default CodeEditor;
