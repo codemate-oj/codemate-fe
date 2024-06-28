@@ -67,14 +67,14 @@ const RecordList = () => {
 
   const { data: records, loading } = useRequest(
     async () => {
+      const ObjectId = (await import("bson")).ObjectId;
       return await request.get("/record", {
         params: {
           page: currentPage,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ...(filter as any),
         },
-        transformData: async (data) => {
-          const ObjectId = (await import("bson")).ObjectId;
+        transformData: (data) => {
           return data.data.rdocs.map((record) => ({
             rid: record._id,
             status: record.status,
