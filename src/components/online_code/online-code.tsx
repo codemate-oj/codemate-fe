@@ -71,9 +71,10 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
 
   const [isVisible, setIsVisible] = useState(false);
   useEffect(() => {
-    setIsVisible(true); // 组件挂载后设置为可见，触发动画
+    setTimeout(() => {
+      setIsVisible(true); // 加载完成后触发动画
+    }, 50); // 短暂延迟以确保加载完成
   }, []);
-
   const exit = () => {
     setIsVisible(false);
     setTimeout(() => {
@@ -128,7 +129,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
     <div
       className={`slide-up fixed inset-0 z-50 h-screen w-full overflow-hidden bg-white transition-transform duration-500 ${isVisible ? "translate-y-0" : "translate-y-full"}`}
     >
-      <div className="flex h-[10vh] w-full items-center justify-center">
+      <div className="z-10 flex h-[10vh] w-full items-center justify-center">
         {onlineEditorHeader.map((item) => {
           switch (item.type) {
             case "default":
@@ -149,7 +150,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
                 switch (item.type) {
                   case "select":
                     return (
-                      <div className="m-2 inline-block" key={index}>
+                      <div className="m-2 inline-block hover:text-black" key={index}>
                         选择语言&nbsp;
                         <Radio.Group onChange={item.onSelectedChange} defaultValue={item?.options?.[0]}>
                           {item?.options?.map((i) => (
@@ -165,10 +166,6 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
               <CodeEditor selectedLanguage={selectedLanguage} code={code} handleCode={handleCode} />
             </ResultTab>
           </div>
-          {/*<Divider className="!m-0" />*/}
-          {/*<div className="flex h-[20vh] w-full justify-center">*/}
-          {/*  <SubmitRecord updateRecord={updateRecord} />*/}
-          {/*</div>*/}
         </div>
       </div>
     </div>
