@@ -6,7 +6,6 @@ import loginStore from "@/store/login";
 import { useRequest } from "ahooks";
 import { Table, TableProps } from "antd";
 import React, { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 
 const tableColumns: TableProps["columns"] = [
   {
@@ -75,12 +74,11 @@ const getRecords = (page = 1, pid: string, uid = loginStore.user.get()?._id ?? 0
 };
 
 interface SubmitRecordProps {
+  pid: string;
   updateRecord: string;
 }
 
-const SubmitRecord: React.FC<SubmitRecordProps> = ({ updateRecord }) => {
-  const pathname = usePathname();
-  const pid = pathname.split("/").pop();
+const SubmitRecord: React.FC<SubmitRecordProps> = ({ pid, updateRecord }) => {
   const [tableData, setTableData] = useState<RecordType[]>([]);
   const [current, setCurrent] = useState(1);
   const [hasNoMore, setHasNoMore] = useState(false);

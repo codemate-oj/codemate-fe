@@ -51,7 +51,7 @@ const PRight: React.FC<PRightProps> = ({ pid }) => {
         ) : (
           <div className="block py-2 font-yahei hover:text-primary" key={index}>
             {item.content}
-            {showOnlineCode && <OnlineCode toggleOnlineCodeVisibility={toggleOnlineCodeVisibility} />}
+            {showOnlineCode && <OnlineCode pid={pid} toggleOnlineCodeVisibility={toggleOnlineCodeVisibility} />}
           </div>
         );
       })}

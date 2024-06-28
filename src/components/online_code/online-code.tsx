@@ -5,18 +5,15 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import "allotment/dist/style.css";
 import ResultTab from "@/components/online_code/result-tab";
 import { request } from "@/lib/request";
-import { usePathname } from "next/navigation";
 import CodeEditor from "@/components/online_code/code-editor";
 import QuestionDetail from "@/components/online_code/question-detail";
 
 interface OnlineCodeProps {
+  pid: string;
   toggleOnlineCodeVisibility: () => void;
 }
 
-const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) => {
-  const pathname = usePathname();
-  const pid = pathname.split("/").pop();
-
+const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility }) => {
   const [selectedLanguage, setSelectedLanguage] = useState("cpp");
   const [code, setCode] = useState("//lang: c++");
   const [input, setInput] = useState("");
@@ -140,12 +137,12 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ toggleOnlineCodeVisibility }) =
       <Divider className="!m-0" />
       <div className="flex h-[90vh] w-full">
         <div className="w-[50%] p-6">
-          <QuestionDetail />
+          <QuestionDetail pid={pid} />
         </div>
         <Divider type="vertical" className="!h-full" />
         <div className="w-[50%]">
           <div className="h-[90vh] flex-1">
-            <ResultTab input={input} handleInput={handleInput} rid={rid} selfRid={selfRid}>
+            <ResultTab pid={pid} input={input} handleInput={handleInput} rid={rid} selfRid={selfRid}>
               {onlineEditorHeader.map((item, index) => {
                 switch (item.type) {
                   case "select":

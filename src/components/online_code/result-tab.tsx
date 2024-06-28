@@ -11,13 +11,14 @@ const tabList = [
 
 interface ResultTabProps {
   children: React.ReactNode;
+  pid: string;
   input: string;
   handleInput: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   rid: string;
   selfRid: string;
 }
 
-const ResultTab: React.FC<ResultTabProps> = ({ children, input, handleInput, rid, selfRid }) => {
+const ResultTab: React.FC<ResultTabProps> = ({ children, pid, input, handleInput, rid, selfRid }) => {
   const [activeTabKey, setActiveTabKey] = useState<string>("tab2");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [collapseKey, setCollapseKey] = useState<string>("");
@@ -71,7 +72,7 @@ const ResultTab: React.FC<ResultTabProps> = ({ children, input, handleInput, rid
           </div>
           <Divider />
           <div className="flex h-[20vh] w-full justify-center">
-            <SubmitRecord updateRecord={rid} />
+            <SubmitRecord pid={pid} updateRecord={rid} />
           </div>
         </div>
       ),

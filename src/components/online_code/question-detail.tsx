@@ -4,7 +4,6 @@ import code from "@/lib/unified/code";
 import media from "@/lib/unified/media";
 import React, { useEffect, useState } from "react";
 import { request } from "@/lib/request";
-import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Spin } from "antd";
 
@@ -34,9 +33,11 @@ function extractMarkdownContent(pdoc: Awaited<ReturnType<typeof getProblemDetail
   return _content;
 }
 
-const QuestionDetail: React.FC = React.memo(() => {
-  const pathname = usePathname();
-  const pid = pathname.split("/").pop();
+interface QuestionDetailProps {
+  pid: string;
+}
+
+const QuestionDetail: React.FC<QuestionDetailProps> = React.memo(({ pid }) => {
   const [pdoc, setPdoc] = useState<Awaited<ReturnType<typeof getProblemDetail>>["data"]["pdoc"]>();
   const [markdownContent, setMarkdownContent] = useState("");
 
