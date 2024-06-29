@@ -2,7 +2,7 @@ import type { RecordDoc } from "@/components/record/detail-page";
 import { useHydroWebSocket } from "./useHydroWebSocket";
 import { useEffect, useState } from "react";
 
-export default function useRealtimeRecordDetail(rid: string, defaultValue: RecordDoc) {
+export default function useRealtimeRecordDetail(rid = "", defaultValue?: RecordDoc) {
   const [rdoc, setRdoc] = useState(defaultValue);
 
   const { latestMessage } = useHydroWebSocket(`/record-detail-conn`, { rid, domainId: "system" });

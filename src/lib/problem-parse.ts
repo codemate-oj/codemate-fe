@@ -63,7 +63,7 @@ export const extractQuestionsFromAst = (ast: Parent): FormilySchema => {
               "x-decorator": "FormItem",
               "x-component": "CustomInput",
             };
-            schema.properties[`question${pIndex}`] = obj;
+            schema.properties[`${pIndex}`] = obj;
             break;
           }
           case "select":
@@ -77,13 +77,13 @@ export const extractQuestionsFromAst = (ast: Parent): FormilySchema => {
             if (listNode.type !== "list") break;
             const options = extractOptions(listNode as List);
             const obj: Property = {
-              type: "string",
+              type: "select",
               title: titleText,
               "x-decorator": "FormItem",
               "x-component": type === "select" ? "CustomSelect" : "CustomMutiSelect",
               enum: options,
             };
-            schema.properties[`question${pIndex}`] = obj;
+            schema.properties[`${pIndex}`] = obj;
             break;
           }
           default:

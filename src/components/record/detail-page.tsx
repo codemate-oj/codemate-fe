@@ -17,6 +17,9 @@ interface IProps {
 const DetailPage: React.FC<IProps> = ({ defaultValue, rid }) => {
   const rdoc = useRealtimeRecordDetail(rid, defaultValue);
 
+  if (!rdoc) {
+    return null;
+  }
   return (
     <div className="mt-5">
       <Card title={<JudgeStatus statusCode={rdoc.status} score={rdoc.score} />}>
