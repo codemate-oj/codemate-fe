@@ -31,7 +31,7 @@ export const useUrlParamState = (key: string, defaultValue?: string) => {
   // 在没有URL参数时设置默认值
   useEffect(() => {
     const val = searchParams.get(key);
-    if (!val && defaultValue) {
+    if (val === null && defaultValue) {
       setValue(defaultValue);
     }
   }, [defaultValue, setValue, key, searchParams]);

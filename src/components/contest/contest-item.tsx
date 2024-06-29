@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import ContestState from "./contest-state";
 import Image from "next/image";
-import { remoteUrl, getTimeDiffByHour, formatTime } from "@/lib/utils";
+import { remoteUrl, getTimeDiffByHour, formatTime, getContestState } from "@/lib/utils";
 interface ContestItemProps {
   title: string;
   rule: string;
@@ -33,11 +33,13 @@ const Item: React.FC<ItemProps> = (props) => {
       <div onClick={() => toDetail(_id)} className="relative mr-8 h-40 w-80 cursor-pointer overflow-hidden">
         <ContestState
           isApply={isApply}
-          beginAt={beginAt}
-          endAt={endAt}
-          checkinBeginAt={checkinBeginAt}
-          checkinEndAt={checkinEndAt}
-          styleClassNames="absolute top-2 right-2 py-2 px-4 text-sm font-normal rounded-lg"
+          status={getContestState({
+            checkinBeginAt,
+            checkinEndAt,
+            beginAt,
+            endAt,
+          })}
+          className="absolute right-2 top-2 rounded-lg px-4 py-2 text-sm font-normal"
         />
 
         <Image src={remoteUrl(imageURL as string)} alt="loading" width={320} height={160} />

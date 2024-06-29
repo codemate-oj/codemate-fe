@@ -1,15 +1,13 @@
-import { CollapseProps } from "antd";
-import { useRouter } from "next/navigation";
 import React from "react";
+import type { getContestState } from "@/lib/utils";
+import { CollapseProps } from "antd";
+
 interface ContestDetailRightPropsType {
-  tag: string[];
-  nickname: string;
-  state: string;
-  tid: string;
+  tdoc: { tag?: string[]; docId: string };
+  udoc: { uname: string; nickname?: string };
+  status: ReturnType<typeof getContestState>;
 }
-const ContestDetailRight: React.FC<ContestDetailRightPropsType> = (props) => {
-  const { nickname, state, tid } = props;
-  const router = useRouter();
+const ContestDetailRight: React.FC<ContestDetailRightPropsType> = ({ tdoc, udoc, status }) => {
   const items: CollapseProps["items"] = [
     {
       key: "1",
@@ -24,7 +22,7 @@ const ContestDetailRight: React.FC<ContestDetailRightPropsType> = (props) => {
     {
       key: "3",
       label: "举办方",
-      children: <span className="text-[#FF7D37]">{nickname}</span>,
+      children: <span className="text-[#FF7D37]">{udoc.nickname ?? udoc.uname}</span>,
     },
     {
       key: "4",
@@ -43,7 +41,7 @@ const ContestDetailRight: React.FC<ContestDetailRightPropsType> = (props) => {
         <span
           className="cursor-pointer text-[#FF7D37]"
           onClick={() => {
-            router.push(`/contest/${tid}/scoreboard`);
+            window.open(`/contest/${tdoc.docId}/scoreboard`);
           }}
         >
           本次比赛完整排名
@@ -54,7 +52,7 @@ const ContestDetailRight: React.FC<ContestDetailRightPropsType> = (props) => {
   return (
     <div className={""}>
       {items.map((item) => {
-        if ((item.key == "5" || item.key == "6") && state !== "已结束") return null;
+        if ((item.key == "5" || item.key == "6") && status !== "已结束") return null;
         return (
           <div key={item.key}>
             <div className="h-10 w-52 border-b">

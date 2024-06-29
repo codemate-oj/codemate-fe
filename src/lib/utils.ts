@@ -1,7 +1,8 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import dayjs from "dayjs";
-import type { ObjectId } from "bson";
+import { useModal } from "@ebay/nice-modal-react";
+import { DialogProps } from "@radix-ui/react-dialog";
 
 /**
  * A function that combines and merges class names.
@@ -116,7 +117,7 @@ export function formatTime(time: string) {
 }
 
 //获取比赛状态
-export const getDetailState = (props: {
+export const getContestState = (props: {
   beginAt: string;
   endAt: string;
   checkinBeginAt?: string;
@@ -150,7 +151,20 @@ export function getScoreColor(score: number | string): string {
   ][Math.floor((Number(score) || 0) / 10)];
 }
 
-export async function getTimeFromObjectId(ObjectId: ObjectId | string) {
+export async function getTimeFromObjectId(ObjectId: string) {
   const OID = (await import("bson")).ObjectId;
-  return new OID(ObjectId).getTimestamp();
+  return OID.createFromHexString(ObjectId).getTimestamp();
+}
+
+export function niceRadixModal(modal: ReturnType<typeof useModal>): DialogProps {
+  return {
+    open: modal.visible,
+    onOpenChange: (open) => {
+      if (!open) {
+        modal.remove();
+      } else {
+        modal.show();
+      }
+    },
+  };
 }
