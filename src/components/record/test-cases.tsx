@@ -20,6 +20,7 @@ export interface TestCaseType {
 }
 
 interface IProps {
+  rid: string;
   testCases: TestCaseType[];
 }
 
