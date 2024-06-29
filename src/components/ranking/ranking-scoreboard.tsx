@@ -2,22 +2,27 @@
 import { request } from "@/lib/request";
 import TreeSelector from "./tree-selelctor";
 import { useRequest } from "ahooks";
+import Loading from "@/app/(home)/loading";
+import RankingScoreboardTable from "./ranking-scoreboard-table";
+// import data from "./data.json";
 const RankingScoreBoard: React.FC = () => {
+  // const loading = false;
   const { data, loading } = useRequest(async () => {
     //@ts-expect-error 后端类型未添加
-    const { data } = await request.get("/ranking_by?rankby=problem_cpp", {
+    const { data } = await request.get("/ranking", {
       transformData: (data) => {
         return data;
       },
     });
     return {
-      udocs: data.udocs,
+      data: data,
     };
   });
+  const { udocs } = data?.data?.udocs;
   return (
     <>
       <TreeSelector />
-      {loading ? data?.udocs : null}
+      {loading ? <Loading /> : <RankingScoreboardTable data={udocs} />}
     </>
   );
 };
