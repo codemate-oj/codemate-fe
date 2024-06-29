@@ -1,13 +1,32 @@
 "use client";
 import { request } from "@/lib/request";
 import { useRequest } from "ahooks";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import RecordFilterForm, { RecordFilterFormType } from "./record-filter-form";
 import { Button, Table, TableProps } from "antd";
 import { getTimeDiffFromNow } from "@/lib/utils";
 import { PROGRAMMING_LANGS } from "@/constants/misc";
-import JudgeStatus from "../user/record/judge-status";
+import JudgeStatus from "./judge-status";
 import Link from "next/link";
+import useRecordMainConn from "@/hooks/useRecordMainConn";
+
+export interface RecordRowType {
+  rid: string;
+  status: number;
+  score: number;
+  problem: {
+    pid: string;
+    title: string;
+  };
+  submitBy: {
+    nickname?: string;
+    uname: string;
+  };
+  time: number;
+  memory: number;
+  lang: string;
+  submitAt: Date;
+}
 
 export const tableColumns: TableProps["columns"] = [
   {
@@ -65,7 +84,11 @@ const RecordList = () => {
   const [filter, setFilter] = useState<RecordFilterFormType>();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: records, loading } = useRequest(
+  const {
+    data: records,
+    loading,
+    mutate,
+  } = useRequest(
     async () => {
       const ObjectId = (await import("bson")).ObjectId;
       return await request.get("/record", {
@@ -79,8 +102,14 @@ const RecordList = () => {
             rid: record._id,
             status: record.status,
             score: record.score,
-            problem: data.data.pdict[record.pid],
-            submitBy: data.data.udict[record.uid],
+            problem: data.data.pdict[record.pid] as unknown as {
+              pid: string;
+              title: string;
+            },
+            submitBy: data.data.udict[record.uid] as unknown as {
+              nickname?: string;
+              uname: string;
+            },
             time: record.time,
             memory: record.memory,
             lang: record.lang === "_" ? "客观题" : PROGRAMMING_LANGS[record.lang as keyof typeof PROGRAMMING_LANGS],
@@ -94,6 +123,25 @@ const RecordList = () => {
       ready: filter !== undefined,
     }
   );
+
+  const latestRowChange = useRecordMainConn(filter);
+
+  useEffect(() => {
+    if (!latestRowChange || !records) return;
+    const _records = [...records];
+    const existedRDoc = _records?.find((record) => record.rid === latestRowChange.rid);
+    if (existedRDoc) {
+      const i = _records?.indexOf(existedRDoc);
+      if (i !== undefined && i !== -1) {
+        _records.splice(i, 1, { ...existedRDoc, ...latestRowChange });
+        mutate(_records);
+      }
+    } else {
+      _records.unshift({ ...latestRowChange });
+      _records.splice(_records.length - 1, 1);
+      mutate(_records);
+    }
+  }, [latestRowChange]);
 
   return (
     <div className="space-y-5">
