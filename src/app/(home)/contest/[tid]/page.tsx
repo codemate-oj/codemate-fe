@@ -36,7 +36,7 @@ const ContestDetailPage = async ({ params }: { params: { tid: string } }) => {
   });
   const isApply = Boolean(tsdoc.attend);
   // @ts-expect-error 为兼容老版本，新版本没有此定义
-  const hybridContent = `### 重要内容 \n\n ${tdoc.importantContent} \n\n ### 比赛内容 \n\n ${tdoc.content}`;
+  const hybridContent = `${tdoc.importantContent ? `### 重要内容 \n\n ${tdoc.importantContent} \n\n` : ""}### 比赛内容 \n\n ${tdoc.content}`;
 
   return (
     <div>

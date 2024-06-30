@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import type { getContestState } from "@/lib/utils";
 import { CollapseProps } from "antd";
