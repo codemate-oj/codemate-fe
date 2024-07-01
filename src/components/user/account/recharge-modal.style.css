@@ -1,0 +1,198 @@
+.modal-overlay {
+  z-index: 1000;
+  background-color: var(--black-a9);
+  position: fixed;
+  inset: 0;
+  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-main {
+  z-index: 1001;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow:
+    hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
+    hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 464px;
+  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.modal-title-container {
+  position: relative;
+  border-radius: 8px 8px 0 0;
+
+  width: 100%;
+  text-align: center;
+  padding: 12px 0;
+  background: #ff7d37;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .modal-close-icon {
+    position: absolute;
+    top: 28px;
+    right: 20px;
+
+    > svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .modal-title {
+    font-family: Source Han Sans;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 48px;
+    text-align: center;
+    letter-spacing: 0px;
+
+    font-variation-settings: "opsz" auto;
+    color: #ffffff;
+  }
+}
+
+.modal-content {
+  padding: 32px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.modal-footer {
+  width: 100%;
+  margin: 47px 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes overlayShow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes contentShow {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+
+
+
+.online-recharge-modal {
+  .tips {
+    > svg {
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+    }
+
+    font-family: Microsoft YaHei UI;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: normal;
+    letter-spacing: 0em;
+
+    font-feature-settings: "kern" on;
+    color: #797979;
+
+    margin-bottom: 20px;
+  }
+
+  .amount-card-container {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+
+    .amount-card-item {
+      cursor: pointer;
+
+      border-radius: 8px;
+      border: 1px solid #f7f5f5;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      min-height: 58px;
+
+      > span {
+        font-family: Microsoft YaHei UI;
+        font-size: 20px;
+        font-weight: normal;
+        line-height: normal;
+        text-align: center;
+        letter-spacing: 0em;
+
+        font-feature-settings: "kern" on;
+        color: #3d3d3d;
+      }
+
+      &.selected {
+        background: #ff7d37;
+
+        > span {
+          color: #f7f5f5;
+        }
+      }
+    }
+  }
+
+  .amount-input {
+    margin-top: 20px;
+    width: 100%;
+
+    .desc-text {
+      font-family: Microsoft YaHei UI;
+      font-size: 16px;
+      font-weight: normal;
+      line-height: normal;
+      letter-spacing: 0em;
+
+      font-feature-settings: "kern" on;
+      color: #797979;
+
+      margin-bottom: 10px;
+    }
+  }
+
+  .alarm-text {
+    margin-top: 30px;
+
+    width: 100%;
+    text-align: center;
+
+    font-family: Microsoft YaHei UI;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: normal;
+    letter-spacing: 0em;
+
+    font-feature-settings: "kern" on;
+    color: #ff0000;
+  }
+}
