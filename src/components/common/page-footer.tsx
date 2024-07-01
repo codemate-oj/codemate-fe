@@ -20,7 +20,7 @@ const PageFooter = () => {
     <footer className="w-full bg-[#F8F8F8] text-center text-[#797979]">
       <div className="m-auto flex max-w-screen-2xl justify-center gap-14 p-10">
         <section className="text-center">
-          <Image src="/img/logo.png" alt="website-logo" width={178} height={178} />
+          <Image src="/img/new-logo.png" alt="website-logo" width={178} height={178} />
           <p className="mt-5 text-xl text-[#3D3D3D]">AI推题，高效有趣玩OJ</p>
         </section>
         <FooterSection
@@ -39,7 +39,7 @@ const PageFooter = () => {
           <li className="col-span-2">赛事平台委托评测</li>
           <li className="col-span-2">中小学OJ平台定制</li>
           <li className="col-span-2">教培机构OJ共享服务</li>
-          <li className="col-span-2">合作热线：400-850-8565</li>
+          <li className="col-span-2">合作热线：18922852573</li>
         </FooterSection>
         <FooterSection
           icon={<Image src="/svg/footer-rules.svg" alt="rules" width={30} height={34} />}

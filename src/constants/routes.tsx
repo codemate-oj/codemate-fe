@@ -2,11 +2,11 @@ import type { NavItemWithIcon } from "@/components/user/user-popup";
 import Image from "next/image";
 
 export const mainRoutes: NavItemType[] = [
-  { name: "告示墙", href: "/bulletin" },
-  { name: "修炼场", href: "/" },
-  { name: "竞技场", href: "/contest" },
+  { name: "告示墙(公告)", href: "/bulletin" },
+  { name: "修炼场(题库)", href: "/" },
+  { name: "竞技场(竞赛)", href: "/contest" },
   { name: "封神榜", href: "/ranking" },
-  { name: "觉醒台", href: "/discuss" },
+  { name: "觉醒台(论坛)", href: "/discuss" },
 ];
 
 export const userCenterRoutes: NavItemWithIcon[] = [

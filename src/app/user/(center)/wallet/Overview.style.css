@@ -1,0 +1,174 @@
+.balance-banner {
+  margin-top: 20px;
+
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #f1f1f1;
+  padding: 0 36px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  min-height: 128px;
+  width: 100%;
+
+  .left-icon {
+    height: 62px;
+    width: 62px;
+    padding: 18px;
+    background: rgba(255, 125, 55, 0.0588);
+    border-radius: 50%;
+
+    margin-right: 30px;
+
+    > svg {
+      width: 30px;
+      height: 26px;
+    }
+  }
+
+  .balance-main {
+    flex: 1;
+
+    .balance-title {
+      font-family: Microsoft YaHei;
+      font-size: 16px;
+      font-weight: normal;
+      line-height: normal;
+      letter-spacing: 0em;
+
+      font-feature-settings: "kern" on;
+      color: #3d3d3d;
+    }
+
+    .balance-value {
+      font-family: Microsoft YaHei;
+      font-size: 16px;
+      font-weight: bold;
+      line-height: normal;
+      letter-spacing: 0em;
+
+      font-variation-settings: "opsz" auto;
+      font-feature-settings: "kern" on;
+      color: #ff7d37;
+
+      .balance-number {
+        font-family: Microsoft YaHei;
+        font-weight: 700;
+        font-size: 34px;
+        font-variation-settings: "opsz" auto;
+      }
+
+      .balance-unit {
+        font-family: Microsoft YaHei;
+        font-weight: 700;
+        font-size: 16px;
+        font-variation-settings: "opsz" auto;
+      }
+    }
+  }
+}
+
+.balance-other-cards {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 30px;
+  gap: 30px;
+
+  .balance-add-card {
+    border-radius: 8px;
+    flex: 1;
+    padding: 70px 50px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 46px;
+
+    &.aqua {
+      background-color: rgba(218, 239, 255, 0.8196);
+
+      .left-icon-bg {
+        background-color: rgba(45, 122, 179, 0.9);
+      }
+
+      .right-title {
+        color: #2d7ab3;
+      }
+    }
+
+    &.orange {
+      background-color: #fff0e3;
+
+      &.for-others .left-icon-bg {
+        /* padding: 0; */
+        > svg {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .left-icon-bg {
+        background-color: #ff7d37;
+      }
+
+      .right-title {
+        color: #ff7d37;
+      }
+    }
+
+    .left-icon-bg {
+      width: 138px;
+      height: 138px;
+      border-radius: 50%;
+
+      padding: 22px;
+
+      > svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .right-text {
+      .right-title {
+        font-family: Microsoft YaHei;
+        font-size: 28px;
+        font-weight: bold;
+        line-height: normal;
+        letter-spacing: 0em;
+
+        font-variation-settings: "opsz" auto;
+        font-feature-settings: "kern" on;
+
+        margin-bottom: 20px;
+      }
+    }
+  }
+}
+
+.card-recharge-modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  height: 100%;
+
+  .custom-antd-form-item {
+    .custom-label {
+      font-family: Microsoft YaHei;
+      font-size: 14px;
+      font-weight: normal;
+      line-height: normal;
+      letter-spacing: 0em;
+  
+      font-feature-settings: "kern" on;
+      color: #797979;
+  
+      margin-bottom: 13px;
+    }
+  }
+}
