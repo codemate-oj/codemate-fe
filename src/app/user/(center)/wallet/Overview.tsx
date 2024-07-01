@@ -46,10 +46,7 @@ const CardContent: Parameters<typeof Card>[0][] = [
     className: "aqua",
     icon: <Image src="/svg/card-recharge-icon.svg" alt="about-us" width={100} height={100} />,
     onClickButton: () => {
-      NiceModal.show(ShowRecahrgeCardModal, {
-        cardId: "卡号",
-        cardPassword: "卡号密码",
-      });
+      NiceModal.show(ShowRecahrgeCardModal);
     },
   },
   {
@@ -58,9 +55,7 @@ const CardContent: Parameters<typeof Card>[0][] = [
     className: "orange for-others",
     icon: <Image src="/svg/recharge-for-others.svg" alt="about-us" width={100} height={100} />,
     onClickButton: () => {
-      NiceModal.show(ShowRecahrgeCardOtherModal, {
-        UID: "",
-      });
+      NiceModal.show(ShowRecahrgeCardOtherModal);
     },
   },
 ];
