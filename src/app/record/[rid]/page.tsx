@@ -1,9 +1,7 @@
 import PageTitle from "@/components/common/page-title";
-import JudgeStatus from "@/components/user/record/judge-status";
-import TestCases from "@/components/user/record/test-cases";
+import DetailPage from "@/components/record/detail-page";
 import { request } from "@/lib/request";
-import { getScoreColor, getTimeDiffFromNow, getTimeFromObjectId, parseTemplate } from "@/lib/utils";
-import { Card } from "antd";
+import { getScoreColor, getTimeDiffFromNow, getTimeFromObjectId } from "@/lib/utils";
 import type { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
@@ -53,20 +51,7 @@ const RecordDetailPage = async ({ params }: Props) => {
           <span style={{ color: getScoreColor(rdoc.score) }}>{rdoc.score}</span>
         </div>
       </div>
-      <div className="mt-5">
-        <Card title={<JudgeStatus statusCode={rdoc.status} score={rdoc.score} />}>
-          <h3 className="text-lg font-bold">评测详情</h3>
-          <div className="my-5 text-fail">
-            {rdoc.compilerTexts.map((item, index) => (
-              <div key={index}>{item}</div>
-            ))}
-            {rdoc.judgeTexts.map((item, index) => (
-              <div key={index}>{typeof item === "string" ? item : parseTemplate(item.message, item.params ?? [])}</div>
-            ))}
-          </div>
-          {rdoc.testCases.length > 0 && <TestCases testCases={rdoc.testCases} />}
-        </Card>
-      </div>
+      <DetailPage rid={rid} defaultValue={rdoc} />
     </div>
   );
 };
