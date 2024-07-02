@@ -1,7 +1,7 @@
 "use client";
 import { request } from "@/lib/request";
 import { useRequest } from "ahooks";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import RecordFilterForm, { RecordFilterFormType } from "./record-filter-form";
 import { Button, Table, TableProps } from "antd";
 import { getTimeDiffFromNow } from "@/lib/utils";
@@ -41,6 +41,7 @@ export const tableColumns: TableProps["columns"] = [
   },
   {
     title: "题目",
+    key: "problem",
     dataIndex: "problem",
     render: (value) => (
       <Link
@@ -56,32 +57,43 @@ export const tableColumns: TableProps["columns"] = [
   },
   {
     title: "递交者",
+    key: "submitBy",
     dataIndex: "submitBy",
     render: (value) => value.nickname ?? value.uname,
   },
   {
     title: "时间",
+    key: "time",
     dataIndex: "time",
     render: (value) => (value === 0 ? "-" : `${value.toFixed(1)} ms`),
   },
   {
     title: "内存",
+    key: "memory",
     dataIndex: "memory",
     render: (value) => (value === 0 ? "-" : `${(value / 1024).toFixed(2)} MiB`),
   },
   {
     title: "语言",
+    key: "lang",
     dataIndex: "lang",
   },
   {
     title: "提交时间",
+    key: "submitAt",
     dataIndex: "submitAt",
     render: (value) => getTimeDiffFromNow(value),
   },
 ];
 
-const RecordList = () => {
-  const [filter, setFilter] = useState<RecordFilterFormType>();
+interface RecordListProps {
+  builtinFilter?: RecordFilterFormType;
+  hiddenColumns?: string[];
+  tableProps?: Partial<TableProps>;
+}
+
+const RecordList: React.FC<RecordListProps> = ({ builtinFilter, hiddenColumns = [], tableProps = {} }) => {
+  const [filter, setFilter] = useState(builtinFilter);
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
@@ -143,10 +155,15 @@ const RecordList = () => {
     }
   }, [latestRowChange]);
 
+  const columns = useMemo(
+    () => tableColumns.filter((col) => !hiddenColumns.includes(col.key as string)),
+    [hiddenColumns]
+  );
+
   return (
     <div className="space-y-5">
-      <RecordFilterForm onSubmit={setFilter} loading={loading} />
-      <Table rowKey="rid" loading={loading} dataSource={records} columns={tableColumns} pagination={false} />
+      {!builtinFilter && <RecordFilterForm onSubmit={setFilter} loading={loading} />}
+      <Table rowKey="rid" loading={loading} dataSource={records} columns={columns} pagination={false} {...tableProps} />
       <div className="w-full space-x-4 text-center">
         <Button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)} loading={loading}>
           上一页
