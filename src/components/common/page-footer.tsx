@@ -80,8 +80,16 @@ const PageFooter = () => {
         <ul className="m-auto flex max-w-screen-2xl justify-end gap-4">
           <li>故障反馈</li>
           <li>用户条款</li>
-          <li>评测队列</li>
-          <li>服务状态</li>
+          <li>
+            <Link href="/record" target="_blank">
+              评测队列
+            </Link>
+          </li>
+          <li>
+            <a href="https://api.aioj.net/status" target="_blank">
+              服务状态
+            </a>
+          </li>
           {process.env.NEXT_PUBLIC_BEIAN && (
             <li>
               <a href="https://beian.miit.gov.cn/" target="_blank">

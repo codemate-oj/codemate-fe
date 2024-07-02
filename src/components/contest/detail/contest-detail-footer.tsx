@@ -1,153 +1,79 @@
 "use client";
-import { request } from "@/lib/request";
-import { Modal } from "antd";
-import { CheckOutlined, ExportOutlined } from "@ant-design/icons";
+import { ExportOutlined } from "@ant-design/icons";
 import CountdownTimer from "./count-down";
-import { useState } from "react";
-import store from "@/store/login";
-import Link from "next/link";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import LoginRegisterModal from "@/components/login/login-register-modal";
+import ActionButton from "./action-button";
+import type { getContestState } from "@/lib/utils";
+import { HydroError } from "@/lib/error";
+import { ERROR_TYPE } from "@/constants/error-enum";
+import NiceModal from "@ebay/nice-modal-react";
+import ApplyFailModal from "./modals/apply-fail-modal";
+import { useRouter } from "next/navigation";
+import { request } from "@/lib/request";
+import loginStore from "@/store/login";
+import { useLockFn } from "ahooks";
+import ApplySuccessModal from "./modals/apply-success-modal";
 
-const handleClickApply = async (tid: string, setIsOpen: () => void) => {
-  await request.post(`/contest/${tid as "{tid}"}`, { operation: "attend" });
-  setIsOpen();
-  return 0;
-};
-const DetailStateApply: React.FC<{
-  isLogin: boolean;
+interface IProps {
   isApply: boolean;
-  state: string;
-  tid: string;
-  click: () => void;
-}> = (props) => {
-  const { isLogin, isApply, state, tid, click } = props;
-  if (isApply) {
-    if (state == "进行中") {
-      return (
-        <Link
-          href={`/contest/${tid}/problems`}
-          target="_blankss"
-          className="rounded-lg border border-primary bg-primary px-4 py-2 text-sm font-normal text-white"
-        >
-          开始做题
-        </Link>
-      );
-    } else if (state == "已结束") {
-      return (
-        <Link
-          href={`/contest/${tid}/problems`}
-          target="_blankss"
-          className="rounded-lg border border-primary bg-primary px-4 py-2 text-sm font-normal text-white"
-        >
-          查看结果
-        </Link>
-      );
-    } else {
-      return (
-        <span className="cursor-pointer rounded-lg border border-primary bg-primary px-4 py-2 text-sm font-normal text-white">
-          已报名
-        </span>
-      );
-    }
-  } else {
-    if (state == "预告中") {
-      return <></>;
-    } else if (state == "可报名" || state == "进行中") {
-      return (
-        <span
-          className="cursor-pointer rounded-lg border border-primary bg-primary px-4 py-2 text-sm font-normal text-white"
-          onClick={() => {
-            if (!isLogin) {
-              store.dialogJumpTo("login");
-              return;
-            }
-            handleClickApply(tid, () => {
-              click();
-            });
-          }}
-        >
-          马上报名
-        </span>
-      );
-    } else {
-      return (
-        <span className="cursor-not-allowed rounded-lg border border-[#706f6e] bg-[#706f6e] px-4 py-2 text-sm font-normal text-white">
-          报名已结束
-        </span>
-      );
-    }
-  }
-};
-const ContestDetailFooter: React.FC<{
-  title: string;
-  isApply: boolean;
-  state: string;
-  tid: string;
-  checkinEndAt?: string;
-}> = (props) => {
-  const { isApply, state, tid, checkinEndAt, title } = props;
-
-  const [isOpen, setIsOpen] = useState(false);
-  const handleOpenChange = (open: boolean) => {
-    store.isDialogShow.set(open);
-    if (!open) {
-      store.dialogReset();
-    }
+  status: ReturnType<typeof getContestState>;
+  tdoc: {
+    docId: string;
+    title: string;
+    checkinEndAt?: string;
   };
-  const currentDialogPage = store.useCurrentContext();
-  const userContext = store.user.use();
-  const isDialogShow = store.isDialogShow.use();
-  //TODO: 待处理登录问题
+}
+
+const ContestDetailFooter: React.FC<IProps> = ({ isApply, status, tdoc }) => {
+  const router = useRouter();
+  const user = loginStore.user.use();
+
+  const handleApply = useLockFn(async () => {
+    if (user === null) {
+      loginStore.showLoginDialog();
+      return;
+    }
+    try {
+      await request.post(`/contest/${tdoc.docId}` as "/contest/{tid}", {
+        operation: "attend",
+      });
+      await NiceModal.show(ApplySuccessModal, {
+        username: user.uname,
+        contestTitle: tdoc.title,
+      });
+      window.location.reload();
+    } catch (e) {
+      if (e instanceof HydroError) {
+        if (e.code === ERROR_TYPE.USER_NOT_AUTHORIZED_ERROR) {
+          NiceModal.show(ApplyFailModal, {
+            error: e,
+            customMessage: "该比赛要求用户实名认证后才能参加",
+            actions: [
+              {
+                text: "去实名认证",
+                action: (hide) => {
+                  router.push("/user/setting");
+                  hide();
+                },
+              },
+            ],
+          });
+        } else {
+          NiceModal.show(ApplyFailModal, { error: e });
+        }
+      } else {
+        throw e;
+      }
+    }
+  });
+
   return (
     <div className={"mt-8 flex justify-between"}>
-      <Dialog modal={true} open={isDialogShow} onOpenChange={handleOpenChange}>
-        <DialogContent className="max-w-[400px]">
-          <LoginRegisterModal>{currentDialogPage?.component}</LoginRegisterModal>
-        </DialogContent>
-      </Dialog>
-      <Modal
-        title={
-          <div className="text-[#ffa54c]">
-            <CheckOutlined />
-            比赛报名成功
-          </div>
-        }
-        centered={true}
-        footer={() => (
-          <Link href={"/contest"} className="rounded-md bg-primary px-4 py-2 text-base font-normal text-white">
-            返回首页
-          </Link>
-        )}
-        open={isOpen}
-        onOk={() => setIsOpen(false)}
-        onCancel={() => setIsOpen(false)}
-      >
-        <p>
-          亲爱的<span className="font-bold">{userContext?.uname}</span>
-        </p>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;您已成功报名{title}，请在后台“我的比赛”中查看。</p>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;请务必记住比赛时间，及时参赛哦</p>
-      </Modal>
-      {state == "可报名" ? (
-        <CountdownTimer time={Math.floor((new Date(checkinEndAt as string).getTime() - new Date().getTime()) / 1000)} />
-      ) : (
-        <div />
+      {status == "可报名" && tdoc.checkinEndAt && (
+        <CountdownTimer time={Math.floor((new Date(tdoc.checkinEndAt).getTime() - new Date().getTime()) / 1000)} />
       )}
       <div>
-        <DetailStateApply
-          isLogin={Boolean(userContext)}
-          isApply={isApply}
-          state={state}
-          tid={tid}
-          click={() => {
-            setIsOpen(true);
-          }}
-        />
-        <span
-          onClick={() => store.dialogJumpTo("login")}
-          className="ml-2 cursor-pointer rounded-lg border border-primary bg-primary px-4 py-2 text-sm font-normal text-white"
-        >
+        <ActionButton isApply={isApply} status={status} tdoc={tdoc} onApply={handleApply} />
+        <span className="ml-2 cursor-pointer rounded-lg border border-primary bg-primary px-4 py-2 text-sm font-normal text-white">
           <ExportOutlined />
           &nbsp; 分享
         </span>

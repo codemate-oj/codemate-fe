@@ -60,10 +60,10 @@ const columns: TableProps<DataType>["columns"] = [
 type DataType = RecordType;
 interface RecordType {
   key: string;
-  status: string;
+  status: string | number;
   title: string;
   time: number;
-  memory: number;
+  memory: number | string;
   score: number;
   language: string;
   last_commit: string;

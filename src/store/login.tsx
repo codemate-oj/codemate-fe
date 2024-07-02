@@ -74,8 +74,10 @@ const loginStore = store(
   renew: async () => {
     const sid = store.sid.get() ?? Cookies.get("sid") ?? null;
     if (!sid) return;
-    //@ts-expect-error 后端还没有添加该类型
-    const { data } = await request.get(`/login?sid=${sid}`, {
+    const { data } = await request.get(`/login`, {
+      params: {
+        sid,
+      },
       headers: {
         Authorization: `Bearer ${sid}`,
       },
@@ -91,7 +93,9 @@ const loginStore = store(
       store.user.set(null);
       store.sid.set(null);
     } else {
+      // @ts-expect-error UserContext 未良好定义
       store.user.set(data.UserContext);
+      // @ts-expect-error UserContext 未良好定义
       store.sid.set(data.sid ?? sid);
     }
   },

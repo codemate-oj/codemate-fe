@@ -59,7 +59,7 @@ const SolutionPage = async ({ params }: Props) => {
           <SolutionItem></SolutionItem>
         </div>
         <div className="w-1/5 pl-5">
-          <PRight />
+          <PRight pid={params.pid} />
         </div>
       </div>
     </div>

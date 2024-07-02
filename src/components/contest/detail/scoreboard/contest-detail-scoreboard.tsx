@@ -4,9 +4,9 @@ import Loading from "@/app/(home)/loading";
 import { request } from "@/lib/request";
 import { useRequest } from "ahooks";
 import ScoreboardTop from "./contest-detail-scoreboard-top";
-import ContestDetailRight from "../contest-detail-right";
 import ScoreboardTable from "./contesst-detail-table";
-import { getDetailState } from "@/lib/utils";
+import { getContestState } from "@/lib/utils";
+import ContestDetailRight from "../contest-detail-right";
 
 interface ScoreboardProps {
   tid: string;
@@ -28,7 +28,7 @@ const Scoreboard: React.FC<ScoreboardProps> = (props) => {
   });
   const { title, attend, beginAt, endAt } = data?.tdoc || {};
   const rows = data?.rows.slice(1);
-  const state = getDetailState({
+  const state = getContestState({
     checkinBeginAt: data?.tdoc?.checkinBeginAt,
     checkinEndAt: data?.tdoc?.checkinEndAt,
     beginAt: beginAt,
@@ -60,12 +60,7 @@ const Scoreboard: React.FC<ScoreboardProps> = (props) => {
         <ScoreboardTable tableColumns={tableColumns} dataSource={tableData}></ScoreboardTable>
       </div>
       <div>
-        <ContestDetailRight
-          tag={data?.tdoc.tag}
-          nickname={String(data?.udict[data?.tdoc.owner].nickname)}
-          state={state}
-          tid={tid}
-        />
+        <ContestDetailRight tdoc={data?.tdoc} status={state} udoc={data?.udict[data?.tdoc?.owner]} />
       </div>
     </div>
   );

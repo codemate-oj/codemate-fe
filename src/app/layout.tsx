@@ -43,7 +43,7 @@ export default function RootLayout({
           <AntdRegistry>
             <AntdThemeConfigProvider>
               <NiceModalProvider>
-                <header className="relative m-auto flex max-w-screen-xl items-center justify-between px-10 py-2 xl:px-0">
+                <header className="relative m-auto flex max-w-[1200px] items-center justify-between py-2 xl:px-0">
                   <section className="flex flex-none items-center gap-x-2.5">
                     <Image src="/img/logo.png" alt="website-logo" width={80} height={80} />
                     <h1 className="hidden text-2xl font-bold lg:block">AI推题，高效有趣玩OJ</h1>
