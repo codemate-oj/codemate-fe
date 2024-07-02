@@ -36,9 +36,15 @@ const PageFooter = () => {
           icon={<Image src="/svg/footer-cooperation.svg" alt="cooperation" width={42} height={34} />}
           title="商务合作"
         >
-          <li className="col-span-2">赛事平台委托评测</li>
-          <li className="col-span-2">中小学OJ平台定制</li>
-          <li className="col-span-2">教培机构OJ共享服务</li>
+          <li className="col-span-2">
+            <Link href="/trade_collaboration/game_delegate_assessment">赛事平台委托评测</Link>
+          </li>
+          <li className="col-span-2">
+            <Link href="/trade_collaboration/training_org_assessment">中小学OJ平台定制</Link>
+          </li>
+          <li className="col-span-2">
+            <Link href="/trade_collaboration/training_org_assessment">教培机构OJ共享服务</Link>
+          </li>
           <li className="col-span-2">合作热线：400-850-8565</li>
         </FooterSection>
         <FooterSection
