@@ -7,6 +7,7 @@ import ResultTab from "@/components/online_code/result-tab";
 import { request } from "@/lib/request";
 import CodeEditor from "@/components/online_code/code-editor";
 import QuestionDetail from "@/components/online_code/question-detail";
+import { useLockFn } from "ahooks";
 
 interface OnlineCodeProps {
   pid: string;
@@ -44,7 +45,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility
     const lang = selectedLanguage === "cpp" ? "cc.cc14o2" : selectedLanguage === "python" ? "py.py3" : "_";
     const { data } = await request.post(
       `/p/${pid}/submit` as "/p/{pid}/submit",
-      { lang, code, input },
+      { lang, code, input, pretest: true },
       {
         transformData: (data) => {
           return data;
@@ -55,7 +56,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility
     setUpdateRecord(updateRecord + 1);
   };
 
-  const handleTest = async () => {
+  const handleSubmit = useLockFn(async () => {
     const lang = selectedLanguage === "cpp" ? "cc.cc14o2" : selectedLanguage === "python" ? "py.py3" : "_";
     const { data } = await request.post(
       `/p/${pid}/submit` as "/p/{pid}/submit",
@@ -68,7 +69,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility
     );
     setRid(data.rid ?? "");
     setUpdateRecord(updateRecord + 1);
-  };
+  });
 
   const [isVisible, setIsVisible] = useState(false);
   useEffect(() => {
@@ -100,7 +101,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility
     {
       type: "default",
       content: (
-        <Button className="mb-2 mr-2" onClick={handleTest}>
+        <Button className="mb-2 mr-2" onClick={handleSubmit}>
           提交评测
         </Button>
       ),
