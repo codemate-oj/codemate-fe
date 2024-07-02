@@ -16,13 +16,13 @@ const TrainingOrgAssessment = () => {
   return (
     <div>
       <PageTitle>商务合作</PageTitle>
-      <article className="prose lg:prose-xl">
+      <article className="prose prose-h1:text-xl">
         <div className="text-center text-red-600">
           <p>
             特别说明：本平台不涉及任何线下或线上教育培训业务，仅为编程学习提供助力信息学学习的智能化刷题和竞赛工具。
           </p>
         </div>
-        <h1 className="text-center text-xl font-bold text-orange-600">
+        <h1 className="font-bold text-orange-600">
           如果贵单位是开展信息学课程的教培机构（中小学），CODEMATE可以为您做什么？
         </h1>
         <ol className="ml-6 list-decimal">
