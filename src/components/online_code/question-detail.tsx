@@ -9,6 +9,7 @@ import { Spin } from "antd";
 
 const MarkdownRenderer = dynamic(() => import("@/components/common/markdown-renderer"), {
   loading: () => <Spin />,
+  ssr: false,
 });
 
 function getProblemDetail(pid: string) {
@@ -54,7 +55,7 @@ const QuestionDetail: React.FC<QuestionDetailProps> = React.memo(({ pid }) => {
   }, [pdoc]);
 
   return (
-    <div className="max-w-full overflow-auto">
+    <div className="h-full">
       <MarkdownRenderer
         markdown={markdownContent}
         plugins={[
@@ -67,7 +68,7 @@ const QuestionDetail: React.FC<QuestionDetailProps> = React.memo(({ pid }) => {
             plugin: media(`p/${pdoc?.docId}/file`, pdoc?.additional_file),
           },
         ]}
-        className="prose-pdetail"
+        className="prose-pdetail max-h-full overflow-y-auto"
       />
     </div>
   );

@@ -16,29 +16,39 @@ interface OnlineCodeProps {
   toggleOnlineCodeVisibility: () => void;
 }
 
+interface HeaderItemType {
+  type?: "default" | "select";
+  content?: React.ReactNode;
+  options?: string[];
+  onSelectedChange?: (e: RadioChangeEvent) => void;
+}
+
 const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility }) => {
   const [selectedLanguage, setSelectedLanguage] = useState("cpp");
   const [code, setCode] = useState("//lang: c++");
-  const [input, setInput] = useState("");
+  const [selfTestInput, setSelfTestInput] = useState("");
   const [selfRid, setSelfRid] = useState("");
   const [rid, setRid] = useState("");
   const [updateRecord, setUpdateRecord] = useState(0);
 
+  // 读取缓存和设置默认代码
   useEffect(() => {
     const lastCode = localStorage.getItem(`${pid}-${selectedLanguage}`);
-    setCode(lastCode ?? `${selectedLanguage === "cpp" ? "//lang: cpp" : "#lang: python"}`);
+    setCode(lastCode ?? `${selectedLanguage === "cpp" ? "// lang: cpp" : "# lang: python"}`);
   }, [pid, selectedLanguage]);
+
+  // 读取自测数据
   useEffect(() => {
-    setInput(localStorage.getItem(`${pid}-self-test-input`) ?? "");
+    setSelfTestInput(localStorage.getItem(`${pid}-self-test-input`) ?? "");
   }, [pid]);
 
-  const handleCode = (code: string | undefined) => {
+  const handleCodeChange = (code: string | undefined) => {
     setCode(code ?? "");
     localStorage.setItem(`${pid}-${selectedLanguage}`, code ?? "");
   };
 
-  const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value);
+  const handleSelfTestInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setSelfTestInput(e.target.value);
     localStorage.setItem(`${pid}-self-test-input`, e.target.value ?? "");
   };
 
@@ -47,7 +57,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility
     const lang = selectedLanguage === "cpp" ? "cc.cc14o2" : selectedLanguage === "python" ? "py.py3" : "_";
     const { data } = await request.post(
       `/p/${pid}/submit` as "/p/{pid}/submit",
-      { lang, code, input, pretest: true },
+      { lang, code, input: selfTestInput, pretest: true },
       {
         transformData: (data) => {
           return data;
@@ -88,12 +98,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility
     }, 500);
   };
 
-  const onlineEditorHeader: {
-    type?: "default" | "select";
-    content?: React.ReactNode;
-    options?: string[];
-    onSelectedChange?: (e: RadioChangeEvent) => void;
-  }[] = [
+  const onlineEditorHeader: HeaderItemType[] = [
     // {
     //   type: "default",
     //   content: (
@@ -151,13 +156,19 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility
         <Divider type="vertical" className="!h-full" />
         <div className="w-[50%]">
           <div className="h-[90vh] flex-1">
-            <ResultTab pid={pid} input={input} handleInput={handleInput} rid={rid} selfRid={selfRid}>
+            <ResultTab
+              pid={pid}
+              input={selfTestInput}
+              handleInput={handleSelfTestInputChange}
+              rid={rid}
+              selfRid={selfRid}
+            >
               {onlineEditorHeader.map((item, index) => {
                 switch (item.type) {
                   case "select":
                     return (
                       <div className="m-2 inline-block text-black hover:text-black" key={index}>
-                        选择语言&nbsp;
+                        <span className="mx-2">选择语言</span>
                         <Radio.Group onChange={item.onSelectedChange} defaultValue={item?.options?.[0]}>
                           {item?.options?.map((i) => (
                             <Radio.Button key={i} value={i}>
@@ -169,7 +180,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility
                     );
                 }
               })}
-              <CodeEditor selectedLanguage={selectedLanguage} code={code} handleCode={handleCode} />
+              <CodeEditor selectedLanguage={selectedLanguage} code={code} handleCode={handleCodeChange} />
             </ResultTab>
           </div>
         </div>

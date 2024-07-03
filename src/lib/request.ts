@@ -179,8 +179,18 @@ export const request = {
     } = {}
   ) => {
     let payload: RequestBody | undefined = data;
-    const contentType: string = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
+    if (payload instanceof FormData) {
+      return alovaInstance.Post(url, payload, {
+        ...config,
+        headers: {
+          Accept: "application/json",
+          ...(config.headers ?? {}),
+        },
+        mode: "cors",
+      });
+    }
 
+    const contentType: string = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
     if (data) {
       // 处理自动序列化逻辑
       switch (contentType) {

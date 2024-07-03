@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { Spin } from "antd";
 import { cn } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
+import ScratchIframe from "./scratch-iframe";
 
 const OnlineCode = dynamic(() => import("@/components/online_code/online-code"), {
   ssr: false,
@@ -24,14 +25,9 @@ interface IProps {
 
 const ProblemSidePanel: React.FC<IProps> = ({ pid, entryType }) => {
   const user = loginStore.user.use();
-
-  const [showOnlineCode, setShowOnlineCode] = useState(false);
-
+  const [showIDE, setShowIDE] = useState(false);
+  const [showScratch, setShowScratch] = useState(false);
   const searchParams = useSearchParams();
-
-  const toggleOnlineCodeVisibility = () => {
-    setShowOnlineCode((prevShowOnlineCode) => !prevShowOnlineCode);
-  };
 
   const isFromContest = Boolean(searchParams.get("fromContest"));
 
@@ -40,10 +36,20 @@ const ProblemSidePanel: React.FC<IProps> = ({ pid, entryType }) => {
       name: "进入在线编程模式",
       component: (
         <div className="flex items-center gap-2">
-          <button onClick={toggleOnlineCodeVisibility}>
+          <button
+            className="hover:text-primary"
+            onClick={() => {
+              if (entryType === "default") {
+                setShowIDE(true);
+              } else if (entryType === "scratch") {
+                setShowScratch(true);
+              }
+            }}
+          >
             {entryType === "scratch" ? "进入图形化环境" : "进入在线编程模式"}
           </button>
-          {showOnlineCode && <OnlineCode pid={pid} toggleOnlineCodeVisibility={toggleOnlineCodeVisibility} />}
+          {showIDE && <OnlineCode pid={pid} toggleOnlineCodeVisibility={() => setShowIDE(false)} />}
+          {showScratch && <ScratchIframe pid={pid} onExit={() => setShowScratch(false)} />}
         </div>
       ),
       hidden: entryType !== "default" && entryType !== "scratch",
