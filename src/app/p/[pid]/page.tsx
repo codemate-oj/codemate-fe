@@ -1,6 +1,6 @@
 import PageTitle from "@/components/common/page-title";
 import PTop from "@/components/problem/p-top";
-import PRight from "@/components/problem/p-right";
+import ProblemSidePanel from "@/components/problem/problem-side-panel";
 import CodeActionBar from "@/components/problem/code-action-bar";
 import CodeInput from "@/components/problem/code-input";
 import { request } from "@/lib/request";
@@ -138,7 +138,7 @@ const Page = async ({ params }: Props) => {
               )}
             </div>
             <div className="w-1/5 pl-5">
-              <PRight pid={params.pid} />
+              <ProblemSidePanel pid={params.pid} entryType={pType} />
             </div>
           </div>
         </div>

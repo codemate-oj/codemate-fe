@@ -9,6 +9,7 @@ import CodeEditor from "@/components/online_code/code-editor";
 import QuestionDetail from "@/components/online_code/question-detail";
 import { useLockFn } from "ahooks";
 import { loginGuard } from "@/lib/login-guard";
+import { createPortal } from "react-dom";
 
 interface OnlineCodeProps {
   pid: string;
@@ -130,7 +131,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility
     },
   ];
 
-  return (
+  return createPortal(
     <div
       className={`slide-up fixed inset-0 z-50 h-screen w-full overflow-hidden bg-white transition-transform duration-500 ${isVisible ? "translate-y-0" : "translate-y-full"}`}
     >
@@ -173,7 +174,8 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
