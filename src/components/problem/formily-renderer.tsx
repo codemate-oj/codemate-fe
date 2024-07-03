@@ -12,6 +12,7 @@ import jsYaml from "js-yaml";
 import { useRequest } from "ahooks";
 import useRealtimeRecordDetail from "@/hooks/useRecordDetailConn";
 import { STATUS_ENUM } from "@/constants/judge-status";
+import { loginGuard } from "@/lib/login-guard";
 
 const PID = window.location.pathname.split("/")[2];
 const CACHE_KEY = `answers-${PID}`;
@@ -68,29 +69,31 @@ const FormilyRenderer: React.FC<FormilySchemaProps> = ({ schema, pid }) => {
 
   const { run: handleSubmit, data: rid } = useRequest(
     async () => {
-      setIsJudging(true);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const ans: Record<string, any> = {};
-      const data = form.values;
-      for (const key in data) {
-        if (schema.properties[key].type === "string") {
-          ans[key] = data[key];
-          continue;
+      let rid: string | undefined;
+      await loginGuard(async () => {
+        setIsJudging(true);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const ans: Record<string, any> = {};
+        const data = form.values;
+        for (const key in data) {
+          if (schema.properties[key].type === "string") {
+            ans[key] = data[key];
+            continue;
+          }
+          let choices = data[key];
+          if (!Array.isArray(choices)) choices = [choices];
+          choices = choices.map((choice: number) => String.fromCharCode(65 + choice));
+          ans[key] = choices;
         }
-        let choices = data[key];
-        if (!Array.isArray(choices)) choices = [choices];
-        choices = choices.map((choice: number) => String.fromCharCode(65 + choice));
-        ans[key] = choices;
-      }
-      const rid = await request.post(
-        `/p/${pid}/submit` as "/p/{pid}/submit",
-        {
-          lang: "_",
-          code: jsYaml.dump(ans),
-        },
-        { transformData: (data) => data.data.rid }
-      );
-
+        rid = await request.post(
+          `/p/${pid}/submit` as "/p/{pid}/submit",
+          {
+            lang: "_",
+            code: jsYaml.dump(ans),
+          },
+          { transformData: (data) => data.data.rid }
+        );
+      });
       return rid;
     },
     {

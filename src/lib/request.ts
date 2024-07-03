@@ -4,7 +4,7 @@ import ReactHook from "alova/react";
 import GlobalFetch from "alova/GlobalFetch";
 import mockAdapter from "@/mock";
 import qs from "qs";
-import { tryParseHydroResponse } from "./error";
+import { NotLoginError, tryParseHydroResponse } from "./error";
 import { paths } from "@/types/schema";
 import { objectToFormData } from "./form";
 import { isBrowser } from "./utils";
@@ -68,6 +68,10 @@ export const alovaInstance = createAlova({
         console.error(e);
         data.UserContext = null;
       }
+    }
+
+    if (data.url && data.url.startsWith("/login")) {
+      throw new NotLoginError();
     }
 
     const ret: AlovaResponse = {

@@ -54,20 +54,22 @@ const QuestionDetail: React.FC<QuestionDetailProps> = React.memo(({ pid }) => {
   }, [pdoc]);
 
   return (
-    <MarkdownRenderer
-      markdown={markdownContent}
-      plugins={[
-        {
-          hookIn: "pre-parse",
-          plugin: code,
-        },
-        {
-          hookIn: "pre-parse",
-          plugin: media(`p/${pdoc?.docId}/file`, pdoc?.additional_file),
-        },
-      ]}
-      className="prose-pdetail"
-    />
+    <div className="max-w-full overflow-auto">
+      <MarkdownRenderer
+        markdown={markdownContent}
+        plugins={[
+          {
+            hookIn: "pre-parse",
+            plugin: code,
+          },
+          {
+            hookIn: "pre-parse",
+            plugin: media(`p/${pdoc?.docId}/file`, pdoc?.additional_file),
+          },
+        ]}
+        className="prose-pdetail"
+      />
+    </div>
   );
 });
 

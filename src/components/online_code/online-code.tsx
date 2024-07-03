@@ -8,6 +8,7 @@ import { request } from "@/lib/request";
 import CodeEditor from "@/components/online_code/code-editor";
 import QuestionDetail from "@/components/online_code/question-detail";
 import { useLockFn } from "ahooks";
+import { loginGuard } from "@/lib/login-guard";
 
 interface OnlineCodeProps {
   pid: string;
@@ -58,17 +59,19 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility
 
   const handleSubmit = useLockFn(async () => {
     const lang = selectedLanguage === "cpp" ? "cc.cc14o2" : selectedLanguage === "python" ? "py.py3" : "_";
-    const { data } = await request.post(
-      `/p/${pid}/submit` as "/p/{pid}/submit",
-      { lang, code },
-      {
-        transformData: (data) => {
-          return data;
-        },
-      }
-    );
-    setRid(data.rid ?? "");
-    setUpdateRecord(updateRecord + 1);
+    await loginGuard(async () => {
+      const { data } = await request.post(
+        `/p/${pid}/submit` as "/p/{pid}/submit",
+        { lang, code },
+        {
+          transformData: (data) => {
+            return data;
+          },
+        }
+      );
+      setRid(data.rid ?? "");
+      setUpdateRecord(updateRecord + 1);
+    });
   });
 
   const [isVisible, setIsVisible] = useState(false);
