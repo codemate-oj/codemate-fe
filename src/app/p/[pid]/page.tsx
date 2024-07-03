@@ -130,12 +130,8 @@ const Page = async ({ params }: Props) => {
                   </div>
                 </Suspense>
               </div>
-              {pType === "default" && (
-                <>
-                  <CodeInput langs={langs as LangType[]} pid={params.pid} />
-                  <CodeActionBar type={pType} pid={params.pid} />
-                </>
-              )}
+              {pType === "default" && <CodeInput langs={langs as LangType[]} pid={params.pid} />}
+              <CodeActionBar type={pType} pid={params.pid} />
             </div>
             <div className="w-1/5 pl-5">
               <ProblemSidePanel pid={params.pid} entryType={pType} />
