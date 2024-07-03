@@ -1,24 +1,20 @@
 "use client"; // Error components must be Client Components
 
-import { useEffect } from "react";
+import { Button, Result } from "antd";
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
-  }, [error]);
-
   return (
     <div>
-      <h2>Something went wrong!</h2>
-      <button
-        onClick={
-          // Attempt to recover by trying to re-render the segment
-          () => reset()
-        }
-      >
-        Try again
-      </button>
+      <Result
+        status="error"
+        title="我们遇到了预期外的错误"
+        subTitle={error.message}
+        extra={[
+          <Button key="back" onClick={reset}>
+            重试
+          </Button>,
+        ]}
+      />
     </div>
   );
 }
