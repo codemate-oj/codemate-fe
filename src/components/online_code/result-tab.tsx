@@ -5,8 +5,8 @@ import RecordList from "../record/record-list";
 import { debounce } from "lodash";
 
 const tabList = [
-  // { key: "tab1", label: "自测结果" },
-  { key: "tab2", label: "评测结果" },
+  // { key: "selftest", label: "自测结果" },
+  { key: "submission", label: "评测结果" },
 ];
 
 interface ResultTabProps {
@@ -19,7 +19,7 @@ interface ResultTabProps {
 }
 
 const ResultTab: React.FC<ResultTabProps> = ({ children, pid }) => {
-  const [activeTabKey, setActiveTabKey] = useState<string>("tab2");
+  const [activeTabKey, setActiveTabKey] = useState<string>("submission");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [collapseKey, setCollapseKey] = useState<string>("");
   const [position, setPosition] = useState<string>("60%");
@@ -38,7 +38,7 @@ const ResultTab: React.FC<ResultTabProps> = ({ children, pid }) => {
 
   const contentList: Record<string, React.ReactNode> = useMemo(
     () => ({
-      // tab1: (
+      // selftest: (
       //   <div className="flex items-center justify-around">
       //     <div className="w-2/5">
       //       输入：
@@ -61,7 +61,7 @@ const ResultTab: React.FC<ResultTabProps> = ({ children, pid }) => {
       //     </div>
       //   </div>
       // ),
-      tab2: (
+      submission: (
         <div className="flex h-[20vh] w-full justify-center">
           <RecordList
             builtinFilter={{ pid }}

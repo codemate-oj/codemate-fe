@@ -101,7 +101,7 @@ const OnlineCode: React.FC<OnlineCodeProps> = ({ pid, toggleOnlineCodeVisibility
     {
       type: "default",
       content: (
-        <Button className="mb-2 mr-2" onClick={handleSubmit}>
+        <Button className="mb-2 mr-2" type="primary" onClick={handleSubmit}>
           提交评测
         </Button>
       ),

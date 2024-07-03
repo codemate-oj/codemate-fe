@@ -7,7 +7,7 @@ import { request } from "@/lib/request";
 
 import type { Metadata } from "next";
 import { forwardAuthHeader } from "@/lib/forward-auth";
-import CodeLangProvider, { langType } from "@/providers/code-lang-provider";
+import CodeLangProvider, { LangType } from "@/providers/code-lang-provider";
 import { extractQuestionsFromMarkdown } from "@/lib/problem-parse";
 import React, { Suspense } from "react";
 import Loading from "@/components/ui/loading";
@@ -132,7 +132,7 @@ const Page = async ({ params }: Props) => {
               </div>
               {pType === "default" && (
                 <>
-                  <CodeInput langs={langs as langType[]} pid={params.pid} />
+                  <CodeInput langs={langs as LangType[]} pid={params.pid} />
                   <CodeActionBar type={pType} pid={params.pid} />
                 </>
               )}

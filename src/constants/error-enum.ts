@@ -2,6 +2,7 @@ import ERROR_DATA_MAP from "@/constants/error.yml";
 
 const enum ERROR_TYPE {
   UNKNOWN_SERVER_ERROR = -1,
+  USER_NOT_LOGIN_ERROR = 0,
   VALIDATION_ERROR = 1,
   USER_NOT_FOUND_ERROR,
   USER_ALREADY_EXISTS_ERROR,
