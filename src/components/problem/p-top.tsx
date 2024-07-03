@@ -62,12 +62,12 @@ const PTop: React.FC<PTopProps> = (props) => {
             >
               {isStarred ? "已收藏" : "收藏"}
             </Button>
-            <Button
+            {/* <Button
               variant={"outline"}
               className="border border-blue-500 text-blue-500 hover:bg-accent/30 hover:text-blue-500"
             >
               加入题单
-            </Button>
+            </Button> */}
           </>
         )}
       </div>
