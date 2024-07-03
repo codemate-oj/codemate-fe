@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { request } from "@/lib/request";
 import { useLockFn } from "ahooks";
+import loginStore from "@/store/login";
 
 interface PTopProps {
   nAccept?: number;
@@ -19,6 +20,8 @@ interface PTopProps {
 const PTop: React.FC<PTopProps> = (props) => {
   const { title, pid, tag, difficulty, nSubmit, nAccept, uname, docId, starred } = props;
   const [isStarred, setIsStarred] = useState(false);
+
+  const user = loginStore.user.use();
 
   useEffect(() => {
     if (starred !== undefined) setIsStarred(starred);
@@ -47,22 +50,26 @@ const PTop: React.FC<PTopProps> = (props) => {
       <div className="mb-4 flex items-center">
         <div className="text-[2rem] font-bold">{pid} ：</div>
         <div className="mr-7 text-[2rem] font-bold">{title}</div>
-        <Button
-          onClick={() => {
-            if (isStarred) handleUnstar();
-            else handleStar();
-          }}
-          variant={"outline"}
-          className="mr-2 border border-primary text-primary hover:bg-accent/30 hover:text-primary"
-        >
-          {isStarred ? "已收藏" : "收藏"}
-        </Button>
-        <Button
-          variant={"outline"}
-          className="border border-blue-500 text-blue-500 hover:bg-accent/30 hover:text-blue-500"
-        >
-          加入题单
-        </Button>
+        {user && (
+          <>
+            <Button
+              onClick={() => {
+                if (isStarred) handleUnstar();
+                else handleStar();
+              }}
+              variant={"outline"}
+              className="mr-2 border border-primary text-primary hover:bg-accent/30 hover:text-primary"
+            >
+              {isStarred ? "已收藏" : "收藏"}
+            </Button>
+            <Button
+              variant={"outline"}
+              className="border border-blue-500 text-blue-500 hover:bg-accent/30 hover:text-blue-500"
+            >
+              加入题单
+            </Button>
+          </>
+        )}
       </div>
       <div className="flex justify-around bg-[#F9F9F9] py-2 font-yahei text-[#797979]">
         {list.map((item) => {
