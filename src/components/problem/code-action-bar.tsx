@@ -5,6 +5,7 @@ import { request } from "@/lib/request";
 import { useCodeLangContext } from "@/providers/code-lang-provider";
 import ActionBar from "./action-bar";
 import { loginGuard } from "@/lib/login-guard";
+import emitter from "@/lib/event-emitter";
 
 interface IProps {
   type: string;
@@ -33,7 +34,17 @@ const CodeActionBar: React.FC<IProps> = (props) => {
   return (
     <div className="flex flex-wrap gap-2">
       <div>
-        <Button onClick={handleSubmit}>{type == "scratch" ? "开始答题" : "确认提交"}</Button>
+        <Button
+          onClick={async () => {
+            if (type === "default") {
+              await handleSubmit();
+            } else if (type === "scratch" && (await loginGuard())) {
+              emitter.emit("showScratch");
+            }
+          }}
+        >
+          {type == "scratch" ? "开始答题" : "确认提交"}
+        </Button>
       </div>
       <ActionBar pid={pid} />
     </div>

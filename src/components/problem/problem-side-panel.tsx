@@ -1,12 +1,13 @@
 "use client";
 import loginStore from "@/store/login";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Spin } from "antd";
 import { cn } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 import ScratchIframe from "./scratch-iframe";
+import emitter from "@/lib/event-emitter";
 
 const OnlineCode = dynamic(() => import("@/components/online_code/online-code"), {
   ssr: false,
@@ -63,6 +64,17 @@ const ProblemSidePanel: React.FC<IProps> = ({ pid, entryType }) => {
     { name: "去论坛看看该题", href: "#", hidden: isFromContest },
     { name: "提交记录", href: `/record?pid=${pid}&uidOrName=${user?._id ?? ""}` },
   ];
+
+  useEffect(() => {
+    const onShowScratchEmit = () => {
+      setShowScratch(true);
+    };
+    emitter.on("showScratch", onShowScratchEmit);
+    return () => {
+      emitter.off("showScratch", onShowScratchEmit);
+    };
+  }, []);
+
   return (
     <div className="space-y-4">
       {items
