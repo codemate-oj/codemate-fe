@@ -33,6 +33,7 @@ export const tableColumns: TableProps["columns"] = [
     title: "状态",
     key: "status",
     dataIndex: "status",
+    width: 200,
     render: (value, record) => (
       <Link href={`/record/${record.rid}`} target="_blank" className="hover:underline">
         <JudgeStatus statusCode={value} score={record.score} />

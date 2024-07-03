@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { request } from "@/lib/request";
 import { useCodeLangContext } from "@/providers/code-lang-provider";
 import ActionBar from "./action-bar";
+import { loginGuard } from "@/lib/login-guard";
 
 interface IProps {
   type: string;
@@ -15,18 +16,18 @@ const CodeActionBar: React.FC<IProps> = (props) => {
 
   const handleSubmit = async () => {
     const code = localStorage.getItem(`code-${pid}`) || "";
-
-    const rid = await request.post(
-      `/p/${pid}/submit` as "/p/{pid}/submit",
-      {
-        lang: lang,
-        pretest: false,
-        code: code,
-      },
-      { transformData: (data) => data.data.rid }
-    );
-
-    window.open(`/record/${rid}`);
+    await loginGuard(async () => {
+      const rid = await request.post(
+        `/p/${pid}/submit` as "/p/{pid}/submit",
+        {
+          lang: lang,
+          pretest: false,
+          code: code,
+        },
+        { transformData: (data) => data.data.rid }
+      );
+      window.open(`/record/${rid}`);
+    });
   };
 
   return (

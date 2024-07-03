@@ -4,7 +4,7 @@ import ReactHook from "alova/react";
 import GlobalFetch from "alova/GlobalFetch";
 import mockAdapter from "@/mock";
 import qs from "qs";
-import { tryParseHydroResponse } from "./error";
+import { NotLoginError, tryParseHydroResponse } from "./error";
 import { paths } from "@/types/schema";
 import { objectToFormData } from "./form";
 import { isBrowser } from "./utils";
@@ -68,6 +68,10 @@ export const alovaInstance = createAlova({
         console.error(e);
         data.UserContext = null;
       }
+    }
+
+    if (data.url && data.url.startsWith("/login")) {
+      throw new NotLoginError();
     }
 
     const ret: AlovaResponse = {
@@ -175,8 +179,18 @@ export const request = {
     } = {}
   ) => {
     let payload: RequestBody | undefined = data;
-    const contentType: string = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
+    if (payload instanceof FormData) {
+      return alovaInstance.Post(url, payload, {
+        ...config,
+        headers: {
+          Accept: "application/json",
+          ...(config.headers ?? {}),
+        },
+        mode: "cors",
+      });
+    }
 
+    const contentType: string = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
     if (data) {
       // 处理自动序列化逻辑
       switch (contentType) {

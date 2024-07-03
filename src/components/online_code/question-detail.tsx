@@ -9,6 +9,7 @@ import { Spin } from "antd";
 
 const MarkdownRenderer = dynamic(() => import("@/components/common/markdown-renderer"), {
   loading: () => <Spin />,
+  ssr: false,
 });
 
 function getProblemDetail(pid: string) {
@@ -54,20 +55,22 @@ const QuestionDetail: React.FC<QuestionDetailProps> = React.memo(({ pid }) => {
   }, [pdoc]);
 
   return (
-    <MarkdownRenderer
-      markdown={markdownContent}
-      plugins={[
-        {
-          hookIn: "pre-parse",
-          plugin: code,
-        },
-        {
-          hookIn: "pre-parse",
-          plugin: media(`p/${pdoc?.docId}/file`, pdoc?.additional_file),
-        },
-      ]}
-      className="prose-pdetail"
-    />
+    <div className="h-full">
+      <MarkdownRenderer
+        markdown={markdownContent}
+        plugins={[
+          {
+            hookIn: "pre-parse",
+            plugin: code,
+          },
+          {
+            hookIn: "pre-parse",
+            plugin: media(`p/${pdoc?.docId}/file`, pdoc?.additional_file),
+          },
+        ]}
+        className="prose-pdetail max-h-full overflow-y-auto"
+      />
+    </div>
   );
 });
 
