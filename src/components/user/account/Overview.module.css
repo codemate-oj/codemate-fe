@@ -1,0 +1,152 @@
+.balanceBanner {
+  margin-top: 20px;
+
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #f1f1f1;
+  padding: 0 36px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  min-height: 128px;
+  width: 100%;
+
+  .leftIcon {
+    height: 62px;
+    width: 62px;
+    padding: 18px;
+    background: rgba(255, 125, 55, 0.0588);
+    border-radius: 50%;
+
+    margin-right: 30px;
+
+    /* > svg {
+      width: 30px;
+      height: 26px;
+    } */
+  }
+
+  .balanceMain {
+    flex: 1;
+
+    .balancetitle {
+      font-family: Microsoft YaHei;
+      font-size: 16px;
+      font-weight: normal;
+      line-height: normal;
+      letter-spacing: 0em;
+
+      font-feature-settings: "kern" on;
+      color: #3d3d3d;
+    }
+
+    .balanceValue {
+      font-family: Microsoft YaHei;
+      font-size: 16px;
+      font-weight: bold;
+      line-height: normal;
+      letter-spacing: 0em;
+
+      font-variation-settings: "opsz" auto;
+      font-feature-settings: "kern" on;
+      color: #ff7d37;
+
+      .balanceNumber {
+        font-family: Microsoft YaHei;
+        font-weight: 700;
+        font-size: 34px;
+        font-variation-settings: "opsz" auto;
+      }
+
+      .balanceUnit {
+        font-family: Microsoft YaHei;
+        font-weight: 700;
+        font-size: 16px;
+        font-variation-settings: "opsz" auto;
+      }
+    }
+  }
+}
+
+.balanceOtherCards {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 30px;
+  gap: 30px;
+
+  .balanceAddCard {
+    border-radius: 8px;
+    flex: 1;
+    padding: 70px 50px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 46px;
+
+    &.aqua {
+      background-color: rgba(218, 239, 255, 0.8196);
+
+      .leftIconBg {
+        background-color: rgba(45, 122, 179, 0.9);
+      }
+
+      .rightTitle {
+        color: #2d7ab3;
+      }
+    }
+
+    &.orange {
+      background-color: #fff0e3;
+
+      &.forOthers .leftIconBg {
+        /* padding: 0; */
+        /* > svg {
+          width: 100%;
+          height: 100%;
+        } */
+      }
+
+      .leftIconBg {
+        background-color: #ff7d37;
+      }
+
+      .rightTitle {
+        color: #ff7d37;
+      }
+    }
+
+    .leftIconBg {
+      width: 138px;
+      height: 138px;
+      border-radius: 50%;
+
+      padding: 22px;
+
+      /* > svg {
+        width: 100%;
+        height: 100%;
+      } */
+    }
+
+    .rightText {
+      .rightTitle {
+        font-family: Microsoft YaHei;
+        font-size: 28px;
+        font-weight: bold;
+        line-height: normal;
+        letter-spacing: 0em;
+
+        font-variation-settings: "opsz" auto;
+        font-feature-settings: "kern" on;
+
+        margin-bottom: 20px;
+      }
+    }
+  }
+}
+

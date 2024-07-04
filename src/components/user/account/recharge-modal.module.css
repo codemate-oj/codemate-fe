@@ -1,0 +1,174 @@
+.modalMain {
+  z-index: 1001;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow:
+    hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
+    hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 464px;
+  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* &:focus {
+    outline: none;
+  } */
+}
+
+.modalMain:focus {
+  outline: none;
+}
+
+.modalTitleContainer {
+  position: relative;
+  border-radius: 8px 8px 0 0;
+
+  width: 100%;
+  text-align: center;
+  padding: 12px 0;
+  background: #ff7d37;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .modalTitle {
+    font-family: Source Han Sans;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 48px;
+    text-align: center;
+    letter-spacing: 0px;
+
+    font-variation-settings: "opsz" auto;
+    color: #ffffff;
+  }
+}
+
+.modalContent {
+  padding: 32px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.modalFooter {
+  width: 100%;
+  margin: 47px 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes overlayShow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes contentShow {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.onlineRechargeModal {
+  .tips {
+    font-family: Microsoft YaHei UI;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: normal;
+    letter-spacing: 0em;
+    font-feature-settings: "kern" on;
+    color: #797979;
+    margin-bottom: 20px;
+  }
+
+  .amountCardContainer {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+
+    .amountCardItem {
+      cursor: pointer;
+      border-radius: 8px;
+      border: 1px solid #f7f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 58px;
+
+      &.selected {
+        background: #ff7d37;
+      }
+
+      &.selected > span {
+        color: #f7f5f5;
+      }
+    }
+  }
+
+  .amountInput {
+    margin-top: 20px;
+    width: 100%;
+
+    .descText {
+      font-family: Microsoft YaHei UI;
+      font-size: 16px;
+      font-weight: normal;
+      line-height: normal;
+      letter-spacing: 0em;
+      font-feature-settings: "kern" on;
+      color: #797979;
+      margin-bottom: 10px;
+    }
+  }
+
+  .alarmText {
+    margin-top: 30px;
+    width: 100%;
+    text-align: center;
+    font-family: Microsoft YaHei UI;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: normal;
+    letter-spacing: 0em;
+    font-feature-settings: "kern" on;
+    color: #ff0000;
+  }
+}
+
+.cardRechargeModal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  height: 100%;
+
+  .customAntdFormItem {
+    .customLabel {
+      font-family: Microsoft YaHei;
+      font-size: 14px;
+      font-weight: normal;
+      line-height: normal;
+      letter-spacing: 0em;
+
+      font-feature-settings: "kern" on;
+      color: #797979;
+
+      margin-bottom: 13px;
+    }
+  }
+}

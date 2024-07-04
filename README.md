@@ -54,7 +54,7 @@ API_URL=http://localhost:8888/
 以下环境变量可能在编译时/运行时影响程序的行为（所有`process.env`环境变量都会被Next自动注入，前缀含有`NEXT_PUBLIC_*`的表示可以在运行时/浏览器环境中注入宏）：
 
 - `BASE_URL`，影响API的baseUrl，默认为`/api`
-- `API_URL`，影响反向代理的目标值，默认为`https://www.aioj.net/`
+- `L`，影响反向代理的目标值，默认为`https://www.aioj.net/`
 - `DISABLE_CACHE`，当值为`true`时会禁用alova的缓存机制（但暂时不会禁用Next的缓存机制）
 - `LOCAL_MOCK`，当值为`true`时会无视prod环境限制强制启用mock（基于alova）
 - `NEXT_PUBLIC_APIFOX_TOKEN`，APIFOX云端Mock的鉴权Token
@@ -69,7 +69,7 @@ Next的Node服务在生产环境中将与[codemate-core(hydro)](https://github.c
 
 我们有一个临时的测试服务器，用于提供后端环境，IP = http://42.193.125.14/
 
-将`API_URL`设置为`http://42.193.125.14/`即可。
+将`L`设置为`http://42.193.125.14/`即可。
 
 ### 本地 API 调试方法
 
