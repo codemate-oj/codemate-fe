@@ -11,7 +11,7 @@ const TrainingOrgAssessment = () => {
   return (
     <div>
       <PageTitle>商务合作</PageTitle>
-      <article className="prose prose-h1:text-xl" style={{ maxWidth: "950px" }}>
+      <article className="prose prose-h1:text-xl">
         <div className="text-center text-red-600">
           <p>
             特别说明：本平台不涉及任何线下或线上教育培训业务，仅为编程学习提供助力信息学学习的智能化刷题和竞赛工具。

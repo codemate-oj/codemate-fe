@@ -11,7 +11,7 @@ const GameDelegateAssessment = () => {
   return (
     <div>
       <PageTitle>商务合作</PageTitle>
-      <article className="prose prose-h1:text-xl" style={{ maxWidth: "950px" }}>
+      <article className="prose prose-h1:text-xl">
         <h1 className="text-left text-xl font-bold text-orange-600">
           如果您是编程赛事主办方或承办方，CODEMATE可以为您做什么？
         </h1>

@@ -26,7 +26,7 @@ const columns: TableColumnsType<DataType> = [
     title: "题目名称",
     dataIndex: "title",
     key: "title",
-    width: "250px",
+    width: "200px",
     render: (_, { title }) => <span className="text-sm font-bold">{title}</span>,
   },
   {
@@ -37,11 +37,10 @@ const columns: TableColumnsType<DataType> = [
       </>
     ),
     key: "tag",
-    width: "250px",
     dataIndex: "tag",
-    ellipsis: true,
+    // ellipsis: true,
     render: (_, record) => (
-      <>
+      <div className="flex flex-wrap gap-2">
         {record.tag?.map((tag: string) => {
           return (
             <Tag color={"volcano"} key={tag} className="!bg-orange-50 !leading-4 !text-primary">
@@ -49,7 +48,7 @@ const columns: TableColumnsType<DataType> = [
             </Tag>
           );
         })}
-      </>
+      </div>
     ),
   },
   {
@@ -82,9 +81,9 @@ const columns: TableColumnsType<DataType> = [
     title: "热度",
     key: "hot",
     render: (_, record) => (
-      <div className="flex gap-1">{"🔥".repeat(Math.min(Math.floor(record.nSubmit / 20), 6))}</div>
+      <div className="flex gap-1">{"🔥".repeat(Math.min(Math.floor(record.nSubmit / 20), 5))}</div>
     ),
-    width: "200px",
+    width: "150px",
   },
 ];
 

@@ -91,14 +91,16 @@ const config = {
       },
       typography: {
         DEFAULT: {
-          // 定义code样式
-          pre: {
-            background: "transparent",
-            border: "1px solid #e2e8f0", // gray.300
-            borderRadius: "0.25rem",
-          },
-          code: {
-            color: "#2d3748", // gray.800
+          css: {
+            maxWidth: "none",
+            pre: {
+              background: "transparent",
+              border: "1px solid #e2e8f0", // gray.300
+              borderRadius: "0.25rem",
+            },
+            code: {
+              color: "#2d3748", // gray.800
+            },
           },
         },
         // 定制题目详情页的prose样式
