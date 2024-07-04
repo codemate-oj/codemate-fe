@@ -78,7 +78,7 @@ const RecordFilterForm: React.FC<IProps> = ({ onSubmit, loading }) => {
         <FormItem label="由比赛ID筛选" name="tid">
           <Input />
         </FormItem>
-        <FormItem label="由题目语言筛选" name="lang" layout="horizontal">
+        <FormItem label="由题目语言筛选" name="lang">
           <Select className="min-w-[150px]" options={langOptions} allowClear />
         </FormItem>
         <FormItem label="由评测状态筛选" name="status">

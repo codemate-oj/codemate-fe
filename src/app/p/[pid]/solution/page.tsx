@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { request } from "@/lib/request";
 import { forwardAuthHeader } from "@/lib/forward-auth";
 import PageTitle from "@/components/common/page-title";
-import PRight from "@/components/problem/p-right";
+import ProblemSidePanel from "@/components/problem/problem-side-panel";
 import SolutionItem from "@/components/solution/solution-item";
 
 type Props = {
@@ -59,7 +59,7 @@ const SolutionPage = async ({ params }: Props) => {
           <SolutionItem></SolutionItem>
         </div>
         <div className="w-1/5 pl-5">
-          <PRight pid={params.pid} />
+          <ProblemSidePanel pid={params.pid} entryType="solution" />
         </div>
       </div>
     </div>

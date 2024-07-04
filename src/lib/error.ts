@@ -25,6 +25,17 @@ export class HydroError extends Error implements Hydro.HydroError {
   }
 }
 
+export class NotLoginError extends Error {
+  jumpTo?: string;
+  code = ERROR_TYPE.USER_NOT_LOGIN_ERROR;
+  msgCn = "您需要登录才能进行此操作";
+  constructor(msg?: string, url?: string) {
+    super("not login");
+    if (msg) this.msgCn = msg;
+    this.jumpTo = url;
+  }
+}
+
 export const tryParseHydroResponse = async (resp: Response, method?: Method) => {
   const data = await resp.json();
   if (!resp.ok || resp.status !== 200 || data?.error) {
