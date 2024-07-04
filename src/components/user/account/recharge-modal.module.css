@@ -1,12 +1,4 @@
-.modal-overlay {
-  z-index: 1000;
-  background-color: var(--black-a9);
-  position: fixed;
-  inset: 0;
-  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.modal-main {
+.modalMain {
   z-index: 1001;
   background-color: white;
   border-radius: 8px;
@@ -21,12 +13,16 @@
   max-width: 464px;
   animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 
-  &:focus {
+  /* &:focus {
     outline: none;
-  }
+  } */
 }
 
-.modal-title-container {
+.modalMain:focus {
+  outline: none;
+}
+
+.modalTitleContainer {
   position: relative;
   border-radius: 8px 8px 0 0;
 
@@ -38,18 +34,7 @@
   align-items: center;
   justify-content: center;
 
-  .modal-close-icon {
-    position: absolute;
-    top: 28px;
-    right: 20px;
-
-    > svg {
-      width: 16px;
-      height: 16px;
-    }
-  }
-
-  .modal-title {
+  .modalTitle {
     font-family: Source Han Sans;
     font-size: 20px;
     font-weight: bold;
@@ -62,14 +47,14 @@
   }
 }
 
-.modal-content {
+.modalContent {
   padding: 32px 30px;
   display: flex;
   flex-direction: column;
   gap: 30px;
 }
 
-.modal-footer {
+.modalFooter {
   width: 100%;
   margin: 47px 0;
 
@@ -98,77 +83,84 @@
   }
 }
 
-
-
-
-.online-recharge-modal {
+.onlineRechargeModal {
   .tips {
-    > svg {
-      width: 16px;
-      height: 16px;
-      margin-right: 6px;
-    }
-
     font-family: Microsoft YaHei UI;
     font-size: 14px;
     font-weight: normal;
     line-height: normal;
     letter-spacing: 0em;
-
     font-feature-settings: "kern" on;
     color: #797979;
-
     margin-bottom: 20px;
   }
 
-  .amount-card-container {
+  .amountCardContainer {
     width: 100%;
-
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
 
-    .amount-card-item {
+    .amountCardItem {
       cursor: pointer;
-
       border-radius: 8px;
       border: 1px solid #f7f5f5;
-
       display: flex;
       justify-content: center;
       align-items: center;
-
       min-height: 58px;
-
-      > span {
-        font-family: Microsoft YaHei UI;
-        font-size: 20px;
-        font-weight: normal;
-        line-height: normal;
-        text-align: center;
-        letter-spacing: 0em;
-
-        font-feature-settings: "kern" on;
-        color: #3d3d3d;
-      }
 
       &.selected {
         background: #ff7d37;
+      }
 
-        > span {
-          color: #f7f5f5;
-        }
+      &.selected > span {
+        color: #f7f5f5;
       }
     }
   }
 
-  .amount-input {
+  .amountInput {
     margin-top: 20px;
     width: 100%;
 
-    .desc-text {
+    .descText {
       font-family: Microsoft YaHei UI;
       font-size: 16px;
+      font-weight: normal;
+      line-height: normal;
+      letter-spacing: 0em;
+      font-feature-settings: "kern" on;
+      color: #797979;
+      margin-bottom: 10px;
+    }
+  }
+
+  .alarmText {
+    margin-top: 30px;
+    width: 100%;
+    text-align: center;
+    font-family: Microsoft YaHei UI;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: normal;
+    letter-spacing: 0em;
+    font-feature-settings: "kern" on;
+    color: #ff0000;
+  }
+}
+
+.cardRechargeModal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  height: 100%;
+
+  .customAntdFormItem {
+    .customLabel {
+      font-family: Microsoft YaHei;
+      font-size: 14px;
       font-weight: normal;
       line-height: normal;
       letter-spacing: 0em;
@@ -176,23 +168,7 @@
       font-feature-settings: "kern" on;
       color: #797979;
 
-      margin-bottom: 10px;
+      margin-bottom: 13px;
     }
-  }
-
-  .alarm-text {
-    margin-top: 30px;
-
-    width: 100%;
-    text-align: center;
-
-    font-family: Microsoft YaHei UI;
-    font-size: 16px;
-    font-weight: normal;
-    line-height: normal;
-    letter-spacing: 0em;
-
-    font-feature-settings: "kern" on;
-    color: #ff0000;
   }
 }

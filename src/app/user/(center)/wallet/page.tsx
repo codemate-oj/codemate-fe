@@ -1,8 +1,8 @@
 "use client";
 import { Tabs, TabsProps } from "antd";
 import React from "react";
-import Overview from "@/app/user/(center)/wallet/Overview";
-import Detail from "@/app/user/(center)/wallet/Detail";
+import Overview from "@/components/user/account/Overview";
+import Detail from "@/components/user/account/Detail";
 import { useUrlParamState } from "@/hooks/useUrlParamState";
 
 const tabItems: TabsProps["items"] = [

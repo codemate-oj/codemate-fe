@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Button, ConfigProvider } from "antd";
-import "./Overview.style.css";
+import styles from "./Overview.module.css";
 import Image from "next/image";
 import { showRechargeModal } from "@/components/user/account/recharge-modal";
 import ShowRecahrgeCardModal from "@/components/user/account/recharge-card-modal";
@@ -19,10 +19,10 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ className, title, icon, buttonText, buttonColor = "#FF7D37", onClickButton }) => {
   return (
-    <div className={`balance-add-card ${className}`}>
-      <div className="left-icon-bg">{icon}</div>
-      <div className="right-text">
-        <div className="right-title">{title}</div>
+    <div className={`${styles.balanceAddCard} ${className}`}>
+      <div className={styles.leftIconBg}>{icon}</div>
+      <div className={styles.rightText}>
+        <div className={styles.rightTitle}>{title}</div>
         <ConfigProvider theme={{ token: { colorPrimary: buttonColor } }}>
           <Button type="primary" onClick={onClickButton} style={{ lineHeight: 0, padding: "10px 50px" }}>
             {buttonText}
@@ -43,7 +43,7 @@ const CardContent: Parameters<typeof Card>[0][] = [
     title: "充值卡充值",
     buttonText: "立即充值",
     buttonColor: "#2D7AB3",
-    className: "aqua",
+    className: `${styles.aqua}`,
     icon: <Image src="/svg/card-recharge-icon.svg" alt="about-us" width={100} height={100} />,
     onClickButton: () => {
       NiceModal.show(ShowRecahrgeCardModal);
@@ -52,7 +52,7 @@ const CardContent: Parameters<typeof Card>[0][] = [
   {
     title: "给别人充值",
     buttonText: "代充值",
-    className: "orange for-others",
+    className: `${styles.orange} ${styles.forOthers}`,
     icon: <Image src="/svg/recharge-for-others.svg" alt="about-us" width={100} height={100} />,
     onClickButton: () => {
       NiceModal.show(ShowRecahrgeCardOtherModal);
@@ -63,25 +63,25 @@ const CardContent: Parameters<typeof Card>[0][] = [
 const Overview = () => {
   return (
     <div>
-      <div className="balance-banner">
-        <div className="left-icon">
+      <div className={styles.balanceBanner}>
+        <div className={styles.leftIcon}>
           <Image src="/svg/account-wallet.svg" alt="about-us" width={30} height={34} />
         </div>
-        <div className="balance-main">
-          <div className="balance-title">魅值余额</div>
-          <div className="balance-value">
-            <span className="balance-number">0</span>
-            <span className="balance-unit">点</span>
+        <div className={styles.balanceMain}>
+          <div className={styles.balanceTitle}>魅值余额</div>
+          <div className={styles.balanceValue}>
+            <span className={styles.balanceNumber}>0</span>
+            <span className={styles.balanceUnit}>点</span>
           </div>
         </div>
-        <div className="balance-add">
+        <div>
           <Button type="primary" style={{ padding: "10px 50px", lineHeight: 0 }} onClick={showAntdModal}>
             充值
           </Button>
         </div>
       </div>
 
-      <div className="balance-other-cards">
+      <div className={styles.balanceOtherCards}>
         {CardContent.map((item) => (
           <Card {...item} key={item.title} />
         ))}

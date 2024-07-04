@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Input } from "antd";
-import "./recharge-modal.style.css";
+import style from "./recharge-modal.module.css";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import { Dialog, DialogContent, DialogFooter, DialogTitle } from "../../ui/dialog";
 
@@ -31,21 +31,21 @@ export const showRechargeModal = NiceModal.create(() => {
         }
       }}
     >
-      <DialogContent className="modal-main max-w-[500px] border-0 p-0">
-        <DialogTitle className="modal-title-container">
-          <div className="modal-title">在线充值</div>
+      <DialogContent className={`${style.modalMain} max-w-[500px] border-0 p-0`}>
+        <DialogTitle className={style.modalTitleContainer}>
+          <div className={style.modalTitle}>在线充值</div>
         </DialogTitle>
 
-        <div className="online-recharge-modal p-6">
-          <p className="tips">
+        <div className={`${style.onlineRechargeModal} p-6`}>
+          <p className={style.tips}>
             {/* <TipIcon /> */}
             1元=10魅值
           </p>
-          <div className="amount-card-container">
+          <div className={style.amountCardContainer}>
             {SupportedAmounts.map((amount, index) => (
               <div
                 key={index}
-                className={`amount-card-item ${index === selectedIndex && "selected"}`}
+                className={`${style.amountCardItem} ${index === selectedIndex && style.selected}`}
                 onClick={() => {
                   setSelectedIndex(index);
                   setAmount(amount);
@@ -55,8 +55,8 @@ export const showRechargeModal = NiceModal.create(() => {
               </div>
             ))}
           </div>
-          <div className="amount-input">
-            <p className="desc-text">其他金额</p>
+          <div className={style.amountInput}>
+            <p className={style.descText}>其他金额</p>
             <Input
               type="number"
               onChange={(e) => {
@@ -65,13 +65,13 @@ export const showRechargeModal = NiceModal.create(() => {
             />
           </div>
           {amount && (
-            <div className="alarm-text">
+            <div className={style.alarmText}>
               订单确认：充值{amount}魅值 金额{amount / 10}元
             </div>
           )}
         </div>
 
-        <DialogFooter className="modal-footer">
+        <DialogFooter className={style.modalFooter}>
           <Button
             disabled={!amount}
             onClick={() => {

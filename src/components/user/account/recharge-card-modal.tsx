@@ -1,6 +1,7 @@
 import ThemedModal from "@/components/common/themed-modal";
 import { Button } from "@/components/ui/button";
 import { niceRadixModal } from "@/lib/utils";
+import style from "./recharge-modal.module.css";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import { Input } from "antd";
 import React from "react";
@@ -23,13 +24,13 @@ const ShowRecahrgeCardModal = NiceModal.create(() => {
       }
       {...niceRadixModal(modal)}
     >
-      <div className="card-recharge-modal">
-        <div className="custom-antd-form-item">
-          <p className="custom-label">请输入充值卡号</p>
+      <div className={style.cardRechargeModal}>
+        <div className={style.customAntdFormItem}>
+          <p className={style.customLabel}>请输入充值卡号</p>
           <Input title="请输入充值卡号" />
         </div>
-        <div className="custom-antd-form-item">
-          <p className="custom-label">请输入充值卡密码</p>
+        <div className={style.customAntdFormItem}>
+          <p className={style.customLabel}>请输入充值卡密码</p>
           <Input title="请输入充值卡密码" />
         </div>
       </div>
