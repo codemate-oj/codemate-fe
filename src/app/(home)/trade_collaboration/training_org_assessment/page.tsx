@@ -11,7 +11,7 @@ const TrainingOrgAssessment = () => {
   return (
     <div>
       <PageTitle>商务合作</PageTitle>
-      <article className="prose prose-h1:text-xl">
+      <article className="prose prose-h1:text-xl" style={{ maxWidth: "950px" }}>
         <div className="text-center text-red-600">
           <p>
             特别说明：本平台不涉及任何线下或线上教育培训业务，仅为编程学习提供助力信息学学习的智能化刷题和竞赛工具。
@@ -62,10 +62,10 @@ const TrainingOrgAssessment = () => {
         </div>
       </article>
       <div className="space-y-4">
-        <Image src={`/img/trade_collaboration/1.png`} alt="123" width={600} height={200} />
-        <Image src={`/img/trade_collaboration/2.png`} alt="123" width={600} height={200} />
-        <Image src={`/img/trade_collaboration/3.png`} alt="123" width={600} height={200} />
-        <Image src={`/img/trade_collaboration/4.png`} alt="123" width={600} height={200} />
+        <Image src={`/img/trade_collaboration/1.png`} alt="123" width={950} height={530} />
+        <Image src={`/img/trade_collaboration/2.png`} alt="123" width={950} height={530} />
+        <Image src={`/img/trade_collaboration/3.png`} alt="123" width={950} height={530} />
+        <Image src={`/img/trade_collaboration/4.png`} alt="123" width={950} height={530} />
       </div>
       <div className="mt-8 flex justify-center">
         <button className="mr-4 rounded bg-orange-500 px-4 py-2 text-white">观看宣传片</button>

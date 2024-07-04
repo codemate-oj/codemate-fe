@@ -20,13 +20,13 @@ const columns: TableColumnsType<DataType> = [
     title: "编号",
     dataIndex: "pid",
     key: "pid",
-    width: "100px",
+    width: "120px",
   },
   {
     title: "题目名称",
     dataIndex: "title",
     key: "title",
-    width: "150px",
+    width: "250px",
     render: (_, { title }) => <span className="text-sm font-bold">{title}</span>,
   },
   {
@@ -37,6 +37,7 @@ const columns: TableColumnsType<DataType> = [
       </>
     ),
     key: "tag",
+    width: "250px",
     dataIndex: "tag",
     ellipsis: true,
     render: (_, record) => (
@@ -83,7 +84,7 @@ const columns: TableColumnsType<DataType> = [
     render: (_, record) => (
       <div className="flex gap-1">{"🔥".repeat(Math.min(Math.floor(record.nSubmit / 20), 6))}</div>
     ),
-    width: "100px",
+    width: "200px",
   },
 ];
 
