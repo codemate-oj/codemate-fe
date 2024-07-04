@@ -62,10 +62,10 @@ const TrainingOrgAssessment = () => {
         </div>
       </article>
       <div className="space-y-4">
-        <Image src={`/img/trade_collaboration/1.png`} alt="123" width={600} height={200} />
-        <Image src={`/img/trade_collaboration/2.png`} alt="123" width={600} height={200} />
-        <Image src={`/img/trade_collaboration/3.png`} alt="123" width={600} height={200} />
-        <Image src={`/img/trade_collaboration/4.png`} alt="123" width={600} height={200} />
+        <Image src={`/img/trade_collaboration/1.png`} alt="123" width={950} height={530} />
+        <Image src={`/img/trade_collaboration/2.png`} alt="123" width={950} height={530} />
+        <Image src={`/img/trade_collaboration/3.png`} alt="123" width={950} height={530} />
+        <Image src={`/img/trade_collaboration/4.png`} alt="123" width={950} height={530} />
       </div>
       <div className="mt-8 flex justify-center">
         <button className="mr-4 rounded bg-orange-500 px-4 py-2 text-white">观看宣传片</button>
