@@ -47,7 +47,17 @@ const LoginForm = () => {
             {errorText}
           </p>
         )}
-        <Button type="button" variant="link" className="mb-4 mt-2 p-0 pl-1">
+        <Button
+          type="button"
+          variant="link"
+          className="mb-4 mt-2 p-0 pl-1"
+          onClick={() => {
+            store.dialogJumpTo("sms-code", {
+              title: "短信验证码登录",
+              hideLogo: true,
+            });
+          }}
+        >
           短信验证码登录
         </Button>
         <VerifyButton

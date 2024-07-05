@@ -5,11 +5,12 @@ import { request } from "@/lib/request";
 import LoginForm from "@/components/login/pages/login-form";
 import EmailOrPhoneForm from "@/components/login/pages/email-or-phone-form";
 import ChooseVerifyForm from "@/components/login/pages/choose-verify-form";
+import SmsCodeForm from "@/components/login/pages/sms-code-form";
 import UserInfoForm from "@/components/login/pages/user-info-form";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 
-export type DialogStatusName = "login" | "choose-verify" | "input-email-or-phone" | "user-info";
+export type DialogStatusName = "login" | "choose-verify" | "input-email-or-phone" | "user-info" | "sms-code";
 
 export interface DialogPage {
   component: React.ReactNode;
@@ -36,6 +37,9 @@ export const DialogStatusMap: Record<DialogStatusName, DialogPage> = {
   "user-info": {
     component: <UserInfoForm />,
     hideLogo: true,
+  },
+  "sms-code": {
+    component: <SmsCodeForm />,
   },
 };
 
@@ -103,6 +107,23 @@ const loginStore = store(
     const sid = await request.post(
       "/login",
       { uname, password },
+      {
+        transformData: (data, headers) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          return ((data as any).sid ?? headers.get("X-Hydro-Sid")) as string | null;
+        },
+      }
+    );
+    store.sid.set(sid);
+    store.isDialogShow.set(false);
+    store.dialogContextStack.set([]);
+    // 登陆成功后刷新整个页面
+    window.location.reload();
+  },
+  loginSms: async (verifyCode: string, tokenId: string) => {
+    const sid = await request.post(
+      `/login/${tokenId}` as "/login/{tokenId}",
+      { verifyCode },
       {
         transformData: (data, headers) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
