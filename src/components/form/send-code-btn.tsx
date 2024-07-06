@@ -18,27 +18,31 @@ const SendCodeButton: FC<ButtonProps> = ({ phone, label, ticket, randStr, disabl
   const [isSend, setIsSend] = useState(false);
   const [time, setTime] = useState(60);
   const [loading, setLoading] = useState(false);
-  // const [isDisabled, setIsDisabled] = useState(disabled)
-
+  const [isDisabled, setIsDisabled] = useState(disabled);
   let timeRef: NodeJS.Timeout;
 
   useEffect(() => {
-    if (time && time != 0) {
-      timeRef = setTimeout(() => {
-        setTime((time) => time - 4);
-      }, 1000);
-    } else {
-      setIsSend(false);
+    setIsDisabled(disabled);
+    if (isSend) {
+      if (time && time != 0) {
+        setIsDisabled(true);
+        timeRef = setTimeout(() => {
+          setTime((time) => time - 1);
+        }, 1000);
+      } else {
+        setIsSend(false);
+        setIsDisabled(false);
+      }
     }
+
     return () => {
       clearInterval(timeRef);
     };
-  }, [time]);
+  }, [time, disabled, isSend]);
 
   const handleSend = async () => {
     try {
       setLoading(true);
-      // setIsDisabled(false)
       const dataTokenId = await request.post(
         "/login/sms-code",
         {
@@ -52,15 +56,15 @@ const SendCodeButton: FC<ButtonProps> = ({ phone, label, ticket, randStr, disabl
       );
       onSuccess(dataTokenId);
       setLoading(false);
-      setTime(60);
       setIsSend(true);
+      setTime(60);
     } catch (e) {
       console.error(e);
     }
   };
 
   return (
-    <Button size="large" disabled={disabled} loading={loading} onClick={handleSend}>
+    <Button size="large" disabled={isDisabled} loading={loading} onClick={handleSend}>
       {isSend ? time : label}
     </Button>
   );
