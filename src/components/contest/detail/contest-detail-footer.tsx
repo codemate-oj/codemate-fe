@@ -1,6 +1,5 @@
 "use client";
 import { ExportOutlined } from "@ant-design/icons";
-import CountdownTimer from "./count-down";
 import ActionButton from "./action-button";
 import type { getContestState } from "@/lib/utils";
 import { HydroError } from "@/lib/error";
@@ -12,6 +11,9 @@ import { request } from "@/lib/request";
 import loginStore from "@/store/login";
 import { useLockFn } from "ahooks";
 import ApplySuccessModal from "./modals/apply-success-modal";
+import dynamic from "next/dynamic";
+
+const CountdownTimer = dynamic(() => import("./count-down"), { ssr: false });
 
 interface IProps {
   isApply: boolean;

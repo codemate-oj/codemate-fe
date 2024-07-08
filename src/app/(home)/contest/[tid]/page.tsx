@@ -3,7 +3,7 @@ import PageTitle from "@/components/common/page-title";
 import { Metadata } from "next";
 import { request } from "@/lib/request";
 import { getContestState } from "@/lib/utils";
-import { PROGRAMMING_LANGS } from "@/constants/misc";
+import { BRANCH_NAME, PROGRAMMING_LANGS } from "@/constants/misc";
 import ContestState from "@/components/contest/contest-state";
 import ContestDetailFooter from "@/components/contest/detail/contest-detail-footer";
 import ContestDetailRight from "@/components/contest/detail/contest-detail-right";
@@ -12,7 +12,7 @@ import { forwardAuthHeader } from "@/lib/forward-auth";
 const MarkdownRenderer = React.lazy(() => import("@/components/common/markdown-renderer"));
 
 export const metadata: Metadata = {
-  title: "竞技场-比赛详情 - CODEMATE",
+  title: `竞技场 - 比赛详情 - ${BRANCH_NAME}`,
 };
 
 const getContestDetail = (tid: string) => {
