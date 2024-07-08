@@ -60,7 +60,7 @@ const PageFooter = () => {
         </FooterSection>
         <FooterSection
           icon={<Image src="/svg/footer-about.svg" alt="about-us" width={30} height={34} />}
-          title="关于CODEMATE"
+          title="关于 AIOJ"
         >
           <li>品牌故事</li>
           <li>平台优势</li>
