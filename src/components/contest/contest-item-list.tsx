@@ -46,7 +46,7 @@ const ContestItemList: React.FC = () => {
     }
   );
   return (
-    <div className={"pt-3"}>
+    <div className="space-y-10 py-3">
       {loading ? (
         <Skeleton />
       ) : (
