@@ -13,6 +13,7 @@ export async function loginGuard(fn?: () => unknown | Promise<unknown>, msg?: st
   } catch (e) {
     if (e instanceof NotLoginError) {
       toast.error(e.msgCn ?? msg ?? "您尚未登录");
+      loginStore.reset();
       loginStore.showLoginDialog();
       return false;
     } else if (catchHydroError && e instanceof HydroError) {

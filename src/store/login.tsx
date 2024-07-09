@@ -113,8 +113,6 @@ const loginStore = store(
     store.sid.set(sid);
     store.isDialogShow.set(false);
     store.dialogContextStack.set([]);
-    // 登陆成功后刷新整个页面
-    window.location.reload();
   },
 
   logout: async () => {
@@ -160,6 +158,10 @@ const loginStore = store(
     store.set((draft) => {
       draft.dialogContextStack.push(ctx);
     });
+  },
+  reset: () => {
+    store.sid.set(null);
+    store.user.set(null);
   },
 }));
 

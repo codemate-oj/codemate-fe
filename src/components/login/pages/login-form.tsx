@@ -28,6 +28,9 @@ const LoginForm = () => {
     setErrorText("");
     try {
       await store.login(values.uname, values.password);
+      await store.renew();
+      // 登陆成功后刷新整个页面
+      window.location.reload();
     } catch (e) {
       console.error(e);
       if (e instanceof HydroError) {

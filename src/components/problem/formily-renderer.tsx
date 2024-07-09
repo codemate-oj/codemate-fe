@@ -70,7 +70,7 @@ const FormilyRenderer: React.FC<FormilySchemaProps> = ({ schema, pid }) => {
   const { run: handleSubmit, data: rid } = useRequest(
     async () => {
       let rid: string | undefined;
-      await loginGuard(async () => {
+      const isLogin = await loginGuard(async () => {
         setIsJudging(true);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const ans: Record<string, any> = {};
@@ -94,6 +94,7 @@ const FormilyRenderer: React.FC<FormilySchemaProps> = ({ schema, pid }) => {
           { transformData: (data) => data.data.rid }
         );
       });
+      if (!isLogin) setIsJudging(false);
       return rid;
     },
     {
