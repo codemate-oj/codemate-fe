@@ -50,16 +50,12 @@ export interface BulletinBoardProps {
 }
 
 const Index = (props: BulletinBoardProps) => {
-  const { data, bulletinListRenderer } = props;
+  const { data, bulletinListRenderer = BulletinList } = props;
 
   const items: CollapseProps["items"] = data?.map((card: BulletinCardProps) => {
     return {
       ...card,
-      children: bulletinListRenderer ? (
-        bulletinListRenderer(card)
-      ) : (
-        <BulletinList {...card} key={card.key}></BulletinList>
-      ),
+      children: <React.Fragment key={card.key}>{bulletinListRenderer(card)}</React.Fragment>,
     };
   });
 

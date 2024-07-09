@@ -15,6 +15,7 @@ import { Toaster } from "@/components/ui/sonner";
 import dynamic from "next/dynamic";
 import NiceModalProvider from "@/providers/nice-modal-provider";
 import ApolloContextProvider from "@/providers/apollo-provider";
+import { BRANCH_NAME, BRANCH_SLOGAN } from "@/constants/misc";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,8 +25,8 @@ const UserLogin = dynamic(() => import("@/components/login/user-login"), {
 });
 
 export const metadata: Metadata = {
-  title: "CODEMATE",
-  description: "新一代的AI驱动的OJ平台",
+  title: BRANCH_NAME,
+  description: BRANCH_SLOGAN,
 };
 
 export default function RootLayout({

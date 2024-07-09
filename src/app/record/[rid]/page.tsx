@@ -1,5 +1,6 @@
 import PageTitle from "@/components/common/page-title";
 import DetailPage from "@/components/record/detail-page";
+import { BRANCH_NAME } from "@/constants/misc";
 import { request } from "@/lib/request";
 import { getScoreColor, getTimeDiffFromNow, getTimeFromObjectId } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -7,7 +8,7 @@ import Link from "next/link";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "评测结果 - CODEMATE",
+  title: `评测结果 - ${BRANCH_NAME}`,
 };
 
 interface Props {
