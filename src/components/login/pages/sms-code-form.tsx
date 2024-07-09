@@ -66,9 +66,13 @@ const PhoneForm: React.FC<IProps> = ({
     }
   });
 
+  // 处理请求成功接收到的tokenId
   const handleSuccess = (tokenId: string) => {
-    // 在这里处理接收到的tokenId
     setTokenId(tokenId);
+  };
+  // 处理请求失败接收到的信息
+  const handleFail = (e: string) => {
+    setErrorText(e);
   };
 
   return (
@@ -81,7 +85,7 @@ const PhoneForm: React.FC<IProps> = ({
       {description && <p className="mt-3 text-sm text-[#797979]">{description}</p>}
       <Form {...form}>
         <form className="my-10" onSubmit={form.handleSubmit(handleSubmit)}>
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col space-y-8">
             <FormField
               control={form.control}
               name="phone"
@@ -116,6 +120,7 @@ const PhoneForm: React.FC<IProps> = ({
                   ticket={ticket}
                   randStr={randStr}
                   onSuccess={handleSuccess}
+                  error={handleFail}
                 />
               </div>
             </div>

@@ -1,6 +1,8 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState, useEffect, useRef } from "react";
 import { Button } from "antd";
 import { request } from "@/lib/request";
+import { useRequest } from "ahooks";
+import { HydroError } from "@/lib/error";
 
 export interface ButtonProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -12,21 +14,21 @@ export interface ButtonProps extends React.InputHTMLAttributes<HTMLInputElement>
   randStr: string;
   disabled?: boolean;
   onSuccess: (tokenId: string) => void;
+  error: (e: string) => void;
 }
 
-const SendCodeButton: FC<ButtonProps> = ({ phone, label, ticket, randStr, disabled, onSuccess }) => {
+const SendCodeButton: FC<ButtonProps> = ({ phone, label, ticket, randStr, disabled, onSuccess, error }) => {
   const [isSend, setIsSend] = useState(false);
   const [time, setTime] = useState(60);
-  const [loading, setLoading] = useState(false);
   const [isDisabled, setIsDisabled] = useState(disabled);
-  let timeRef: NodeJS.Timeout;
+  const timeRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setIsDisabled(disabled);
     if (isSend) {
       if (time && time != 0) {
         setIsDisabled(true);
-        timeRef = setTimeout(() => {
+        timeRef.current = setTimeout(() => {
           setTime((time) => time - 1);
         }, 1000);
       } else {
@@ -34,37 +36,43 @@ const SendCodeButton: FC<ButtonProps> = ({ phone, label, ticket, randStr, disabl
         setIsDisabled(false);
       }
     }
-
     return () => {
-      clearInterval(timeRef);
+      clearInterval(timeRef.current!);
     };
   }, [time, disabled, isSend]);
 
-  const handleSend = async () => {
-    try {
-      setLoading(true);
-      const dataTokenId = await request.post(
-        "/login/sms-code",
-        {
-          uname: phone,
-          ticket,
-          randStr,
-        },
-        {
-          transformData: ({ data }) => data.tokenId,
+  const { runAsync: handleSubmit, loading } = useRequest(
+    async () => {
+      try {
+        const dataTokenId = await request.post(
+          "/login/sms-code",
+          {
+            uname: phone,
+            ticket,
+            randStr,
+          },
+          {
+            transformData: ({ data }) => data.tokenId,
+          }
+        );
+        onSuccess(dataTokenId);
+        setIsSend(true);
+        setTime(60);
+      } catch (e) {
+        console.error(e);
+        if (e instanceof HydroError) {
+          error(e.message);
+        } else {
+          throw e;
         }
-      );
-      onSuccess(dataTokenId);
-      setLoading(false);
-      setIsSend(true);
-      setTime(60);
-    } catch (e) {
-      console.error(e);
+      }
+    },
+    {
+      manual: true,
     }
-  };
-
+  );
   return (
-    <Button size="large" disabled={isDisabled} loading={loading} onClick={handleSend}>
+    <Button size="large" disabled={isDisabled} loading={loading} onClick={handleSubmit}>
       {isSend ? time : label}
     </Button>
   );
