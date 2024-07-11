@@ -7,10 +7,19 @@ import EmailOrPhoneForm from "@/components/login/pages/email-or-phone-form";
 import ChooseVerifyForm from "@/components/login/pages/choose-verify-form";
 import SmsCodeForm from "@/components/login/pages/sms-code-form";
 import UserInfoForm from "@/components/login/pages/user-info-form";
+import CodeForm from "@/components/login/pages/code-form";
+import ResetPassForm from "@/components/login/pages/reset-pass-form";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 
-export type DialogStatusName = "login" | "choose-verify" | "input-email-or-phone" | "user-info" | "sms-code";
+export type DialogStatusName =
+  | "login"
+  | "choose-verify"
+  | "input-email-or-phone"
+  | "user-info"
+  | "sms-code"
+  | "code-form"
+  | "reset-pass";
 
 export interface DialogPage {
   component: React.ReactNode;
@@ -40,6 +49,12 @@ export const DialogStatusMap: Record<DialogStatusName, DialogPage> = {
   },
   "sms-code": {
     component: <SmsCodeForm />,
+  },
+  "code-form": {
+    component: <CodeForm />,
+  },
+  "reset-pass": {
+    component: <ResetPassForm />,
   },
 };
 
