@@ -77,4 +77,19 @@ const labelValueMap: LabelValueMapTYPE = [
     children: alikeChildren,
   },
 ];
+export type keyType = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11";
+export const searchParamsLabelValueMap = {
+  "0": "all",
+  "1": "all",
+  "2": "all",
+  "3": "all",
+  "4": "all",
+  "5": "all",
+  "6": "Cpp",
+  "7": "Py",
+  "8": "Cpp",
+  "9": "Py",
+  "10": "Cpp",
+  "11": "Py",
+};
 export default labelValueMap;

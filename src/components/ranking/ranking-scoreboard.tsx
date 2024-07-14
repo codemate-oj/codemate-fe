@@ -4,21 +4,54 @@ import TreeSelector from "./tree-selelctor";
 import { useRequest } from "ahooks";
 import Loading from "@/app/(home)/loading";
 import RankingScoreboardTable from "./ranking-scoreboard-table";
+import { useSearchParams } from "next/navigation";
 // import data from "./data.json";
+interface itemType {
+  _id: string;
+  key: string;
+  uname: string;
+  rp: number;
+  contest: number;
+  nSubmit: number;
+  nAccept: number;
+  totalScore: number;
+}
 const RankingScoreBoard: React.FC = () => {
   // const loading = false;
-  const { data, loading } = useRequest(async () => {
-    //@ts-expect-error 后端类型未添加
-    const { data } = await request.get("/ranking", {
-      transformData: (data) => {
-        return data;
-      },
-    });
-    return {
-      data: data,
-    };
+  const searchParams = useSearchParams();
+  const { data, loading } = useRequest(
+    async () => {
+      // @ts-expect-error 后端类型未添加
+      const { data } = await request.get(`/ranking?rankBy=${searchParams.get("rankBy")}`, {
+        transformData: (data) => {
+          return data;
+        },
+      });
+      return {
+        udocs: data?.udocs,
+        rpInfo: data?.rpInfo,
+      };
+    },
+    {
+      refreshDeps: [searchParams.get("rankBy")],
+    }
+  );
+  const { udocs, rpInfo } = data || { udocs: undefined, rpInfo: undefined };
+  const defaultObj = {
+    _id: "",
+    key: "",
+    uname: "",
+    rp: null,
+    contest: null,
+    nSubmit: null,
+    nAccept: null,
+    totalScore: null,
+  };
+  udocs?.forEach((item: itemType, index: number) => {
+    udocs[index] = rpInfo[String(item._id)]
+      ? { ...item, ...rpInfo[String(item._id)], ...rpInfo[String(item._id)]?.rpInfo }
+      : { ...defaultObj, ...item };
   });
-  const { udocs } = data?.data?.udocs;
   return (
     <>
       <TreeSelector />

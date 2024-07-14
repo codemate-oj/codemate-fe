@@ -19,6 +19,7 @@ interface DataType {
 
 const RankingScoreboardTable: React.FC<ScoreboardTableProps> = (props) => {
   const { data } = props;
+
   const tableColumns: TableColumnsType<DataType> = [
     {
       title: "排名",
@@ -42,6 +43,9 @@ const RankingScoreboardTable: React.FC<ScoreboardTableProps> = (props) => {
       title: "比赛",
       dataIndex: "contest",
       key: "contest",
+      render: (_, record) => {
+        return record.contest ? parseInt(String(record.contest)) : undefined;
+      },
     },
     {
       title: "提交",
@@ -58,7 +62,7 @@ const RankingScoreboardTable: React.FC<ScoreboardTableProps> = (props) => {
       dataIndex: "nAcceptPercentage",
       key: "nAcceptPercentage",
       render: (_, record) => {
-        return (record.nAccept / record.nSubmit).toFixed(2) * 100 + "%";
+        return Number((record.nAccept / record.nSubmit).toFixed(2)) * 100 + "%";
       },
     },
     {
