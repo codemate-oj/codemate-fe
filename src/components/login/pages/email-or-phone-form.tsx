@@ -22,41 +22,77 @@ const EmailOrPhoneForm = () => {
       setAgreed(true);
       try {
         let token: string;
-        if (isEmail) {
-          token = await request.post(
-            "/register/email-code",
-            {
-              mail: value,
-              ticket,
-              randStr,
-            },
-            {
-              transformData: ({ data }) => data.tokenId,
-            }
-          );
-        } else {
-          token = await request.post(
-            "/register/sms-code",
-            {
-              phoneNumber: value,
-              ticket,
-              randStr,
-            },
-            {
-              transformData: ({ data }) => data.tokenId,
-            }
-          );
-        }
         switch (formContext?.purpose) {
           case "register":
+            if (isEmail) {
+              token = await request.post(
+                "/register/email-code",
+                {
+                  mail: value,
+                  ticket,
+                  randStr,
+                },
+                {
+                  transformData: ({ data }) => data.tokenId,
+                }
+              );
+            } else {
+              token = await request.post(
+                "/register/sms-code",
+                {
+                  phoneNumber: value,
+                  ticket,
+                  randStr,
+                },
+                {
+                  transformData: ({ data }) => data.tokenId,
+                }
+              );
+            }
             store.dialogJumpTo("user-info", {
               sendTo: value,
               token,
             });
             break;
+          case "reset":
+            token = await request.post(
+              "/user/lostpass",
+              {
+                emailOrPhone: value,
+              },
+              {
+                transformData: ({ data }) => data.tokenId,
+              }
+            );
+            store.dialogJumpTo("code-form", {
+              sendTo: value,
+              token,
+              hideLogo: true,
+            });
+            break;
           default:
             break;
         }
+
+        // switch (formContext?.purpose) {
+        //   case "register":
+        //     store.dialogJumpTo("user-info", {
+        //       sendTo: value,
+        //       token,
+        //     });
+        //     break;
+        //   case "reset":
+        //     store.dialogJumpTo("code-form", {
+        //       sendTo: value,
+        //       token,
+        //       title: "忘记密码",
+        //       description: "请输入验证码",
+        //       hideLogo: true,
+        //     });
+        //     break;
+        //   default:
+        //     break;
+        // }
       } catch (e) {
         if (e instanceof HydroError) {
           setErrorText(e.message);

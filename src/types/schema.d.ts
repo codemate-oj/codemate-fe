@@ -2566,6 +2566,121 @@ export interface paths {
       };
     };
   };
+  "/user/lostpass": {
+    /**
+     * 请求找回密码
+     * @description 请求找回密码
+     */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /**
+             * @description 邮箱或手机号
+             */
+            emailOrPhone: string;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              tokenId: string;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/user/lostpass/with_code": {
+    /**
+     * 验证输入验证码正确性
+     * @description 验证输入验证码正确性
+     */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /**
+             * @description 邮箱或手机号
+             */
+            emailOrPhone: string;
+            /**
+             * @description 输入的验证码
+             */
+            verifyCode: string;
+            tokenId: string;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              success: boolean;
+              tokenId: string;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/user/lostpass/reset": {
+    /**
+     * 重设用户密码
+     * @description 重设用户密码
+     */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            tokenId: string;
+            /**
+             * @description 新密码
+             */
+            password: string;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              success: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
 }
 
 export type webhooks = Record<string, never>;
