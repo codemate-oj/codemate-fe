@@ -13,6 +13,9 @@ import { Icon } from "@iconify/react";
 import CodeInput from "./code-input";
 import store from "@/store/login";
 import useCountdown from "@/hooks/useCountdown";
+import { useLockFn } from "ahooks";
+import { request } from "@/lib/request";
+import { HydroError } from "@/lib/error";
 
 const formSchema = z.object({
   code: smsCode,
@@ -27,7 +30,7 @@ interface IProps {
   error?: string;
 }
 
-const CodeForm: React.FC<IProps> = ({ title = "请输入验证码", buttonText = "下一步", loading, error: errorText }) => {
+const CodeForm: React.FC<IProps> = ({ title = "请输入验证码", buttonText = "下一步", loading, error }) => {
   const currentContext = store.useCurrentContext();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -35,9 +38,12 @@ const CodeForm: React.FC<IProps> = ({ title = "请输入验证码", buttonText =
       code: "",
     },
   });
+
+  const [errorText, setErrorText] = useState(error);
   const [verifyPassed, setVerifyPassed] = useState(false);
   const [ticket, setTicket] = useState("");
   const [randStr, setRandStr] = useState("");
+  const [tokenId, setTokenId] = useState(currentContext?.token);
 
   const { countdown, resetCountdown, isCoolingDown } = useCountdown(10);
 
@@ -46,19 +52,55 @@ const CodeForm: React.FC<IProps> = ({ title = "请输入验证码", buttonText =
   }, [countdown, resetCountdown]);
 
   // 重新发送请求
-  const reSend = () => {
-    resetCountdown(10);
-    ticket;
-    randStr;
-  };
+  const reSend = useLockFn(async () => {
+    try {
+      const token = await request.post(
+        "/user/lostpass",
+        {
+          emailOrPhone: currentContext?.sendTo,
+        },
+        {
+          transformData: ({ data }) => data.tokenId,
+        }
+      );
+      setTokenId(token);
+      resetCountdown(60);
+      ticket;
+      randStr;
+    } catch (e) {
+      console.error(e);
+      if (e instanceof HydroError) {
+        setErrorText(e.message);
+      }
+    }
+  });
 
   // 下一步处理
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    store.dialogJumpTo("reset-pass", {
-      code: values.code,
-      hideLogo: true,
-    });
-  };
+  const handleSubmit = useLockFn(async (values: z.infer<typeof formSchema>) => {
+    setErrorText("");
+    try {
+      const token = await request.post(
+        "/user/lostpass/with_code",
+        {
+          tokenId: tokenId,
+          verifyCode: values.code,
+          emailOrPhone: currentContext?.sendTo,
+        },
+        {
+          transformData: ({ data }) => data.tokenId,
+        }
+      );
+      store.dialogJumpTo("reset-pass", {
+        token: token,
+        hideLogo: true,
+      });
+    } catch (e) {
+      console.error(e);
+      if (e instanceof HydroError) {
+        setErrorText(e.message);
+      }
+    }
+  });
 
   const getCodeInput = (value: string) => {
     form.setValue("code", value);

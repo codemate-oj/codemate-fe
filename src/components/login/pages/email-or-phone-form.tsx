@@ -55,7 +55,15 @@ const EmailOrPhoneForm = () => {
             });
             break;
           case "reset":
-            token = "123456";
+            token = await request.post(
+              "/user/lostpass",
+              {
+                emailOrPhone: value,
+              },
+              {
+                transformData: ({ data }) => data.tokenId,
+              }
+            );
             store.dialogJumpTo("code-form", {
               sendTo: value,
               token,

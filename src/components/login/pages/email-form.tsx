@@ -28,7 +28,7 @@ interface IProps {
 const EmailForm: React.FC<IProps> = ({
   title = "请输入邮箱",
   description,
-  buttonText = "提交",
+  buttonText,
   onSubmit,
   loading,
   error: errorText,

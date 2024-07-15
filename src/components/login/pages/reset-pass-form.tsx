@@ -1,15 +1,18 @@
 "use client";
 import React from "react";
 import UnderlinedText from "../../common/underlined-text";
-// import store from "@/store/login";
+import store from "@/store/login";
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput from "@/components/form/form-input";
+import { message } from "antd";
 import { Button } from "@/components/ui/button";
 import { createPasswordSchema } from "@/lib/form";
+import { request } from "@/lib/request";
 import { useLockFn } from "ahooks";
+import { HydroError } from "@/lib/error";
 
 const formSchema = z
   .object({
@@ -31,7 +34,7 @@ interface IProps {
 }
 
 const RestPassForm: React.FC<IProps> = ({}) => {
-  // const currentContext = store.useCurrentContext();
+  const currentContext = store.useCurrentContext();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,8 +43,20 @@ const RestPassForm: React.FC<IProps> = ({}) => {
     },
   });
 
-  const handleSubmit = useLockFn(async () => {
+  const handleSubmit = useLockFn(async (values: z.infer<typeof formSchema>) => {
     // console.log("重置密码点击", values.password,currentContext);
+    try {
+      await request.post("/user/lostpass/reset", {
+        tokenId: currentContext?.token,
+        password: values.password,
+      });
+      message.success("重置成功");
+    } catch (e) {
+      console.error(e);
+      if (e instanceof HydroError) {
+        message.error(e.message);
+      }
+    }
   });
 
   return (
