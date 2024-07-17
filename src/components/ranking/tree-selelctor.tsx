@@ -4,8 +4,11 @@ import FilerTabsTree from "@/components/common/filter-tabs-tree";
 import TOP_FILTER from "@/constants/ranking-top-filter";
 import { useUrlParamState } from "@/hooks/useUrlParamState";
 import { searchParamsLabelValueMap, keyType } from "@/constants/ranking-top-filter";
+import { useSearchParams } from "next/navigation";
 const TreeSelector: React.FC = () => {
-  const [rankBy, setRankBy] = useUrlParamState("rankBy", "all");
+  const searchParams = useSearchParams();
+
+  const [rankBy, setRankBy] = useUrlParamState("rankBy", searchParams.get("rankBy") || "all");
   const [selectedPath, setSelectedPath] = React.useState<string[]>(["0", "5"]);
   return (
     <FilerTabsTree

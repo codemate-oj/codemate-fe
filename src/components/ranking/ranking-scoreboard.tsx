@@ -5,6 +5,7 @@ import { useRequest } from "ahooks";
 import Loading from "@/app/(home)/loading";
 import RankingScoreboardTable from "./ranking-scoreboard-table";
 import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 // import data from "./data.json";
 interface itemType {
   _id: string;
@@ -16,6 +17,16 @@ interface itemType {
   nAccept: number;
   totalScore: number;
 }
+const defaultObj = {
+  _id: "",
+  key: "",
+  uname: "",
+  rp: null,
+  contest: null,
+  nSubmit: null,
+  nAccept: null,
+  totalScore: null,
+};
 const RankingScoreBoard: React.FC = () => {
   // const loading = false;
   const searchParams = useSearchParams();
@@ -37,25 +48,22 @@ const RankingScoreBoard: React.FC = () => {
     }
   );
   const { udocs, rpInfo } = data || { udocs: undefined, rpInfo: undefined };
-  const defaultObj = {
-    _id: "",
-    key: "",
-    uname: "",
-    rp: null,
-    contest: null,
-    nSubmit: null,
-    nAccept: null,
-    totalScore: null,
-  };
-  udocs?.forEach((item: itemType, index: number) => {
-    udocs[index] = rpInfo[String(item._id)]
-      ? { ...item, ...rpInfo[String(item._id)], ...rpInfo[String(item._id)]?.rpInfo }
-      : { ...defaultObj, ...item };
-  });
+  useEffect(() => {
+    udocs?.forEach((item: itemType, index: number) => {
+      udocs[index] = rpInfo[String(item._id)]
+        ? { ...item, ...rpInfo[String(item._id)], ...rpInfo[String(item._id)]?.rpInfo }
+        : { ...defaultObj, ...item };
+    });
+  }, [udocs, rpInfo]);
+  // udocs?.forEach((item: itemType, index: number) => {
+  //   udocs[index] = rpInfo[String(item._id)]
+  //     ? { ...item, ...rpInfo[String(item._id)], ...rpInfo[String(item._id)]?.rpInfo }
+  //     : { ...defaultObj, ...item };
+  // });
   return (
     <>
       <TreeSelector />
-      {loading ? <Loading /> : <RankingScoreboardTable data={udocs} />}
+      {loading ? <Loading /> : <RankingScoreboardTable udocs={udocs} rpInfo={rpInfo} />}
     </>
   );
 };

@@ -1,7 +1,29 @@
 import { Table, TableColumnsType } from "antd";
 import LinkBtn from "../common/link-btn";
 interface ScoreboardTableProps {
-  data: DataType[];
+  udocs: UdocsType[];
+  rpInfo: RpInfoType;
+}
+
+interface UdocsType {
+  _id: string;
+  uname: string;
+  // other fields...
+  [key: string]: number | string;
+}
+interface RpInfoType {
+  [key: string]: {
+    rank: number;
+    rp: number;
+    rpInfo: {
+      contest: number;
+      [key: string]: number | string;
+    };
+    contest: number;
+    nSubmit: number;
+    nAccept: number;
+    totalScore: number;
+  };
 }
 interface DataType {
   _id: string;
@@ -18,8 +40,7 @@ interface DataType {
 }
 
 const RankingScoreboardTable: React.FC<ScoreboardTableProps> = (props) => {
-  const { data } = props;
-
+  const { udocs, rpInfo } = props;
   const tableColumns: TableColumnsType<DataType> = [
     {
       title: "排名",
@@ -36,7 +57,7 @@ const RankingScoreboardTable: React.FC<ScoreboardTableProps> = (props) => {
       dataIndex: "rp",
       key: "rp",
       render: (_, record) => {
-        return record.rp.toFixed(0);
+        return Number(record.rp).toFixed(0);
       },
     },
     {
@@ -71,16 +92,16 @@ const RankingScoreboardTable: React.FC<ScoreboardTableProps> = (props) => {
       key: "totalScore",
     },
   ];
-  const dataSource = data.map((item) => {
+  const dataSource = udocs.map((item) => {
     return {
       _id: item._id,
       key: item._id,
-      rank: item.rank,
+      rank: rpInfo[item._id].rank,
       uname: item.uname,
-      rp: item.rp,
-      contest: item.contest,
-      nSubmit: item.nSubmit,
-      nAccept: item.nAccept,
+      rp: rpInfo[item._id].rp,
+      contest: rpInfo[item._id]?.rpInfo.contest,
+      nSubmit: rpInfo[item._id].nSubmit,
+      nAccept: rpInfo[item._id].nAccept,
       totalScore: item.totalScore,
     };
   });
