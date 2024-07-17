@@ -8,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import UnderlinedText from "@/components/common/underlined-text";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import VerifyButton from "@/components/common/verify-button";
 import { Icon } from "@iconify/react";
 import CodeInput from "./code-input";
 import store from "@/store/login";
@@ -40,12 +39,9 @@ const CodeForm: React.FC<IProps> = ({ title = "请输入验证码", buttonText =
   });
 
   const [errorText, setErrorText] = useState(error);
-  const [verifyPassed, setVerifyPassed] = useState(false);
-  const [ticket, setTicket] = useState("");
-  const [randStr, setRandStr] = useState("");
   const [tokenId, setTokenId] = useState(currentContext?.token);
 
-  const { countdown, resetCountdown, isCoolingDown } = useCountdown(10);
+  const { countdown, resetCountdown, isCoolingDown } = useCountdown(60);
 
   useEffect(() => {
     resetCountdown(countdown);
@@ -65,8 +61,6 @@ const CodeForm: React.FC<IProps> = ({ title = "请输入验证码", buttonText =
       );
       setTokenId(token);
       resetCountdown(60);
-      ticket;
-      randStr;
     } catch (e) {
       console.error(e);
       if (e instanceof HydroError) {
@@ -98,6 +92,8 @@ const CodeForm: React.FC<IProps> = ({ title = "请输入验证码", buttonText =
       console.error(e);
       if (e instanceof HydroError) {
         setErrorText(e.message);
+      } else {
+        setErrorText("验证码输入错误！");
       }
     }
   });
@@ -145,15 +141,8 @@ const CodeForm: React.FC<IProps> = ({ title = "请输入验证码", buttonText =
                 {errorText}
               </p>
             )}
-            <VerifyButton
-              className="mb-2"
-              onVerifySuccess={(e) => {
-                setTicket(e.ticket);
-                setRandStr(e.randstr);
-                setVerifyPassed(true);
-              }}
-            />
-            <Button type="submit" className="block w-full" disabled={!verifyPassed} loading={loading}>
+
+            <Button type="submit" className="block w-full" loading={loading}>
               {buttonText ?? "下一步"}
             </Button>
           </div>

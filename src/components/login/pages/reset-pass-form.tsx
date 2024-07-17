@@ -44,13 +44,13 @@ const RestPassForm: React.FC<IProps> = ({}) => {
   });
 
   const handleSubmit = useLockFn(async (values: z.infer<typeof formSchema>) => {
-    // console.log("重置密码点击", values.password,currentContext);
     try {
       await request.post("/user/lostpass/reset", {
         tokenId: currentContext?.token,
         password: values.password,
       });
       message.success("重置成功");
+      window.location.reload();
     } catch (e) {
       console.error(e);
       if (e instanceof HydroError) {
