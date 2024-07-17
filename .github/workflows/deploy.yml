@@ -25,19 +25,35 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
+      - name: Cache pnpm store
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
       - name: Install dependencies
         run: pnpm install
+
+      - name: Cache .next folder
+        uses: actions/cache@v3
+        with:
+          path: .next
+          key: ${{ runner.os }}-next-build-${{ hashFiles('**/*') }}
+          restore-keys: |
+            ${{ runner.os }}-next-build-
 
       - name: Build project
         run: pnpm build
 
-      - name: Archive .next folder
-        run: tar -czf next-build.tar.gz .next next.config.mjs
+      - name: Archive multiple folders and files
+        run: tar -czf build-artifacts.tar.gz .next next.config.mjs public package.json
 
       - name: Copy files via scp
         uses: appleboy/scp-action@v0.1.4
         with:
-          source: "next-build.tar.gz"
+          source: "build-artifacts.tar.gz"
           target: "/home/ubuntu/nextjs-bootstrap/"
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
@@ -51,6 +67,6 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
             cd /home/ubuntu/nextjs-bootstrap
-            tar -xzf next-build.tar.gz
-            rm next-build.tar.gz
+            tar -xzf build-artifacts.tar.gz
+            rm build-artifacts.tar.gz
             pm2 restart next-app || pm2 start "npm start" --name next-app
