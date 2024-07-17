@@ -11,17 +11,16 @@ jobs:
 
     env:
       # 在这里添加你的环境变量
-      NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-      ANOTHER_ENV_VAR: ${{ secrets.ANOTHER_ENV_VAR }}
+      NEXT_PUBLIC_API_URL: https://api.aioj.net/
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Use Node.js 18.x
+      - name: Use Node.js 20.x
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "20"
 
       - name: Install pnpm
         run: npm install -g pnpm
