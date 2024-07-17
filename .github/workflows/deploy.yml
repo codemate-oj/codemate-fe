@@ -53,4 +53,4 @@ jobs:
             cd /home/ubuntu/nextjs-bootstrap
             tar -xzf next-build.tar.gz
             rm next-build.tar.gz
-            pm2 restart next-app || pm2 start next start --name next-app
+            pm2 restart next-app || pm2 start "npm start" --name next-app
