@@ -32,7 +32,7 @@ jobs:
         run: pnpm build
 
       - name: Archive .next folder
-        run: tar -czf next-build.tar.gz .next
+        run: tar -czf next-build.tar.gz .next next.config.mjs
 
       - name: Copy files via scp
         uses: appleboy/scp-action@v0.1.4
