@@ -34,7 +34,7 @@ interface DataType {
   contest: number;
   nSubmit: number;
   nAccept: number;
-  totalScore: number;
+  totalScore: number | string;
   // other fields...
   [key: string]: number | string;
 }
