@@ -5,7 +5,6 @@ import { useRequest } from "ahooks";
 import Loading from "@/app/(home)/loading";
 import RankingScoreboardTable from "./ranking-scoreboard-table";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 // import data from "./data.json";
 interface itemType {
   _id: string;
@@ -38,9 +37,15 @@ const RankingScoreBoard: React.FC = () => {
           return data;
         },
       });
+      const { udocs, rpInfo } = data;
+      udocs?.forEach((item: itemType, index: number) => {
+        udocs[index] = rpInfo[String(item._id)]
+          ? { ...item, ...rpInfo[String(item._id)], ...rpInfo[String(item._id)]?.rpInfo }
+          : { ...defaultObj, ...item };
+      });
       return {
-        udocs: data?.udocs,
-        rpInfo: data?.rpInfo,
+        udocs,
+        rpInfo,
       };
     },
     {
@@ -48,13 +53,6 @@ const RankingScoreBoard: React.FC = () => {
     }
   );
   const { udocs, rpInfo } = data || { udocs: undefined, rpInfo: undefined };
-  useEffect(() => {
-    udocs?.forEach((item: itemType, index: number) => {
-      udocs[index] = rpInfo[String(item._id)]
-        ? { ...item, ...rpInfo[String(item._id)], ...rpInfo[String(item._id)]?.rpInfo }
-        : { ...defaultObj, ...item };
-    });
-  }, [udocs, rpInfo]);
   // udocs?.forEach((item: itemType, index: number) => {
   //   udocs[index] = rpInfo[String(item._id)]
   //     ? { ...item, ...rpInfo[String(item._id)], ...rpInfo[String(item._id)]?.rpInfo }

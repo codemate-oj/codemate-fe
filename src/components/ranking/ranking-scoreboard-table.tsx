@@ -107,7 +107,6 @@ const RankingScoreboardTable: React.FC<ScoreboardTableProps> = (props) => {
   });
   return (
     <>
-      <div className="font-bold"></div>
       <Table
         columns={tableColumns}
         dataSource={dataSource}
