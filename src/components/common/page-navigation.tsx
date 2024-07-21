@@ -11,7 +11,7 @@ const Navigation: FC<{ routes?: NavItemType[] }> = ({ routes = [] }) => {
   return (
     <>
       <div className="flex-1" />
-      <nav className="absolute left-1/2 -translate-x-1/2">
+      <nav className="absolute left-1/2 ml-14 -translate-x-1/2">
         <ul className="flex gap-x-5">
           {routes?.map((r) => (
             <li className="relative" key={r.href.toString()}>
