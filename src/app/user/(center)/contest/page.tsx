@@ -15,7 +15,7 @@ const tabItems: TabsProps["items"] = Object.keys(CATEGORY_MAP).map((item) => {
   };
 });
 
-export const tableColumns: TableProps["columns"] = [
+const tableColumns: TableProps["columns"] = [
   {
     title: "状态",
     width: 100,
