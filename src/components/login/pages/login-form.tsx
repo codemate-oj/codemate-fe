@@ -47,7 +47,17 @@ const LoginForm = () => {
             {errorText}
           </p>
         )}
-        <Button type="button" variant="link" className="mb-4 mt-2 p-0 pl-1">
+        <Button
+          type="button"
+          variant="link"
+          className="mb-4 mt-2 p-0 pl-1"
+          onClick={() => {
+            store.dialogJumpTo("sms-code", {
+              title: "短信验证码登录",
+              hideLogo: true,
+            });
+          }}
+        >
           短信验证码登录
         </Button>
         <VerifyButton
@@ -63,11 +73,12 @@ const LoginForm = () => {
       <div className="mt-4 flex w-full justify-between">
         <Button
           onClick={() => {
-            // store.dialogJumpTo("choose-verify", {
-            //   title: "找回密码",
-            //   description: "请选择找回密码的方式",
-            //   hideLogo: true,
-            // });
+            store.dialogJumpTo("choose-verify", {
+              title: "找回密码",
+              description: "请选择找回密码的方式",
+              hideLogo: true,
+              category: "reset",
+            });
           }}
           type="button"
           variant="link"

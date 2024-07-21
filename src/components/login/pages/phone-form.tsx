@@ -28,7 +28,7 @@ interface IProps {
 const PhoneForm: React.FC<IProps> = ({
   title = "请输入手机号码",
   description,
-  buttonText = "提交",
+  buttonText,
   onSubmit,
   loading,
   error: errorText,

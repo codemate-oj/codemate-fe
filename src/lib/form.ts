@@ -20,6 +20,12 @@ export const createPasswordSchema = z
   })
   .regex(/^(?=.*[a-zA-Z])(?=.*\d).{8,16}$/, "密码长度8-16位数，必须包含数字字母");
 
+export const smsCode = z
+  .string({
+    required_error: "请输入短信验证码",
+  })
+  .regex(/^\d{6}$/, "验证码长度为6位数字");
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function objectToFormData(obj: Record<string, any>) {
   const formData = new FormData();

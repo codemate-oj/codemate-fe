@@ -1,6 +1,8 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import dayjs from "dayjs";
+import { useModal } from "@ebay/nice-modal-react";
+import { DialogProps } from "@radix-ui/react-dialog";
 
 /**
  * A function that combines and merges class names.
@@ -115,7 +117,7 @@ export function formatTime(time: string) {
 }
 
 //获取比赛状态
-export const getDetailState = (props: {
+export const getContestState = (props: {
   beginAt: string;
   endAt: string;
   checkinBeginAt?: string;
@@ -131,3 +133,38 @@ export const getDetailState = (props: {
   else if (nowDate < endDate) return "进行中";
   else return "已结束";
 };
+
+export function getScoreColor(score: number | string): string {
+  if (score === null || score === undefined || !Number.isFinite(+score)) return "#000000";
+  return [
+    "#ff4f4f",
+    "#ff694f",
+    "#f8603a",
+    "#fc8354",
+    "#fa9231",
+    "#f7bb3b",
+    "#ecdb44",
+    "#e2ec52",
+    "#b0d628",
+    "#93b127",
+    "#25ad40",
+  ][Math.floor((Number(score) || 0) / 10)];
+}
+
+export async function getTimeFromObjectId(ObjectId: string) {
+  const OID = (await import("bson")).ObjectId;
+  return OID.createFromHexString(ObjectId).getTimestamp();
+}
+
+export function niceRadixModal(modal: ReturnType<typeof useModal>): DialogProps {
+  return {
+    open: modal.visible,
+    onOpenChange: (open) => {
+      if (!open) {
+        modal.remove();
+      } else {
+        modal.show();
+      }
+    },
+  };
+}

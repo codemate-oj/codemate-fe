@@ -22,10 +22,15 @@ const nextConfig = {
         port: "",
         pathname: "/file/**",
       },
-
       {
         protocol: "https",
         hostname: "www.aioj.net",
+        port: "",
+        pathname: "/file/**",
+      },
+      {
+        protocol: "https",
+        hostname: "api.aioj.net",
         port: "",
         pathname: "/file/**",
       },

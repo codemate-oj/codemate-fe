@@ -13,7 +13,7 @@ const LoginRegisterModal: React.FC<React.PropsWithChildren> = ({ children }) => 
     <div>
       {!shouldHideLogo && (
         <DialogHeader className="mb-10 flex flex-col items-center">
-          <Image src="/img/logo.png" alt="website-logo" width={120} height={120} />
+          <Image src="/img/new-logo.png" alt="website-logo" width={120} height={120} />
           <DialogTitle>AI推题，高效有趣玩OJ</DialogTitle>
         </DialogHeader>
       )}

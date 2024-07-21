@@ -1,3 +1,6 @@
+export const BRANCH_SLOGAN = "编程练习、AI推题就在AIOJ";
+export const BRANCH_NAME = "AIOJ";
+
 export const PROGRAMMING_LANGS: Record<string, string> = {
   "cc.cc14o2": "C++",
   "py.py3": "Python",

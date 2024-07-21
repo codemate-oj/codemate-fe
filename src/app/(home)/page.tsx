@@ -1,16 +1,17 @@
 import { TreeItem } from "@/components/common/filter-tabs-tree";
 import { type FixedSelectOptions } from "@/components/common/fixed-select";
 import { request } from "@/lib/request";
-import { PROGRAMMING_LANGS } from "@/constants/misc";
-import BulletinBoard from "@/components/common/bulletin-board/index";
+import { BRANCH_SLOGAN, PROGRAMMING_LANGS } from "@/constants/misc";
 import AsideLangSelector from "@/components/home/aside-lang-selector";
 import TreeSelector from "@/components/home/tree-selector";
 import ProblemListTable from "@/components/home/problem-list-table";
 import { type Metadata } from "next";
 import PageTitle from "@/components/common/page-title";
+import SideLayout from "@/components/common/side-layout";
+import BulletinSidebar from "@/components/common/bulletin-sidebar";
 
 export const metadata: Metadata = {
-  title: "题库 - CODEMATE",
+  title: BRANCH_SLOGAN,
 };
 
 interface PlistItemBase {
@@ -53,46 +54,16 @@ function getFilterInfo() {
   });
 }
 
-function getBulletinCardData() {
-  return request.get("/bulletin", {
-    params: {
-      page: 1,
-      limit: 3,
-    },
-    transformData({ data }) {
-      return [
-        {
-          key: "bulletin",
-          label: "重要公告",
-          children: data?.bdocs?.map?.((item) => ({
-            id: item.docId,
-            title: item.title,
-            postTime: item.postAt,
-            href: `/bulletin/${item.docId}`,
-          })),
-        },
-      ];
-    },
-  });
-}
-
 const HomePage = async () => {
   const { filterTree, sideTabs } = await getFilterInfo();
-  const bulletinCardData = await getBulletinCardData();
-
   return (
     <>
       <PageTitle>修炼场</PageTitle>
       <AsideLangSelector options={sideTabs} />
-      <div className="flex w-full">
-        <div className="md:w-[90vw] lg:w-[60vw] 4xl:max-w-7xl">
-          <TreeSelector treeData={filterTree} />
-          <ProblemListTable />
-        </div>
-        <div className="ml-[14px] w-[0px] overflow-hidden lg:w-[400px]">
-          <BulletinBoard data={bulletinCardData}></BulletinBoard>
-        </div>
-      </div>
+      <SideLayout sideComponent={<BulletinSidebar />}>
+        <TreeSelector treeData={filterTree} />
+        <ProblemListTable />
+      </SideLayout>
     </>
   );
 };

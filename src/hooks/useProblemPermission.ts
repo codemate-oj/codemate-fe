@@ -2,11 +2,12 @@ import storeLogin from "@/store/login";
 import { useRequest } from "ahooks";
 import { request } from "@/lib/request";
 import storeModal from "@/store/modal";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export const useProblemPermission = () => {
   const userContext = storeLogin.user.get();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const { run: runCheckProblemPermission } = useRequest(
     async ({ pid, assign, title }) => {
@@ -48,7 +49,8 @@ export const useProblemPermission = () => {
       manual: true,
       onSuccess: (data) => {
         if (data?.hasPermission && pathname === "/") {
-          window.open(`/p/${data?.pid}`);
+          const tid = searchParams.get("tid");
+          window.open(`/p/${data?.pid}?${tid ? `tid=${tid}` : ""}`);
         }
       },
     }
