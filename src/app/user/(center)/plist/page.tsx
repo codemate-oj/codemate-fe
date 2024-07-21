@@ -1,10 +1,10 @@
-import UnderConstruction from "@/components/error/under-construction";
 import React from "react";
+import { Table } from "antd";
 
 const UserProblemListPage = () => {
   return (
     <div>
-      <UnderConstruction />
+      <Table />
     </div>
   );
 };
