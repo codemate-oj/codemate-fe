@@ -14,10 +14,12 @@ const tableColumns: TableProps["columns"] = [
   {
     title: "编号",
     dataIndex: "pid",
+    width: 100,
   },
   {
     title: "题目名称",
     dataIndex: "name",
+    width: 150,
   },
   {
     title: "算法标签",
@@ -35,10 +37,12 @@ const tableColumns: TableProps["columns"] = [
   {
     title: "难度",
     dataIndex: "difficulty",
+    width: 60,
   },
   {
     title: "评测结果",
     dataIndex: "result",
+    width: 100,
     render(value, record) {
       return (
         <span className={cn(value === STATUS_ACCEPTED ? "text-[#04c407]" : "text-[#FF7D37]", "font-bold")}>
@@ -50,6 +54,7 @@ const tableColumns: TableProps["columns"] = [
   {
     title: "平均AC",
     dataIndex: "acPercentage",
+    width: 100,
     render(value) {
       return `${(value * 100).toFixed()}%`;
     },
@@ -57,6 +62,7 @@ const tableColumns: TableProps["columns"] = [
   {
     title: "答题时间",
     dataIndex: "submitAt",
+    width: 100,
     render: (value) => getTimeDiffFromNow(value),
   },
 ];
@@ -72,9 +78,10 @@ export const getRecords = (lang?: string, page = 1, full = false, uid = loginSto
     },
     transformData: ({ data }) => {
       return data.rdocs.map((record) => {
-        const question = data.pdict[record.pid];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const question = data.pdict[record.pid] as Record<string, any>;
         return {
-          pid: record.pid,
+          pid: question?.pid ?? record.pid,
           name: question.title,
           tags: question.tag,
           result: record.status,
