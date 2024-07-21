@@ -8,7 +8,7 @@ import { Table, TableProps, Tabs, TabsProps } from "antd";
 import dayjs from "dayjs";
 import React from "react";
 
-export const tabItems: TabsProps["items"] = Object.keys(CATEGORY_MAP).map((item) => {
+const tabItems: TabsProps["items"] = Object.keys(CATEGORY_MAP).map((item) => {
   return {
     label: CATEGORY_MAP[item as keyof typeof CATEGORY_MAP],
     key: item,
