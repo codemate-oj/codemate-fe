@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 const Layout: React.FC<PropsWithChildren> = ({ children }) => {
-  return <div>{children}</div>;
+  return <div className="max-w-[950px]">{children}</div>;
 };
 
 export default Layout;
