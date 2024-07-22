@@ -1,6 +1,20 @@
 import React from "react";
 import { Table, Divider } from "antd";
 
+// export interface ProblemList extends Document {
+//   docId: ObjectId;
+//   docType: typeof TYPE_PROBLEM_LIST;
+//   title: string;
+//   content: string;
+//   // 题单功能
+//   pids: number[];
+//   assign?: string[];
+//   visibility: "private" | "public" | "system"; // 控制题单可见性：该doc用于个人题单和系统题单
+//   // 树状题单功能
+//   parent: ObjectId | null;
+//   children?: ObjectId[];
+// }
+
 // mock数据
 const dataSource = [
   {
