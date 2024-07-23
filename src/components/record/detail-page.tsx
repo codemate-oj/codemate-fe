@@ -1,11 +1,13 @@
 "use client";
 import type { components } from "@/types/schema";
 import { Card } from "antd";
-import React from "react";
+import React, { Suspense } from "react";
 import JudgeStatus from "./judge-status";
 import { parseTemplate } from "@/lib/utils";
 import TestCases from "./test-cases";
 import useRealtimeRecordDetail from "@/hooks/useRecordDetailConn";
+import { DownloadOutlined } from "@ant-design/icons";
+import { Button } from "antd";
 
 export type RecordDoc = components["schemas"]["Record"];
 
@@ -14,8 +16,22 @@ interface IProps {
   defaultValue: RecordDoc;
 }
 
+const MarkdownRenderer = React.lazy(() => import("@/components/common/markdown-renderer"));
+
 const DetailPage: React.FC<IProps> = ({ defaultValue, rid }) => {
   const rdoc = useRealtimeRecordDetail(rid, defaultValue);
+
+  function parseCode(code: string, lang: string): string {
+    return "```" + (lang === "cc.cc14o2" ? "cpp" : "python") + code;
+  }
+
+  const downloadCode = async (code: string) => {
+    const blob: Blob = new Blob([code], { type: "text/plain" });
+    const link: HTMLAnchorElement = document.getElementById("downloadLink") as HTMLAnchorElement;
+    link.href = URL.createObjectURL(blob);
+    link.download = "download.cc";
+    link.click();
+  };
 
   if (!rdoc) {
     return null;
@@ -34,6 +50,29 @@ const DetailPage: React.FC<IProps> = ({ defaultValue, rid }) => {
         </div>
         {rdoc.testCases.length > 0 && <TestCases rid={rdoc._id} testCases={rdoc.testCases} />}
       </Card>
+      {defaultValue.code && (
+        <div className="mt-4 pl-4">
+          <h2 className="text-[#ff7d37]">【代码】</h2>
+          <div className="mb-5 mt-4">
+            <Button
+              type="primary"
+              shape="round"
+              icon={<DownloadOutlined />}
+              onClick={() => {
+                downloadCode(defaultValue.code);
+              }}
+            >
+              代码下载
+            </Button>
+            <a id="downloadLink" href="#" download="example.cc" className="visible"></a>
+          </div>
+          <div>
+            <Suspense fallback={<div>Loading...</div>}>
+              <MarkdownRenderer markdown={parseCode(defaultValue.code, defaultValue.lang)} className="prose-pdetail" />
+            </Suspense>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
