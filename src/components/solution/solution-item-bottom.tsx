@@ -1,8 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { request } from "@/lib/request";
 
-interface SolutionItemBottomProps {}
+interface SolutionItemBottomProps {
+  pid: string;
+  tid?: string;
+  psid: string;
+  voteNumber?: number;
+}
 type iconName = "like" | "dislike" | "flower" | "comment";
 type IconProps = { color: string; onClick: (a: iconName) => void };
 const LikeIcon = ({ color, onClick }: IconProps) => (
@@ -24,26 +30,26 @@ const LikeIcon = ({ color, onClick }: IconProps) => (
     </g>
   </svg>
 );
-const CommentIcon = ({ color, onClick }: IconProps) => (
-  <svg
-    onClick={() => onClick("comment")}
-    className="mr-2"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    version="1.1"
-    width="15.999991416931152"
-    height="16"
-    viewBox="0 0 15.999991416931152 16"
-  >
-    <g>
-      <path
-        d="M0.00000104904,5.32801C-0.00177231,2.38253,2.14908,-0.00490972,4.8,0.0000084771L11.2,0.0000084771C13.8504,0.0000084771,16,2.39556,16,5.32801L16,16L4.8,16C2.1496,16,0.00000104904,13.6044,0.00000104904,10.672L0.00000104904,5.32801ZM9.59999,7.11112L9.59999,8.88889L11.2,8.88889L11.2,7.11112L9.59999,7.11112ZM4.8,7.11112L4.8,8.88889L6.4,8.88889L6.4,7.11112L4.8,7.11112Z"
-        fill={color}
-        fillOpacity="1"
-      />
-    </g>
-  </svg>
-);
+// const CommentIcon = ({ color, onClick }: IconProps) => (
+//   <svg
+//     onClick={() => onClick("comment")}
+//     className="mr-2"
+//     xmlns="http://www.w3.org/2000/svg"
+//     fill="none"
+//     version="1.1"
+//     width="15.999991416931152"
+//     height="16"
+//     viewBox="0 0 15.999991416931152 16"
+//   >
+//     <g>
+//       <path
+//         d="M0.00000104904,5.32801C-0.00177231,2.38253,2.14908,-0.00490972,4.8,0.0000084771L11.2,0.0000084771C13.8504,0.0000084771,16,2.39556,16,5.32801L16,16L4.8,16C2.1496,16,0.00000104904,13.6044,0.00000104904,10.672L0.00000104904,5.32801ZM9.59999,7.11112L9.59999,8.88889L11.2,8.88889L11.2,7.11112L9.59999,7.11112ZM4.8,7.11112L4.8,8.88889L6.4,8.88889L6.4,7.11112L4.8,7.11112Z"
+//         fill={color}
+//         fillOpacity="1"
+//       />
+//     </g>
+//   </svg>
+// );
 const DislikeIcon = ({ color, onClick }: IconProps) => (
   <svg
     onClick={() => onClick("dislike")}
@@ -63,6 +69,7 @@ const DislikeIcon = ({ color, onClick }: IconProps) => (
     </g>
   </svg>
 );
+
 const FlowerIcon = ({ color, onClick }: IconProps) => (
   <svg
     onClick={() => onClick("flower")}
@@ -82,8 +89,28 @@ const FlowerIcon = ({ color, onClick }: IconProps) => (
     </g>
   </svg>
 );
+
+const likePs = (pid: string, psid: string, operation: string) => {
+  return request.post(
+    `/p/${pid}/solution` as "/p/{pid}/solution",
+    {
+      psid: psid,
+      operation: operation,
+    },
+    {
+      transformData: (data) => {
+        return data.data;
+      },
+    }
+  );
+};
+
 const SolutionItemBottom: React.FC<SolutionItemBottomProps> = (props) => {
-  const {} = props;
+  const { pid, psid, voteNumber } = props;
+
+  const [voteLike, setVoteLike] = useState(Number(voteNumber) > 0 ? voteNumber : 0);
+
+  const [voteDislike, setvoteDislike] = useState(Number(voteNumber) < 0 ? Math.abs(Number(voteNumber)) : 0);
 
   const data: { name: iconName; Icon: (color: string) => React.ReactNode }[] = [
     {
@@ -92,8 +119,20 @@ const SolutionItemBottom: React.FC<SolutionItemBottomProps> = (props) => {
     },
     { name: "dislike", Icon: (color: string) => <DislikeIcon color={color} onClick={handleClick} /> },
     { name: "flower", Icon: (color: string) => <FlowerIcon color={color} onClick={handleClick} /> },
-    { name: "comment", Icon: (color: string) => <CommentIcon color={color} onClick={handleClick} /> },
+    // { name: "comment", Icon: (color: string) => <CommentIcon color={color} onClick={handleClick} /> },
   ];
+
+  const likeHandle = async (type: string) => {
+    try {
+      if (type === "like") {
+        await likePs(pid, psid, "upvote");
+        setVoteLike(voteLike! + 1);
+      } else {
+        await likePs(pid, psid, "downvote");
+        setvoteDislike(voteDislike! + 1);
+      }
+    } catch (error) {}
+  };
 
   const initialColors = {
     like: 0,
@@ -107,9 +146,18 @@ const SolutionItemBottom: React.FC<SolutionItemBottomProps> = (props) => {
 
   const handleClick = (icon: iconName) => {
     const newColor = colors[icon] == 0 ? 1 : 0;
+    switch (icon) {
+      case "like":
+        likeHandle("like");
+        break;
+      case "dislike":
+        likeHandle("dislike");
+        break;
+    }
 
     setColors((prev) => ({ ...prev, [icon]: newColor }));
   };
+
   return (
     <div className={"mt-8"}>
       <div className="flex justify-between">
@@ -118,7 +166,19 @@ const SolutionItemBottom: React.FC<SolutionItemBottomProps> = (props) => {
             return (
               <div className="flex items-center" key={item.name}>
                 {item.Icon(`${colors[item.name] ? "#FF7D37" : "#797979"}`)}
-                <span className={`ml-2 mr-7 font-yahei text-[#797979] ${value == 0 ? "font-bold" : ""}`}>12</span>
+                {item.name == "like" && (
+                  <span className={`ml-2 mr-7 font-yahei text-[#797979] ${value == 0 ? "font-bold" : ""}`}>
+                    {voteLike}
+                  </span>
+                )}
+                {item.name == "dislike" && (
+                  <span className={`ml-2 mr-7 font-yahei text-[#797979] ${value == 0 ? "font-bold" : ""}`}>
+                    {voteDislike}
+                  </span>
+                )}
+                {item.name == "flower" && (
+                  <span className={`ml-2 mr-7 font-yahei text-[#797979] ${value == 0 ? "font-bold" : ""}`}>6</span>
+                )}
               </div>
             );
           })}

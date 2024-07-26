@@ -2681,6 +2681,150 @@ export interface paths {
       };
     };
   };
+  "/p/{pid}/solution": {
+    /** 查看题目题解 */
+    get: {
+      parameters: {
+        path: {
+          /** @example 6660c5b2a19931b7d9bfd231 */
+          pid: string;
+        };
+        query: {
+          /**
+           * @description 分页，为空时不分页
+           * @example 1
+           */
+          page?: number;
+          /**
+           * @description 比赛id
+           */
+          tid?: number;
+        };
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              psdocs: components["schemas"]["ProblemSolution"][];
+              /** @description 当前页 */
+              page: number;
+              /** @description 总页数 */
+              pcount: number;
+              /** @description 题解总数 */
+              pscount?: number;
+              udict: {
+                [key: string]: components["schemas"]["User"];
+              };
+              pssdict: string;
+              /** @description 题目信息 */
+              pdoc: components["schemas"]["Problem"];
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+    /** 赞同题解 */
+    post: {
+      parameters: {
+        path: {
+          /** @example 6660c5b2a19931b7d9bfd231 */
+          pid: string;
+        };
+        query: {
+          /**
+           * @description 比赛id
+           */
+          tid?: number;
+        };
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /**
+             * @description 操作名，Hydro特有的post魔法
+             * @example upvote
+             * @constant
+             */
+            operation: string;
+            /**
+             * Format: uint32
+             * @description 题目ID
+             * @example 1
+             */
+            psid: string;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              vote: number;
+              user_vote: number;
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -3361,6 +3505,32 @@ export interface components {
       domains: string[];
       pinnedDomains: string[];
       _id: number;
+    };
+    ProblemSolution: {
+      _id: string;
+      docId: number;
+      content: string;
+      docType: number;
+      domainId: string;
+      owner: number;
+      maintainer: number[];
+      /**
+       * 所属题目pid
+       */
+      paren: number;
+      reply: components["schemas"]["SolutionReply"];
+      /**
+       * 投票数
+       */
+      vote: number;
+    };
+    SolutionReply: {
+      _id?: string;
+      docId?: string;
+      docType?: number;
+      domainId?: string;
+      owner?: number;
+      maintainer: number[];
     };
   };
   responses: never;
