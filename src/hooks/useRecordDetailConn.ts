@@ -8,9 +8,13 @@ export default function useRealtimeRecordDetail(rid = "", defaultValue?: RecordD
   const { latestMessage } = useHydroWebSocket(`/record-detail-conn`, { rid, domainId: "system" });
 
   useEffect(() => {
-    const data = JSON.parse(latestMessage?.data || "{}");
-    if ("rdoc" in data && data.rdoc) {
-      setRdoc(data.rdoc);
+    try {
+      const data = JSON.parse(latestMessage?.data || "{}");
+      if ("rdoc" in data && data.rdoc) {
+        setRdoc(data.rdoc);
+      }
+    } catch (e) {
+      console.info(e);
     }
   }, [latestMessage]);
 
