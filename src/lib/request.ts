@@ -122,7 +122,7 @@ export const request = {
         ...(config.headers ?? {}),
       },
       mode: "cors",
-      next: { revalidate: 60 }, // 设置静态请求缓存时间为60秒，可以过滤一些高频请求
+      // next: { revalidate: 60 }, // 设置静态请求缓存时间为60秒，可以过滤一些高频请求
     });
   },
   get: <P extends PathsHavingMethod<"get">, R = any>(
@@ -140,7 +140,7 @@ export const request = {
         ...(config.headers ?? {}),
       },
       mode: "cors",
-      next: { revalidate: 60 }, // 设置静态请求缓存时间为60秒，可以过滤一些高频请求
+      // next: { revalidate: 60 }, // 设置静态请求缓存时间为60秒，可以过滤一些高频请求
     });
   },
   postWithoutType: (url: string, data: any, config: Parameters<typeof alovaInstance.Post>[2] = {}) => {
