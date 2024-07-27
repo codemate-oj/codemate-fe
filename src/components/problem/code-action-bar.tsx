@@ -6,6 +6,7 @@ import { useCodeLangContext } from "@/providers/code-lang-provider";
 import ActionBar from "./action-bar";
 import { loginGuard } from "@/lib/login-guard";
 import emitter from "@/lib/event-emitter";
+import { useSearchParams } from "next/navigation";
 
 interface IProps {
   type: string;
@@ -14,16 +15,20 @@ interface IProps {
 const CodeActionBar: React.FC<IProps> = (props) => {
   const { type, pid } = props;
   const { lang } = useCodeLangContext();
+  const searchParams = useSearchParams();
 
   const handleSubmit = async () => {
     const code = localStorage.getItem(`code-${pid}`) || "";
     await loginGuard(async () => {
+      const isFromContest = searchParams.get("fromContest") === "true" && searchParams.get("tid");
+
       const rid = await request.post(
         `/p/${pid}/submit` as "/p/{pid}/submit",
         {
           lang: lang,
           pretest: false,
           code: code,
+          tid: isFromContest ? searchParams.get("tid") ?? "" : "",
         },
         { transformData: (data) => data.data.rid }
       );

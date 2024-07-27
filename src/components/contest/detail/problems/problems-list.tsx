@@ -5,6 +5,8 @@ import EvaluateRecord from "./evaluate-record";
 import { useDocumentVisibility, useRequest } from "ahooks";
 import { request } from "@/lib/request";
 import Loading from "@/app/(home)/loading";
+import loginStore from "@/store/login";
+import NotLogin from "@/components/error/not-login";
 interface PropsType {
   tid: string;
 }
@@ -18,11 +20,7 @@ const ProblemsList: React.FC<PropsType> = (props) => {
           return { data };
         },
       });
-      return {
-        pdict: data.pdict,
-        rdocs: data.rdocs,
-        psdict: data.psdict,
-      };
+      return data;
     },
     { manual: true }
   );
@@ -76,6 +74,10 @@ const ProblemsList: React.FC<PropsType> = (props) => {
         last_commit: item.judgeAt,
       };
     }) ?? [];
+
+  const user = loginStore.user.use();
+
+  if (!user) return <NotLogin />;
 
   return loading ? (
     <Loading />

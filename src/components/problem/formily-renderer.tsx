@@ -13,6 +13,7 @@ import { useRequest } from "ahooks";
 import useRealtimeRecordDetail from "@/hooks/useRecordDetailConn";
 import { STATUS_ENUM } from "@/constants/judge-status";
 import { loginGuard } from "@/lib/login-guard";
+import { useSearchParams } from "next/navigation";
 
 const PID = window.location.pathname.split("/")[2];
 const CACHE_KEY = `answers-${PID}`;
@@ -66,6 +67,7 @@ interface FormilySchemaProps {
 
 const FormilyRenderer: React.FC<FormilySchemaProps> = ({ schema, pid }) => {
   const [isJudging, setIsJudging] = React.useState(false);
+  const searchParams = useSearchParams();
 
   const { run: handleSubmit, data: rid } = useRequest(
     async () => {
@@ -85,11 +87,13 @@ const FormilyRenderer: React.FC<FormilySchemaProps> = ({ schema, pid }) => {
           choices = choices.map((choice: number) => String.fromCharCode(65 + choice));
           ans[key] = choices;
         }
+        const isFromContest = searchParams.get("fromContest") === "true" && searchParams.get("tid");
         rid = await request.post(
           `/p/${pid}/submit` as "/p/{pid}/submit",
           {
             lang: "_",
             code: jsYaml.dump(ans),
+            tid: isFromContest ? searchParams.get("tid") ?? "" : "",
           },
           { transformData: (data) => data.data.rid }
         );
