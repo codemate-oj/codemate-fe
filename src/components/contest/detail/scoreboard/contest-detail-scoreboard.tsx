@@ -60,16 +60,7 @@ const Scoreboard: React.FC<ScoreboardProps> = (props) => {
         <ScoreboardTable tableColumns={tableColumns} dataSource={tableData}></ScoreboardTable>
       </div>
       <div>
-<<<<<<< HEAD
-        <ContestDetailRight
-          tag={data?.tdoc.tag}
-          nickname={String(data?.udict[data?.tdoc.owner]?.nickname)}
-          state={state}
-          tid={tid}
-        />
-=======
         <ContestDetailRight tdoc={data?.tdoc} status={state} udoc={data?.udict[data?.tdoc?.owner]} />
->>>>>>> origin/main
       </div>
     </div>
   );
