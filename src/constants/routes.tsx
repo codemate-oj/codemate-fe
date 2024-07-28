@@ -16,11 +16,11 @@ export const userCenterRoutes: NavItemWithIcon[] = [
     icon: <Image src="/svg/popup-train.svg" alt="my-record" width={20} height={20} />,
   },
   // 暂时隐藏我的题单
-  // {
-  //   name: "我的题单",
-  //   href: "/user/plist",
-  //   icon: <Image src="/svg/popup-list.svg" alt="my-plist" width={17} height={20} />,
-  // },
+  {
+    name: "我的题单",
+    href: "/user/plist",
+    icon: <Image src="/svg/popup-list.svg" alt="my-plist" width={17} height={20} />,
+  },
   {
     name: "我的比赛",
     href: "/user/contest",

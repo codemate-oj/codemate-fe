@@ -26,13 +26,25 @@ const TableList = ({ children }: any) => {
         href: routerConfig?.href,
       },
     ]);
+    if (pathname === "/user/plist/detail") {
+      setBreadcrumbItems([
+        {
+          title: routerConfig?.name ?? "我的中心",
+          href: routerConfig?.href,
+        },
+        {
+          title: "题目详情",
+          href: "/user/plist/detail",
+        },
+      ]);
+    }
   }, []);
 
   return (
     <div className="flex-1">
       <h3 className="mb-5 flex items-center justify-between text-lg font-bold text-[#3D3D3D]">
         <Breadcrumb items={breadcrumbItems} />
-        {routerConfig?.href === "/user/plist" && (
+        {pathname === "/user/plist" && (
           <Button className="font-bold" onClick={() => setModalOpen(true)}>
             创建题单
           </Button>
