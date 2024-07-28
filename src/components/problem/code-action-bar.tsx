@@ -10,7 +10,7 @@ import { useSearchParams } from "next/navigation";
 
 interface IProps {
   type: string;
-  pid: string;
+  pid: string | number;
 }
 const CodeActionBar: React.FC<IProps> = (props) => {
   const { type, pid } = props;
