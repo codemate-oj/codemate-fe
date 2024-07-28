@@ -155,7 +155,7 @@ const ProblemListTable = () => {
                 borderBottom: "0.1rem dashed #F1F1F1",
               }}
             >
-              {record?.brief}
+              {record?.brief?.slice(0, 100)}...
             </div>
           ),
           expandedRowClassName: () => "!text-grey",

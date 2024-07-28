@@ -1,7 +1,7 @@
 import { getTimeDiffFromNow } from "@/lib/utils";
 import { Table, TableProps } from "antd";
 import Link from "next/link";
-import ProblemCommitState from "./problem-commit-state";
+import JudgeStatus from "@/components/record/judge-status";
 interface DataType {
   key: string;
   status: string | number;
@@ -30,8 +30,8 @@ const columns: TableProps<DataType>["columns"] = [
     width: 180,
     align: "center",
     render: (_, record) => {
-      if (record.status == "没有递交") return record.status;
-      return <ProblemCommitState state={Number(record.status)} score={record.score}></ProblemCommitState>;
+      if (typeof record.status === "string") return record.status;
+      return <JudgeStatus statusCode={record.status} score={record.score} />;
     },
   },
   {
@@ -41,9 +41,8 @@ const columns: TableProps<DataType>["columns"] = [
     width: 180,
     align: "center",
     render: (_, record) => {
-      if (record.last_commit == "-") return <span>-</span>;
-      const time = new Date(record.last_commit);
-      if (time) return <span>{getTimeDiffFromNow(time) || "-"}</span>;
+      if (!record.last_commit || record.last_commit == "-") return <span>-</span>;
+      return <span>{getTimeDiffFromNow(new Date(record.last_commit))}</span>;
     },
   },
   {
@@ -70,7 +69,7 @@ const CommitRecord: React.FC<CommitRecordProps> = (props) => {
   return (
     <div>
       <h1 className="px-4 pb-6 pt-4 text-2xl font-light text-[rgb(255,125,55)]">【提交记录】</h1>
-      {<Table dataSource={records} columns={columns} pagination={false}></Table>}
+      <Table dataSource={records} columns={columns} pagination={false}></Table>
     </div>
   );
 };

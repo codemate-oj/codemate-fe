@@ -48,7 +48,7 @@ jobs:
         run: pnpm build
 
       - name: Archive multiple folders and files
-        run: tar -czf build-artifacts.tar.gz .next next.config.mjs public package.json
+        run: tar -czf build-artifacts.tar.gz .next next.config.mjs public
 
       - name: Copy files via scp
         uses: appleboy/scp-action@v0.1.4
@@ -69,4 +69,5 @@ jobs:
             cd /home/ubuntu/nextjs-bootstrap
             tar -xzf build-artifacts.tar.gz
             rm build-artifacts.tar.gz
+            sudo su
             pm2 restart next-app || pm2 start "npm start" --name next-app
