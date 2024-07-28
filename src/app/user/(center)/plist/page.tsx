@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import { Table, Divider, TableProps } from "antd";
+import Link from "next/link";
 
 interface ProblemList {
   key: string;
@@ -56,9 +57,9 @@ const columns: TableProps<ProblemList>["columns"] = [
     title: "Action",
     key: "action",
     render: () => (
-      <a>
+      <Link href={"/user/plist/detail"}>
         <Image src="/svg/app-user-plist-editIcon.svg" alt="editQuiz" width={20} height={24} />
-      </a>
+      </Link>
     ),
   },
 ];

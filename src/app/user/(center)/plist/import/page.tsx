@@ -210,6 +210,8 @@ const UserProblemListPage: React.FC = () => {
     <div>
       <Divider />
       <ProblemListTable></ProblemListTable>;
+      <Divider />
+      <ProblemListTable></ProblemListTable>;
     </div>
   );
 };

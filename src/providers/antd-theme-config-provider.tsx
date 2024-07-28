@@ -41,6 +41,9 @@ export const antdCustomTheme: AntdThemeProviderProps = {
     Tag: {
       defaultBg: "red",
     },
+    Breadcrumb: {
+      lastItemColor: "#FF7D37",
+    },
   },
 };
 
