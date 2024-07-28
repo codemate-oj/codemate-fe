@@ -13,35 +13,26 @@ const TableList = ({ children }: any) => {
   const [breadcrumbItems, setBreadcrumbItems] = useState([
     {
       title: "我的中心",
+      href: "any",
     },
   ]);
 
+  const routerConfig = userCenterRoutes.find((r) => pathname.startsWith(r.href));
+
   useEffect((): void => {
-    switch (userCenterRoutes.find((r) => pathname.startsWith(r.href))?.name) {
-      case "我的题单":
-        setBreadcrumbItems([
-          {
-            title: "我的题单",
-          },
-        ]);
-        break;
-      case "其他页面":
-        break;
-      default:
-        const home = userCenterRoutes.find((r) => pathname.startsWith(r.href))?.name ?? "我的中心";
-        setBreadcrumbItems([
-          {
-            title: home,
-          },
-        ]);
-    }
-  }, [pathname]);
+    setBreadcrumbItems([
+      {
+        title: routerConfig?.name ?? "我的中心",
+        href: routerConfig?.href,
+      },
+    ]);
+  }, []);
 
   return (
     <div className="flex-1">
       <h3 className="mb-5 flex items-center justify-between text-lg font-bold text-[#3D3D3D]">
         <Breadcrumb items={breadcrumbItems} />
-        {userCenterRoutes.find((r) => pathname.startsWith(r.href))?.name === "我的题单" && (
+        {routerConfig?.href === "/user/plist" && (
           <Button className="font-bold" onClick={() => setModalOpen(true)}>
             创建题单
           </Button>
@@ -55,7 +46,6 @@ const TableList = ({ children }: any) => {
         }}
         onCreate={function (): void {
           setModalOpen(false);
-          throw new Error("Function not implemented.");
         }}
       ></CreateQuizModel>
     </div>

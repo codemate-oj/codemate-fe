@@ -1,5 +1,6 @@
 // import { useState } from "react";
 import { Modal, Form, Input, Button } from "antd";
+import { useRouter } from "next/navigation";
 import { FC } from "react";
 
 interface CreateQuizModelProps {
@@ -10,6 +11,7 @@ interface CreateQuizModelProps {
 
 /** @desc 创建题单modal */
 const CreateQuizModel: FC<CreateQuizModelProps> = ({ ModalOpen, onCancel, onCreate }) => {
+  const router = useRouter();
   const [form] = Form.useForm();
 
   const handleOk = () => {};
@@ -22,6 +24,7 @@ const CreateQuizModel: FC<CreateQuizModelProps> = ({ ModalOpen, onCancel, onCrea
     form.validateFields().then((values) => {
       onCreate(values);
       form.resetFields();
+      router.push("/user/plist/detail");
     });
   };
 
