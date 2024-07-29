@@ -1,8 +1,12 @@
+/* eslint-disable no-console */
 "use client";
 import React from "react";
 import Image from "next/image";
 import { Table, Divider, TableProps } from "antd";
 import Link from "next/link";
+// import { useRequest } from "ahooks";
+// import { useUrlParamState } from "@/hooks/useUrlParamState";
+// import { request } from "@/lib/request";
 
 interface ProblemList {
   key: string;
@@ -65,6 +69,28 @@ const columns: TableProps<ProblemList>["columns"] = [
 ];
 
 const UserProblemListPage: React.FC = () => {
+  // 在查询参数上存state
+  // const [page, setPage] = useUrlParamState("page", "1");
+
+  // const { data: problemListData, loading } = useRequest(
+  //   async () => {
+  //     const { data } = await request.get("/user-plist", {
+  //       // params: {
+  //       //   page: Number(page),
+  //       //   all: false,
+  //       // },
+  //       transformData: (data: unknown) => {
+  //         return data;
+  //       },
+  //     });
+  //     return data;
+  //   },
+  //   {
+  //     refreshDeps: [URLSearchParams, page],
+  //   }
+  // );
+  // console.log(problemListData);
+
   return (
     <div>
       <Divider />
