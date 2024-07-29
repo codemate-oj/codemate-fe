@@ -5,6 +5,8 @@ import { Button } from "../ui/button";
 import SolutionItemBottom from "@/components/solution/solution-item-bottom";
 import { components } from "@/types/schema";
 import { getTimeDiffFromNow } from "@/lib/utils";
+import Loading from "@/components/ui/loading";
+import dynamic from "next/dynamic";
 
 interface Solution {
   _id: string;
@@ -25,7 +27,10 @@ interface SolutionTopProps {
   udoc: components["schemas"]["User"];
 }
 
-const MarkdownRenderer = React.lazy(() => import("@/components/common/markdown-renderer"));
+const MarkdownRenderer = dynamic(() => import("@/components/common/markdown-renderer"), {
+  ssr: false,
+  loading: () => <Loading></Loading>,
+});
 
 const SolutionItem: React.FC<SolutionTopProps> = ({ item, udoc, pid }) => {
   const time = new Date(udoc.regat!);
@@ -57,26 +62,9 @@ const SolutionItem: React.FC<SolutionTopProps> = ({ item, udoc, pid }) => {
           </span>
         ))}
       </div>
-      {/* <div className="mb-5 flex flex-col">
-        <span>本章考察知识点</span>
-        <span className="font-yahei text-[#797979]">本章考察知识点</span>
-      </div>{" "}
-      <div>
-        <span className="mb-4 inline-block">选题辨识度分析</span>
-        <div className="flex flex-col bg-primary/10 py-7 pl-10 pr-5 text-primary">
-          <span>【易错选项】</span>
-          <span className="mt-5">【易错选项分析】 </span>
-          <span className="mt-5">【其他选项分析】</span>
 
-            
-        </div>
-      </div>
-      <div className="mt-2 flex flex-col">
-        <span>特别提醒 </span>
-        <span className="text-red-600">特别提醒</span>
-      </div> */}
       <div className="flex flex-col bg-primary/10 py-7 pl-10 pr-5 text-primary">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loading />}>
           <MarkdownRenderer markdown={item.content} className="prose-pdetail" />
         </Suspense>
       </div>
