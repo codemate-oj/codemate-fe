@@ -120,7 +120,7 @@ jobs:
           password: ${{ secrets.PROD_SERVER_PASSWORD }}
           script: |
             sudo su
-            mv /home/ubuntu/nextjs-bootstrap/build-artifacts.tar.gz /root/nextjs-bootstrap
+            mv /home/ubuntu/nextjs-bootstrap/build/build-artifacts.tar.gz /root/nextjs-bootstrap
             cd /root/nextjs-bootstrap
             tar -xzf build-artifacts.tar.gz
             rm build-artifacts.tar.gz
