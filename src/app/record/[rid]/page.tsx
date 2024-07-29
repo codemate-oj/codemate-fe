@@ -4,6 +4,7 @@ import { BRANCH_NAME } from "@/constants/misc";
 import { request } from "@/lib/request";
 import { getTimeDiffFromNow, getTimeFromObjectId } from "@/lib/utils";
 import type { Metadata } from "next";
+import { forwardAuthHeader } from "@/lib/forward-auth";
 
 export const metadata: Metadata = {
   title: `评测结果 - ${BRANCH_NAME}`,
@@ -20,6 +21,7 @@ const getRecordDetail = async (rid: string) => {
 
   return request.get(`/record/${rid}` as "/record/{rid}", {
     transformData: (data) => data.data,
+    ...forwardAuthHeader(),
   });
 };
 
