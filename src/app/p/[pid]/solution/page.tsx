@@ -39,6 +39,8 @@ function determineQuestionType(pdoc: Awaited<ReturnType<typeof getProblemDetail>
 }
 
 const SolutionPage = async ({ params }: Props) => {
+  if (!params.pid) throw new Error("No pid provided");
+
   const { data: pDetailData } = await getProblemDetail(params.pid!);
   const pType = determineQuestionType(pDetailData?.pdoc);
 

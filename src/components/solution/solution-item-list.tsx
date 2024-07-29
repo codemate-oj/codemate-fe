@@ -6,6 +6,8 @@ import Skeleton from "@/components/ui/skeleton";
 import { Pagination } from "antd";
 import LinkBtn from "../common/link-btn";
 import SolutionItem from "./solution-item";
+import loginStore from "@/store/login";
+import NotLogin from "../error/not-login";
 
 interface Props {
   pid: string;
@@ -13,6 +15,7 @@ interface Props {
 
 const SolutionItemList: React.FC<Props> = ({ pid }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const user = loginStore.user.use();
 
   const { data: pSolution, loading } = useRequest(
     async () => {
@@ -39,6 +42,8 @@ const SolutionItemList: React.FC<Props> = ({ pid }) => {
       refreshDeps: [currentPage],
     }
   );
+
+  if (!user) return <NotLogin />;
 
   return (
     <div>

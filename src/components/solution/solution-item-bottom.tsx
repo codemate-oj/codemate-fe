@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { request } from "@/lib/request";
 import { useLockFn } from "ahooks";
 import Image from "next/image";
+import Link from "next/link";
 
 interface SolutionItemBottomProps {
   pid: string;
@@ -15,6 +16,7 @@ type iconName = "like" | "dislike" | "flower" | "comment";
 type IconProps = { isActive: boolean; onClick: (a: iconName) => void };
 const LikeIcon = ({ isActive, onClick }: IconProps) => (
   <Image
+    className="hover:cursor-pointer"
     onClick={() => onClick("like")}
     src={isActive ? "/svg/solution-like-active.svg" : "/svg/solution-like.svg"}
     alt="like"
@@ -25,6 +27,7 @@ const LikeIcon = ({ isActive, onClick }: IconProps) => (
 
 const DislikeIcon = ({ isActive, onClick }: IconProps) => (
   <Image
+    className="hover:cursor-pointer"
     onClick={() => onClick("dislike")}
     src={isActive ? "/svg/solution-dislike-active.svg" : "/svg/solution-dislike.svg"}
     alt="dislike"
@@ -122,13 +125,17 @@ const SolutionItemBottom: React.FC<SolutionItemBottomProps> = (props) => {
           })}
         </div>
         <div>
-          <Button className="mr-2">再次作答</Button>
-          <Button
-            variant={"outline"}
-            className="mr-2 border-primary text-primary hover:bg-accent/20 hover:text-primary"
-          >
-            换题挑战
-          </Button>
+          <Link href={`/p/${pid}`}>
+            <Button className="mr-2">再次作答</Button>
+          </Link>
+          <Link href="/">
+            <Button
+              variant={"outline"}
+              className="mr-2 border-primary text-primary hover:bg-accent/20 hover:text-primary"
+            >
+              换题挑战
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
