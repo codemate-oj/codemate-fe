@@ -5,7 +5,7 @@ import { AVAILABLE_LANG_MAP, useCodeLangContext, LangType } from "@/providers/co
 import { Textarea } from "../ui/textarea";
 
 interface CodeInputProps {
-  pid?: string;
+  pid?: string | number;
   langs: LangType[];
 }
 

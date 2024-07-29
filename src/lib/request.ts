@@ -11,7 +11,7 @@ import { isBrowser } from "./utils";
 
 const IS_DEV = process.env.NODE_ENV === "development";
 
-const BASE_URL = isBrowser() ? "/api" : process.env.API_URL ?? "https://beta.aioj.net/api/";
+const BASE_URL = isBrowser() ? "/api" : process.env.API_URL ?? "https://api.aioj.net/";
 const APIFOX_TOKEN = process.env.NEXT_PUBLIC_APIFOX_TOKEN; // 用于云端mock鉴权
 // const DISABLE_CACHE = IS_DEV || process.env.DISABLE_CACHE === "true"; // 用于停用请求库内建的缓存，对next缓存无效
 const LOCAL_MOCK = IS_DEV || process.env.LOCAL_MOCK === "true"; // 是否使用alova内置的本地mock服务（DEV环境下默认启用）
@@ -122,7 +122,7 @@ export const request = {
         ...(config.headers ?? {}),
       },
       mode: "cors",
-      next: { revalidate: 60 }, // 设置静态请求缓存时间为60秒，可以过滤一些高频请求
+      // next: { revalidate: 60 }, // 设置静态请求缓存时间为60秒，可以过滤一些高频请求
     });
   },
   get: <P extends PathsHavingMethod<"get">, R = any>(
@@ -140,7 +140,7 @@ export const request = {
         ...(config.headers ?? {}),
       },
       mode: "cors",
-      next: { revalidate: 60 }, // 设置静态请求缓存时间为60秒，可以过滤一些高频请求
+      // next: { revalidate: 60 }, // 设置静态请求缓存时间为60秒，可以过滤一些高频请求
     });
   },
   postWithoutType: (url: string, data: any, config: Parameters<typeof alovaInstance.Post>[2] = {}) => {
