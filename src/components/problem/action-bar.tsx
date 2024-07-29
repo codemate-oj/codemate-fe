@@ -7,26 +7,66 @@ import { HydroError } from "@/lib/error";
 import { toast } from "sonner";
 
 interface IProps {
-  pid: string;
+  pid: string | number;
 }
 
 const ActionBar: React.FC<IProps> = ({ pid }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tid = searchParams.get("tid");
+  const isFromContest = Boolean(searchParams.get("fromContest")) && Boolean(tid);
 
   const handleJump = async (operation: "prev" | "next") => {
     try {
-      const jumpTo = await request.post(
-        `/p-list/${tid}` as "/p-list/{tid}",
-        {
-          operation: operation as "prev",
-          curPid: pid,
-        },
-        {
-          transformData: (data) => data.data.pid,
+      let jumpTo: number;
+      if (isFromContest) {
+        const { pids: problemContext, cur } = await request.get(`/p/${pid}` as "/p/{pid}", {
+          params: {
+            tid: tid ?? "",
+          },
+          transformData: (data) => {
+            return { pids: data.data.tdoc?.pids, cur: data.data.pdoc.docId };
+          },
+        });
+        if (!problemContext) {
+          toast.error(`没有找到比赛${tid}`);
+          return;
         }
-      );
+        const index = problemContext.indexOf(cur);
+        if (index === -1) {
+          toast.error("比赛中没有找到该题目");
+          return;
+        }
+        switch (operation) {
+          case "prev": {
+            if (index === 0) {
+              toast.info("已经是第一题了");
+              return;
+            }
+            jumpTo = problemContext[index - 1];
+            break;
+          }
+          case "next": {
+            if (index === problemContext.length - 1) {
+              toast.info("已经是最后一题了");
+              return;
+            }
+            jumpTo = problemContext[index + 1];
+            break;
+          }
+        }
+      } else {
+        jumpTo = await request.post(
+          `/p-list/${tid}` as "/p-list/{tid}",
+          {
+            operation: operation as "prev",
+            curPid: String(pid),
+          },
+          {
+            transformData: (data) => data.data.pid,
+          }
+        );
+      }
       router.push(`/p/${jumpTo}${window.location.search}`);
     } catch (e) {
       if (e instanceof HydroError) {
