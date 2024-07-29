@@ -6,7 +6,6 @@ import Link from "next/link";
 
 interface BulletinItemProps {
   title: string;
-  maintainer: number[];
   tag?: string[];
   _id: string;
   content: string;
