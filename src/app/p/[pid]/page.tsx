@@ -19,6 +19,10 @@ type Props = {
   params: {
     pid: string;
   };
+  searchParams: {
+    tid?: string;
+    fromContest?: string;
+  };
 };
 
 type ProblemType = "objective" | "scratch" | "default";
@@ -29,8 +33,11 @@ const FormilyRenderer = dynamic(() => import("@/components/problem/formily-rende
   loading: () => <Loading></Loading>,
 });
 
-async function getProblemDetail(pid: string) {
+async function getProblemDetail(pid: string, tid?: string) {
   return request.get(`/p/${pid}` as "/p/{pid}", {
+    params: {
+      tid,
+    },
     transformData: (data) => {
       return data;
     },
@@ -86,10 +93,12 @@ function extractMarkdownContent(pdoc: Awaited<ReturnType<typeof getProblemDetail
   return _content;
 }
 
-const Page = async ({ params }: Props) => {
+const Page = async ({ params, searchParams }: Props) => {
   if (!params.pid) throw new Error("No pid provided");
 
-  const { data: pDetailData } = await getProblemDetail(params.pid!);
+  const isFromContest = Boolean(searchParams.fromContest === "true" && searchParams.tid);
+
+  const { data: pDetailData } = await getProblemDetail(params.pid!, isFromContest ? searchParams.tid : undefined);
 
   const pType = determineQuestionType(pDetailData?.pdoc);
   const langs = determineAvailableLangs(pDetailData?.pdoc);
@@ -131,7 +140,7 @@ const Page = async ({ params }: Props) => {
                 </Suspense>
               </div>
               {pType === "default" && <CodeInput langs={langs as LangType[]} pid={params.pid} />}
-              <CodeActionBar type={pType} pid={params.pid} />
+              {pType !== "objective" && <CodeActionBar type={pType} pid={params.pid} />}
             </div>
             <div className="w-1/5 pl-5">
               <ProblemSidePanel pid={params.pid} entryType={pType} />

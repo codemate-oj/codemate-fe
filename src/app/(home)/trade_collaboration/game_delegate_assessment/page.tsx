@@ -9,7 +9,7 @@ import React from "react";
 
 const GameDelegateAssessment = () => {
   return (
-    <div>
+    <div className="max-w-[950px]">
       <PageTitle>商务合作</PageTitle>
       <article className="prose prose-h1:text-xl">
         <h1 className="text-left text-xl font-bold text-orange-600">

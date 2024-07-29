@@ -122,13 +122,17 @@ export const getContestState = (props: {
   endAt: string;
   checkinBeginAt?: string;
   checkinEndAt?: string;
+  isApplied?: boolean;
 }) => {
-  const { endAt, checkinBeginAt, checkinEndAt } = props;
+  const { endAt, checkinBeginAt, checkinEndAt, isApplied = false } = props;
   const nowDate = new Date();
   const endDate = new Date(endAt);
   const checkinBeginDate = new Date(checkinBeginAt as string);
   const checkinEndDate = new Date(checkinEndAt as string);
+
   if (nowDate < checkinBeginDate) return "预告中";
+  // 若已报名，满足进行中则有限显示进行中
+  else if (isApplied && nowDate < endDate) return "进行中";
   else if (nowDate < checkinEndDate) return "可报名";
   else if (nowDate < endDate) return "进行中";
   else return "已结束";

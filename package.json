@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start --port 80 --hostname 0.0.0.0",
     "lint": "next lint",
     "prepare": "husky",
     "test": "echo 'No test specified'",

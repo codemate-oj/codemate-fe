@@ -1,9 +1,10 @@
 import PageTitle from "@/components/common/page-title";
+import { BRANCH_NAME } from "@/constants/misc";
 import type { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "隐私协议 - CODEMATE",
+  title: `隐私协议 - ${BRANCH_NAME}`,
 };
 
 const PrivacyProtocal = () => {
@@ -17,7 +18,7 @@ const PrivacyProtocal = () => {
         </p>
         <h2>一、特别提示</h2>
         <p>
-          1.本协议适用各类扣叮魅平台以及扣叮魅平台提供的各项务，包括但不限于扣叮魅网站（https://www.codemate.cc）、CODEMATE小程序等网站及软件，以及该网站及软件上为您提供的各种扣叮魅服务。本协议由您和扣叮魅(深圳）网络技术有限公司（以下简称“扣叮魅”）在深圳市南山区共同签署。
+          1.本协议适用各类扣叮魅平台以及扣叮魅平台提供的各项务，包括但不限于扣叮魅网站（https://www.aioj.net）、AIOJ小程序等网站及软件，以及该网站及软件上为您提供的各种扣叮魅服务。本协议由您和扣叮魅(深圳）网络技术有限公司（以下简称“扣叮魅”）在深圳市南山区共同签署。
         </p>
         <p>
           2.本协议涉及的术语，我们尽量以简单易懂的方式向您表述。在签署本协议前，请您务必审慎阅读、充分理解本协议各条款的内容，尤其是免除或限制责任/权利的条款、法律适用与争议解决条款、或者其他以下划线/粗体/倾斜/高亮等形式特别标识的条款。如您对本协议内容有任何疑问的，您可通过扣叮魅在线客服、发送邮件33665922001@qq.com

@@ -1,37 +1,43 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import CommitRecord from "./commit-record";
 import EvaluateRecord from "./evaluate-record";
-import { useRequest } from "ahooks";
+import { useDocumentVisibility, useRequest } from "ahooks";
 import { request } from "@/lib/request";
 import Loading from "@/app/(home)/loading";
+import loginStore from "@/store/login";
+import NotLogin from "@/components/error/not-login";
 interface PropsType {
   tid: string;
 }
 const ProblemsList: React.FC<PropsType> = (props) => {
   const { tid } = props;
-  const { data, loading, refresh } = useRequest(async () => {
-    const { data } = await request.get(`/contest/${tid as "{tid}"}/problems`, {
-      transformData: ({ data }) => {
-        return { data };
-      },
-    });
-    return {
-      pdict: data.pdict,
-      rdocs: data.rdocs,
-      psdict: data.psdict,
-    };
-  });
-  const visibilitychangeEvent = () => {
-    if (!document.hidden) {
+
+  const { data, loading, refresh } = useRequest(
+    async () => {
+      const { data } = await request.get(`/contest/${tid as "{tid}"}/problems`, {
+        transformData: ({ data }) => {
+          return { data };
+        },
+      });
+      return data;
+    },
+    { manual: true }
+  );
+
+  const documentVisibility = useDocumentVisibility();
+
+  useEffect(() => {
+    if (documentVisibility === "visible") {
       refresh();
     }
-  };
-  document.addEventListener("visibilitychange", visibilitychangeEvent);
+  }, [documentVisibility]);
+
   const plist = data?.pdict ?? {};
   const plistKeys = Object.keys(plist || {});
   const psdict = data?.psdict ?? {};
   const rdocs = data?.rdocs;
+
   const commitRecords = plistKeys.slice(0, plistKeys.length / 2).map((key, index) => {
     const res = {
       key: key,
@@ -54,6 +60,7 @@ const ProblemsList: React.FC<PropsType> = (props) => {
     }
     return res;
   });
+
   const evaluaRecords =
     rdocs?.map((item) => {
       return {
@@ -67,6 +74,11 @@ const ProblemsList: React.FC<PropsType> = (props) => {
         last_commit: item.judgeAt,
       };
     }) ?? [];
+
+  const user = loginStore.user.use();
+
+  if (!user) return <NotLogin />;
+
   return loading ? (
     <Loading />
   ) : (
