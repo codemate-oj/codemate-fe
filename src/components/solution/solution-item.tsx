@@ -15,7 +15,6 @@ interface Solution {
   docType?: number;
   domainId?: string;
   owner?: number;
-  maintainer?: number[];
   reply: {
     _id: string;
     content: string;
