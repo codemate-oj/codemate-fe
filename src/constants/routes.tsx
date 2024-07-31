@@ -2,11 +2,11 @@ import type { NavItemWithIcon } from "@/components/user/user-popup";
 import Image from "next/image";
 
 export const mainRoutes: NavItemType[] = [
-  { name: "告示墙", href: "/bulletin" },
-  { name: "修炼场", href: "/" },
-  { name: "竞技场", href: "/contest" },
+  { name: "告示墙(公告)", href: "/bulletin" },
+  { name: "修炼场(题库)", href: "/" },
+  { name: "竞技场(竞赛)", href: "/contest" },
   { name: "封神榜", href: "/ranking" },
-  { name: "觉醒台", href: "/discuss" },
+  { name: "觉醒台(论坛)", href: "/discuss" },
 ];
 
 export const userCenterRoutes: NavItemWithIcon[] = [
@@ -15,11 +15,12 @@ export const userCenterRoutes: NavItemWithIcon[] = [
     href: "/user/record",
     icon: <Image src="/svg/popup-train.svg" alt="my-record" width={20} height={20} />,
   },
-  {
-    name: "我的题单",
-    href: "/user/plist",
-    icon: <Image src="/svg/popup-list.svg" alt="my-plist" width={17} height={20} />,
-  },
+  // 暂时隐藏我的题单
+  // {
+  //   name: "我的题单",
+  //   href: "/user/plist",
+  //   icon: <Image src="/svg/popup-list.svg" alt="my-plist" width={17} height={20} />,
+  // },
   {
     name: "我的比赛",
     href: "/user/contest",

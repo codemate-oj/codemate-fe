@@ -47,6 +47,22 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        success: {
+          DEFAULT: "var(--success)",
+          foreground: "var(--success-foreground)",
+        },
+        fail: {
+          DEFAULT: "var(--fail)",
+          foreground: "var(--fail-foreground)",
+        },
+        progress: {
+          DEFAULT: "var(--progress)",
+          foreground: "var(--progress-foreground)",
+        },
+        invalid: {
+          DEFAULT: "var(--invalid)",
+          foreground: "var(--invalid-foreground)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -75,14 +91,16 @@ const config = {
       },
       typography: {
         DEFAULT: {
-          // 定义code样式
-          pre: {
-            background: "transparent",
-            border: "1px solid #e2e8f0", // gray.300
-            borderRadius: "0.25rem",
-          },
-          code: {
-            color: "#2d3748", // gray.800
+          css: {
+            maxWidth: "none",
+            pre: {
+              background: "transparent",
+              border: "1px solid #e2e8f0", // gray.300
+              borderRadius: "0.25rem",
+            },
+            code: {
+              color: "#2d3748", // gray.800
+            },
           },
         },
         // 定制题目详情页的prose样式
@@ -156,6 +174,7 @@ const config = {
       },
     },
   },
+  safelist: ["text-success", "text-fail", "text-progress", "text-invalid"],
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography"), "tailwindcss/nesting"],
 } satisfies Config;
 

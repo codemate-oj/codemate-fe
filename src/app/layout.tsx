@@ -15,6 +15,7 @@ import { Toaster } from "@/components/ui/sonner";
 import dynamic from "next/dynamic";
 import NiceModalProvider from "@/providers/nice-modal-provider";
 import ApolloContextProvider from "@/providers/apollo-provider";
+import { BRANCH_NAME, BRANCH_SLOGAN } from "@/constants/misc";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,8 +25,8 @@ const UserLogin = dynamic(() => import("@/components/login/user-login"), {
 });
 
 export const metadata: Metadata = {
-  title: "CODEMATE",
-  description: "新一代的AI驱动的OJ平台",
+  title: BRANCH_NAME,
+  description: BRANCH_SLOGAN,
 };
 
 export default function RootLayout({
@@ -43,9 +44,9 @@ export default function RootLayout({
           <AntdRegistry>
             <AntdThemeConfigProvider>
               <NiceModalProvider>
-                <header className="relative m-auto flex max-w-screen-xl items-center justify-between px-10 py-2 xl:px-0">
+                <header className="relative m-auto flex max-w-[1200px] items-center justify-between py-2 xl:px-0">
                   <section className="flex flex-none items-center gap-x-2.5">
-                    <Image src="/img/logo.png" alt="website-logo" width={80} height={80} />
+                    <Image src="/img/new-logo.png" alt="website-logo" width={80} height={80} />
                     <h1 className="hidden text-2xl font-bold lg:block">AI推题，高效有趣玩OJ</h1>
                   </section>
                   <Navigation routes={mainRoutes} />

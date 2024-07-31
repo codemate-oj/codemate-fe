@@ -1,14 +1,15 @@
 import { Table, TableProps } from "antd";
 import Link from "next/link";
-import ProblemCommitState from "./problem-commit-state";
 import { getTimeDiffFromNow } from "@/lib/utils";
+import JudgeStatus from "@/components/record/judge-status";
+import { PROGRAMMING_LANGS } from "@/constants/misc";
 const columns: TableProps<DataType>["columns"] = [
   {
     title: "状态",
     dataIndex: "status",
     key: "status",
     render: (_, record) => {
-      return <ProblemCommitState state={Number(record.status)} score={record.score} />;
+      return <JudgeStatus statusCode={Number(record.status)} score={record.score} />;
     },
   },
   {
@@ -45,25 +46,25 @@ const columns: TableProps<DataType>["columns"] = [
     title: "语言",
     dataIndex: "language",
     key: "language",
+    render: (value) => PROGRAMMING_LANGS[value as keyof typeof PROGRAMMING_LANGS] ?? "-",
   },
   {
     title: "提交时间",
     dataIndex: "submitTime",
     key: "submitTime",
     render: (_, record) => {
-      if (record.last_commit == "-") return <span>-</span>;
-      const time = new Date(record.last_commit);
-      if (time) return <span>{getTimeDiffFromNow(time) || "-"}</span>;
+      if (!record.last_commit || record.last_commit == "-") return <span>-</span>;
+      return <span>{getTimeDiffFromNow(new Date(record.last_commit))}</span>;
     },
   },
 ];
 type DataType = RecordType;
 interface RecordType {
   key: string;
-  status: string;
+  status: string | number;
   title: string;
   time: number;
-  memory: number;
+  memory: number | string;
   score: number;
   language: string;
   last_commit: string;

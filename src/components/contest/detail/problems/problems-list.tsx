@@ -1,40 +1,43 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import CommitRecord from "./commit-record";
 import EvaluateRecord from "./evaluate-record";
-import { useRequest } from "ahooks";
+import { useDocumentVisibility, useRequest } from "ahooks";
 import { request } from "@/lib/request";
 import Loading from "@/app/(home)/loading";
+import loginStore from "@/store/login";
+import NotLogin from "@/components/error/not-login";
 interface PropsType {
   tid: string;
 }
 const ProblemsList: React.FC<PropsType> = (props) => {
   const { tid } = props;
-  const { data, loading, refresh } = useRequest(async () => {
-    const { data } = await request.get(`/contest/${tid as "{tid}"}/problems`, {
-      transformData: ({ data }) => {
-        return { data };
-      },
-    });
-    return {
-      //@ts-expect-error 后端类型更新
-      pdict: data.pdict,
-      //@ts-expect-error 后端类型更新
-      rdocs: data.rdocs,
-      //@ts-expect-error 后端类型更新
-      psdict: data.psdict,
-    };
-  });
-  const visibilitychangeEvent = () => {
-    if (!document.hidden) {
+
+  const { data, loading, refresh } = useRequest(
+    async () => {
+      const { data } = await request.get(`/contest/${tid as "{tid}"}/problems`, {
+        transformData: ({ data }) => {
+          return { data };
+        },
+      });
+      return data;
+    },
+    { manual: true }
+  );
+
+  const documentVisibility = useDocumentVisibility();
+
+  useEffect(() => {
+    if (documentVisibility === "visible") {
       refresh();
     }
-  };
-  document.addEventListener("visibilitychange", visibilitychangeEvent);
-  const plist = data?.pdict;
+  }, [documentVisibility]);
+
+  const plist = data?.pdict ?? {};
   const plistKeys = Object.keys(plist || {});
-  const psdict = data?.psdict;
+  const psdict = data?.psdict ?? {};
   const rdocs = data?.rdocs;
+
   const commitRecords = plistKeys.slice(0, plistKeys.length / 2).map((key, index) => {
     const res = {
       key: key,
@@ -46,29 +49,36 @@ const ProblemsList: React.FC<PropsType> = (props) => {
       score: 0,
     };
     if (psdict[key]) {
-      res.status = psdict[key].status;
-      res.score = psdict[key].score;
+      res.status = psdict[key].status ?? 0;
+      res.score = psdict[key].score ?? 0;
     }
-    for (let i = 0; i < rdocs?.length || 0; i++) {
-      if (rdocs[i].pid == key) {
+    for (let i = 0; i < (rdocs?.length ?? 0); i++) {
+      if (rdocs?.[i]?.pid === Number(key)) {
         res.last_commit = rdocs[i].judgeAt;
         break;
       }
     }
     return res;
   });
-  const evaluaRecords = rdocs?.map((item: { [key: string]: string | number }) => {
-    return {
-      key: item._id,
-      score: item.score,
-      status: item.status,
-      title: plist[item.pid].title,
-      time: parseInt(String(item.time)),
-      memory: ((item.memory as number) / 1024).toFixed(1),
-      language: item.lang,
-      last_commit: item.judgeAt,
-    };
-  });
+
+  const evaluaRecords =
+    rdocs?.map((item) => {
+      return {
+        key: item._id,
+        score: item.score,
+        status: item.status,
+        title: plist[item.pid].title,
+        time: parseInt(String(item.time)),
+        memory: ((item.memory as number) / 1024).toFixed(1),
+        language: item.lang,
+        last_commit: item.judgeAt,
+      };
+    }) ?? [];
+
+  const user = loginStore.user.use();
+
+  if (!user) return <NotLogin />;
+
   return loading ? (
     <Loading />
   ) : (

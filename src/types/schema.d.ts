@@ -4,48 +4,6 @@
  */
 
 export interface paths {
-  "/login/sms-code": {
-    /**
-     * 请求短信登录验证码
-     * @description 通过短信登陆，支持给定用户名/手机号登录，若两个字段同时传递则优先按用户名寻找用户。
-     */
-    post: {
-      parameters: {
-        header?: {
-          /** @example application/json */
-          Accept?: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/x-www-form-urlencoded": {
-            /**
-             * @description 允许传入用户名或手机号
-             * @example 18012345678
-             */
-            uname: string;
-            /** @description captcha 验证成功的票据 */
-            ticket: string;
-            /** @description 本次验证的随机串，后续票据校验时需传递该参数 */
-            randStr: string;
-          };
-        };
-      };
-      responses: {
-        /** @description 成功 */
-        200: {
-          content: {
-            "application/json": {
-              UserContext: components["schemas"]["UserContext"];
-              success: boolean;
-              /** @description 在登陆时需要传递的 tokenId */
-              tokenId: string;
-            };
-          };
-        };
-      };
-    };
-  };
   "/register/{tokenId}": {
     /**
      * 验证码注册
@@ -122,6 +80,496 @@ export interface paths {
       };
     };
   };
+  "/login/sms-code": {
+    /**
+     * 请求短信登录验证码
+     * @description 通过短信登陆，支持给定用户名/手机号登录，若两个字段同时传递则优先按用户名寻找用户。
+     */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /**
+             * @description 允许传入用户名或手机号
+             * @example 18012345678
+             */
+            uname: string;
+            /**
+             * @description captcha 验证成功的票据
+             * @example
+             */
+            ticket: string;
+            /**
+             * @description 本次验证的随机串，后续票据校验时需传递该参数
+             * @example
+             */
+            randStr: string;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              success: boolean;
+              /** @description 在登陆时需要传递的 tokenId */
+              tokenId: string;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/logout": {
+    /**
+     * 登出
+     * @description 登出
+     */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+            };
+          };
+        };
+        /** @description Redirect */
+        "x-200:Redirect": {
+          content: {
+            "application/json": {
+              /** 重定向的URL */
+              url: string;
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/user/verify": {
+    /**
+     * 获取实名认证信息
+     * @description 获取实名认证信息
+     */
+    get: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              /** 身份证号 */
+              idNumber: string;
+              /** 真实姓名 */
+              realName: string;
+              /**
+               * 是否通过验证
+               * @description 是否通过了API校验
+               */
+              verified: boolean;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+    /**
+     * 上传实名信息
+     * @description 上传实名信息（身份证号和姓名），在服务端调用第三方接口验证。
+     */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /** @example 110101200312133798 */
+            idNumber: string;
+            /** @example 张三 */
+            realName: string;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              success: boolean;
+              code: number;
+              idNumber: string;
+              realName: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/domain/group/code": {
+    /**
+     * 导出所有激活码数据
+     * @description 需要用户有**编辑域**的权限
+     */
+    get: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              groups: components["schemas"]["Group"][];
+              tokens: components["schemas"]["ActivationToken"][];
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/p-list": {
+    /**
+     * 获取所有系统题单
+     * @description 以树状结构获取所有系统题单，用于首页的筛选树
+     */
+    get: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              roots: components["schemas"]["SystemProblemList%20Recursive"][];
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/p": {
+    /**
+     * 首页题目筛选
+     * @description 支持多条件并列筛选，默认留空的情况下直接读取题库题目；
+     */
+    get: {
+      parameters: {
+        query?: {
+          /**
+           * @description 默认值为1，分页参数
+           * @example 1
+           */
+          page?: number;
+          /**
+           * @description 默认值为system_setting.pagination.problem
+           * @example 15
+           */
+          limit?: number;
+          /**
+           * @description 逗号分隔数组，不需要括号包裹，请URLEncode
+           * @example [
+           *   "贪心算法,动态规划"
+           * ]
+           */
+          tags?: string[];
+          /**
+           * @description 指定可用于提交题目的语言
+           * @example scratch
+           */
+          lang?: string;
+          /**
+           * @description 默认为false，为true时只选择客观题
+           * @example true
+           */
+          objective?: boolean;
+          /**
+           * @description 用于模糊搜索文本，可以与上面的条件一起使用（支持使用qs查询，但建议使用上面的接口）
+           * @example 图形化
+           */
+          q?: string;
+          /**
+           * @description 指定从某个系统题单中查询符合上述条件的题目
+           * @example 66200c489cd74d3e4c931302
+           */
+          source?: string;
+        };
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              /** 当前页 */
+              page: number;
+              /** 总页数 */
+              pcount: number;
+              /**
+               * 总题目数
+               * @description 当前条件下的总题目数
+               */
+              ppcount: number;
+              /**
+               * 查找结果关系
+               * @description 默认为eq即可，可忽略
+               * @enum {string}
+               */
+              pcountRelation: "eq" | "gte";
+              /** 题目 */
+              pdocs: {
+                /**
+                 * 类型
+                 * @description 题目docType=10
+                 * @constant
+                 */
+                docType: 10;
+                /** @description 题目真实ID是数字 */
+                docId: number;
+                /**
+                 * PID
+                 * @description 题目外显ID可以是pid，二者都可以寻址到题目
+                 */
+                pid: string;
+                title: string;
+                nSubmit: number;
+                nAccept: number;
+                tag: string[];
+                hidden?: boolean;
+                stats?: string;
+                difficulty?: number;
+                assign?: string[];
+                config: string | components["schemas"]["ProblemConfig"];
+                /** 摘要 */
+                brief: string;
+              }[];
+              /** 题目用户状态字典 */
+              psdict: {
+                [key: string]: Record<string, never>;
+              };
+              /** 查询入参 */
+              qs: string;
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+    /** 取消收藏题目 */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /**
+             * @description 操作名，Hydro特有的post魔法
+             * @example unstar
+             * @constant
+             */
+            operation: "unstar";
+            /**
+             * Format: uint32
+             * @description 题目ID
+             * @example 1
+             */
+            pid?: number;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
   "/contest": {
     /**
      * 比赛列表
@@ -161,6 +609,11 @@ export interface paths {
            * @example 测试比赛
            */
           q?: string;
+          /**
+           * @description 只查看已参加的比赛
+           * @example true
+           */
+          attend?: boolean;
         };
         header?: {
           /** @example application/json */
@@ -203,6 +656,63 @@ export interface paths {
               group: string;
               UiContext: components["schemas"]["UiContext"];
               UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/captcha/test": {
+    /**
+     * 验证码（测试）
+     * @description **仅在 debug 模式中可用**
+     *
+     * 测试验证码.
+     */
+    get: {
+      parameters: {
+        query: {
+          /** @description 前端验证返回的 ticket */
+          ticket: string;
+          /** @description 前端验证返回的随机字符串 */
+          randStr: string;
+        };
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              /** @description 验证是否成功 */
+              success: boolean;
             };
           };
         };
@@ -359,7 +869,9 @@ export interface paths {
       requestBody?: {
         content: {
           "multipart/form-data": {
+            /** @example */
             addFilter?: string;
+            /** @example */
             delFilter?: string;
           };
         };
@@ -399,51 +911,18 @@ export interface paths {
       };
     };
   };
-  "/p": {
-    /**
-     * 首页题目筛选
-     * @description 支持多条件并列筛选，默认留空的情况下直接读取题库题目；
-     */
+  "/ranking": {
+    /** 获取排行榜 */
     get: {
       parameters: {
         query?: {
-          /**
-           * @description 默认值为1，分页参数
-           * @example 1
-           */
+          /** @example 1 */
           page?: number;
           /**
-           * @description 默认值为system_setting.pagination.problem
-           * @example 15
+           * @description 可选值：all, Cpp, Py, Scratch，大小写敏感
+           * @example all
            */
-          limit?: number;
-          /**
-           * @description 逗号分隔数组，不需要括号包裹，请URLEncode
-           * @example [
-           *   "贪心算法,动态规划"
-           * ]
-           */
-          tags?: string[];
-          /**
-           * @description 指定可用于提交题目的语言
-           * @example scratch
-           */
-          lang?: string;
-          /**
-           * @description 默认为false，为true时只选择客观题
-           * @example true
-           */
-          objective?: boolean;
-          /**
-           * @description 用于模糊搜索文本，可以与上面的条件一起使用（支持使用qs查询，但建议使用上面的接口）
-           * @example 图形化
-           */
-          q?: string;
-          /**
-           * @description 指定从某个系统题单中查询符合上述条件的题目
-           * @example 66200c489cd74d3e4c931302
-           */
-          source?: string;
+          rankBy?: string;
         };
         header?: {
           /** @example application/json */
@@ -455,53 +934,167 @@ export interface paths {
         200: {
           content: {
             "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              /** @description 已排好序 */
+              udocs: components["schemas"]["User"][];
+              rpInfo: {
+                "[uid]": components["schemas"]["RpInfo"];
+              };
+              upcount: number;
+              ucount: number;
+              page: number;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/user/lostpass": {
+    /** 1. 请求找回密码 */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /**
+             * @description 需要找回密码的邮箱或手机
+             * @example
+             */
+            emailOrPhone: string;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              /** @description 用于唯一标识找回事件的 tokenId，接下来的流程会用到 */
+              tokenId: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/p/{pid}/solution": {
+    /** 查看题目题解 */
+    get: {
+      parameters: {
+        query?: {
+          page?: number;
+          /** @description 比赛ID（如有） */
+          tid?: string;
+        };
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+        path: {
+          pid: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              /** 题解 */
+              psdocs: {
+                _id: string;
+                docId: string;
+                docType: number;
+                domainId: string;
+                owner: number;
+                maintainer?: number[];
+                approved?: string;
+                /** 所属题目pid */
+                parent: number;
+                reply: {
+                  _id: string;
+                  docId: string;
+                  docType: number;
+                  domainId: string;
+                  owner: number;
+                  maintainer?: number[];
+                  content: string;
+                  approved?: string;
+                }[];
+                /**
+                 * 投票数
+                 * @description 反对>赞成可能是负数
+                 */
+                vote: number;
+                content: string;
+              }[];
               /** 当前页 */
               page: number;
               /** 总页数 */
               pcount: number;
-              /**
-               * 总题目数
-               * @description 当前条件下的总题目数
-               */
-              ppcount: number;
-              /**
-               * 查找结果关系
-               * @description 默认为eq即可，可忽略
-               * @enum {string}
-               */
-              pcountRelation: "eq" | "gte";
-              /** 题目 */
-              pdocs: {
-                /**
-                 * 类型
-                 * @description 题目docType=10
-                 * @constant
-                 */
-                docType: 10;
-                /** @description 题目真实ID是数字 */
-                docId: number;
-                /**
-                 * PID
-                 * @description 题目外显ID可以是pid，二者都可以寻址到题目
-                 */
-                pid: string;
-                title: string;
-                nSubmit: number;
-                nAccept: number;
-                tag: string[];
-                hidden?: boolean;
-                stats?: string;
-                difficulty?: number;
-                config: string | components["schemas"]["ProblemConfig"];
-              }[];
-              /** 题目用户状态字典 */
-              psdict: {
+              /** 题解总数 */
+              pscount: number;
+              /** 用户字典 */
+              udict: {
                 [key: string]: Record<string, never>;
               };
-              /** 查询入参 */
-              qs: string;
-              UiContext: components["schemas"]["UiContext"];
-              UserContext: components["schemas"]["UserContext"];
+              pssdict: {
+                [key: string]: Record<string, never>;
+              };
+              pdoc: components["schemas"]["Problem"];
             };
           };
         };
@@ -529,29 +1122,34 @@ export interface paths {
         };
       };
     };
-    /** 取消收藏题目 */
+    /** 反对题解 */
     post: {
       parameters: {
+        query?: {
+          /** @description 比赛ID（如有） */
+          tid?: string;
+        };
         header?: {
           /** @example application/json */
           Accept?: string;
+        };
+        path: {
+          pid: string;
         };
       };
       requestBody?: {
         content: {
           "application/x-www-form-urlencoded": {
+            /**
+             * @description 题解ID
+             * @example
+             */
+            psid?: string;
             /**
              * @description 操作名，Hydro特有的post魔法
-             * @example unstar
-             * @constant
+             * @example downvote
              */
-            operation: "unstar";
-            /**
-             * Format: uint32
-             * @description 题目ID
-             * @example 1
-             */
-            pid?: number;
+            operation?: string;
           };
         };
       };
@@ -584,300 +1182,6 @@ export interface paths {
               error: components["schemas"]["Error"];
               UiContext: components["schemas"]["UiContext"];
               UserContext: components["schemas"]["UserContext"];
-            };
-          };
-        };
-      };
-    };
-  };
-  "/domain/group/code": {
-    /**
-     * 导出所有激活码数据
-     * @description 需要用户有**编辑域**的权限
-     */
-    get: {
-      parameters: {
-        header?: {
-          /** @example application/json */
-          Accept?: string;
-        };
-      };
-      responses: {
-        /** @description 成功 */
-        200: {
-          content: {
-            "application/json": {
-              UserContext: components["schemas"]["UserContext"];
-              UiContext: components["schemas"]["UiContext"];
-              groups: components["schemas"]["Group"][];
-              tokens: components["schemas"]["ActivationToken"][];
-            };
-          };
-        };
-        /** @description Forbidden */
-        403: {
-          content: {
-            "application/json": {
-              /** @description 错误信息 */
-              error: components["schemas"]["Error"];
-              UiContext: components["schemas"]["UiContext"];
-              UserContext: components["schemas"]["UserContext"];
-            };
-          };
-        };
-        /** @description Not Found */
-        404: {
-          content: {
-            "application/json": {
-              /** @description 错误信息 */
-              error: components["schemas"]["Error"];
-              UiContext: components["schemas"]["UiContext"];
-              UserContext: components["schemas"]["UserContext"];
-            };
-          };
-        };
-      };
-    };
-  };
-  "/captcha/test": {
-    /**
-     * 验证码（测试）
-     * @description **仅在 debug 模式中可用**
-     *
-     * 测试验证码.
-     */
-    get: {
-      parameters: {
-        query: {
-          /** @description 前端验证返回的 ticket */
-          ticket: string;
-          /** @description 前端验证返回的随机字符串 */
-          randStr: string;
-        };
-        header?: {
-          /** @example application/json */
-          Accept?: string;
-        };
-      };
-      responses: {
-        /** @description 成功 */
-        200: {
-          content: {
-            "application/json": {
-              UserContext: components["schemas"]["UserContext"];
-              UiContext: components["schemas"]["UiContext"];
-              /** @description 验证是否成功 */
-              success: boolean;
-            };
-          };
-        };
-        /** @description Forbidden */
-        403: {
-          content: {
-            "application/json": {
-              /** @description 错误信息 */
-              error: components["schemas"]["Error"];
-              UiContext: components["schemas"]["UiContext"];
-              UserContext: components["schemas"]["UserContext"];
-            };
-          };
-        };
-        /** @description Not Found */
-        404: {
-          content: {
-            "application/json": {
-              /** @description 错误信息 */
-              error: components["schemas"]["Error"];
-              UiContext: components["schemas"]["UiContext"];
-              UserContext: components["schemas"]["UserContext"];
-            };
-          };
-        };
-      };
-    };
-  };
-  "/user/verify": {
-    /**
-     * 获取实名认证信息
-     * @description 获取实名认证信息
-     */
-    get: {
-      parameters: {
-        header?: {
-          /** @example application/json */
-          Accept?: string;
-        };
-      };
-      responses: {
-        /** @description 成功 */
-        200: {
-          content: {
-            "application/json": {
-              UserContext: components["schemas"]["UserContext"];
-              UiContext: components["schemas"]["UiContext"];
-              /** 身份证号 */
-              idNumber: string;
-              /** 真实姓名 */
-              realName: string;
-              /**
-               * 是否通过验证
-               * @description 是否通过了API校验
-               */
-              verified: boolean;
-            };
-          };
-        };
-        /** @description Forbidden */
-        403: {
-          content: {
-            "application/json": {
-              /** @description 错误信息 */
-              error: components["schemas"]["Error"];
-              UiContext: components["schemas"]["UiContext"];
-              UserContext: components["schemas"]["UserContext"];
-            };
-          };
-        };
-        /** @description Not Found */
-        404: {
-          content: {
-            "application/json": {
-              /** @description 错误信息 */
-              error: components["schemas"]["Error"];
-              UiContext: components["schemas"]["UiContext"];
-              UserContext: components["schemas"]["UserContext"];
-            };
-          };
-        };
-      };
-    };
-    /**
-     * 上传实名信息
-     * @description 上传实名信息（身份证号和姓名），在服务端调用第三方接口验证。
-     */
-    post: {
-      parameters: {
-        header?: {
-          /** @example application/json */
-          Accept?: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/x-www-form-urlencoded": {
-            /** @example 110101200312133798 */
-            idNumber: string;
-            /** @example 张三 */
-            realName: string;
-          };
-        };
-      };
-      responses: {
-        /** @description 成功 */
-        200: {
-          content: {
-            "application/json": {
-              UserContext: components["schemas"]["UserContext"];
-              UiContext: components["schemas"]["UiContext"];
-              success: boolean;
-              code: number;
-              idNumber: string;
-              realName: string;
-            };
-          };
-        };
-        /** @description Forbidden */
-        403: {
-          content: {
-            "application/json": {
-              /** @description 错误信息 */
-              error: components["schemas"]["Error"];
-              UiContext: components["schemas"]["UiContext"];
-              UserContext: components["schemas"]["UserContext"];
-            };
-          };
-        };
-        /** @description Not Found */
-        404: {
-          content: {
-            "application/json": {
-              /** @description 错误信息 */
-              error: components["schemas"]["Error"];
-              UiContext: components["schemas"]["UiContext"];
-              UserContext: components["schemas"]["UserContext"];
-            };
-          };
-        };
-      };
-    };
-  };
-  "/p-list": {
-    /**
-     * 获取所有系统题单
-     * @description 以树状结构获取所有系统题单，用于首页的筛选树
-     */
-    get: {
-      parameters: {
-        header?: {
-          /** @example application/json */
-          Accept?: string;
-        };
-      };
-      responses: {
-        /** @description 成功 */
-        200: {
-          content: {
-            "application/json": {
-              UserContext: components["schemas"]["UserContext"];
-              UiContext: components["schemas"]["UiContext"];
-              roots: components["schemas"]["SystemProblemList%20Recursive"][];
-            };
-          };
-        };
-        /** @description Forbidden */
-        403: {
-          content: {
-            "application/json": {
-              /** @description 错误信息 */
-              error: components["schemas"]["Error"];
-              UiContext: components["schemas"]["UiContext"];
-              UserContext: components["schemas"]["UserContext"];
-            };
-          };
-        };
-        /** @description Not Found */
-        404: {
-          content: {
-            "application/json": {
-              /** @description 错误信息 */
-              error: components["schemas"]["Error"];
-              UiContext: components["schemas"]["UiContext"];
-              UserContext: components["schemas"]["UserContext"];
-            };
-          };
-        };
-      };
-    };
-  };
-  "/logout": {
-    /**
-     * 登出
-     * @description 登出
-     */
-    post: {
-      parameters: {
-        header?: {
-          /** @example application/json */
-          Accept?: string;
-        };
-      };
-      responses: {
-        /** @description 成功 */
-        200: {
-          content: {
-            "application/json": {
-              UserContext: components["schemas"]["UserContext"];
-              UiContext: components["schemas"]["UiContext"];
             };
           };
         };
@@ -895,15 +1199,68 @@ export interface paths {
       };
     };
   };
-  "/problem/starred": {
-    /** 查看已收藏题目 */
+  "/recommend_api/refresh": {
+    /**
+     * 推题模型刷新
+     * @description 刷新模型 (上写锁)
+     * - 刷新后，其他刷新操作会阻塞、推荐操作也会阻塞，直到刷新完成
+     * - 默认每小时刷新一次，也可手动触发刷新
+     * - 如果同时存在recommend在执行(上读锁)，将等待读锁结束
+     */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/user-plist": {
+    /** 用户题单列表 */
     get: {
       parameters: {
         query?: {
           /** @example 1 */
           page?: number;
-          /** @example 15 */
-          pageSize?: number;
+          /**
+           * @description 仅管理员可用，显示所有用户的题单
+           * @example false
+           */
+          all?: boolean;
         };
         header?: {
           /** @example application/json */
@@ -915,22 +1272,193 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              /** 题目ID */
-              pids: number[];
-              /** 题目状态字典 */
-              psdict?: {
-                [key: string]: components["schemas"]["StatusBaseDoc"];
-              };
-              /** 题目字典 */
-              pdict?: {
-                [key: string]: Record<string, never>;
-              };
-              page: number;
-              pageSize: number;
-              psdocCount: number;
-              pageCount: number;
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              pldocs: components["schemas"]["UserProblemList"][];
+              /** @description 页数 */
+              pldocsPage: number;
+              /** @description 总数 */
+              pldocsCount: number;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
               UiContext: components["schemas"]["UiContext"];
               UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/user/center": {
+    /**
+     * 个人中心
+     * @description migrated from codemate-oj/codemate-legacy
+     */
+    get: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              udoc: components["schemas"]["User"];
+              sdoc: {
+                createAt: string;
+                updateAt: string;
+              };
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+    /**
+     * 修改个人信息
+     * @description migrated from codemate-oj/codemate-legacy
+     */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /** @example */
+            nickname?: string;
+            /** @example */
+            nationality?: string;
+            /** @example 0 */
+            age?: number;
+            /** @example */
+            oier?: boolean;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              success: boolean;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/p/{pid}/solution/{sid}": {
+    /** 查看题目指定题解 */
+    get: {
+      parameters: {
+        query?: {
+          page?: number;
+          /** @description 比赛ID（如有） */
+          tid?: string;
+        };
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+        path: {
+          /** @description 题目ID */
+          pid: string;
+          /** @description 题解ID */
+          sid: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              /** 题解 */
+              psdocs: components["schemas"]["ProblemSolution"][];
+              /** 当前页 */
+              page: number;
+              /** 总页数 */
+              pcount: number;
+              /** 题解总数 */
+              pscount: number;
+              udict: string;
+              pssdict: string;
+              pdoc: components["schemas"]["Problem"];
+              /** 题解ID */
+              sid: string;
             };
           };
         };
@@ -981,7 +1509,10 @@ export interface paths {
              * @example 123456
              */
             ticket: string;
-            /** @description 本次验证的随机串，后续票据校验时需传递该参数 */
+            /**
+             * @description 本次验证的随机串，后续票据校验时需传递该参数
+             * @example
+             */
             randStr: string;
           };
         };
@@ -995,6 +1526,139 @@ export interface paths {
               success: boolean;
               code: number;
               tokenId: string;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/login/{tokenId}": {
+    /** 短信验证码登录 */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+        path: {
+          tokenId: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /**
+             * @description 短信验证码
+             * @example 123456
+             */
+            verifyCode: string;
+            /**
+             * @description 长期记忆session
+             * @default false
+             * @example true
+             */
+            rememberme?: boolean;
+            /**
+             * @description 登陆后跳转url
+             * @example /
+             */
+            redirect?: string;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+            };
+          };
+        };
+        /** @description Redirect */
+        "x-200:Redirect": {
+          content: {
+            "application/json": {
+              /** 重定向的URL */
+              url: string;
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/priv": {
+    /**
+     * 激活指定组权限
+     * @description 使用激活码激活指定组权限
+     */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /**
+             * @description 操作名，Hydro特有的post魔法
+             * @example activate
+             * @constant
+             */
+            operation: "activate";
+            /**
+             * @description 激活码（6位）
+             * @example aaaaa
+             */
+            code: string;
+            /**
+             * @description UID（留空则使用session值）
+             * @example 1
+             */
+            uid?: number;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              success: boolean;
+              /**
+               * 组名
+               * @description 激活的小组名称
+               */
+              group: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
             };
           };
         };
@@ -1121,6 +1785,70 @@ export interface paths {
               pid: number;
               /** @description 是否有对应题目权限 */
               access: boolean;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/bulletin": {
+    /** 查询公告列表 */
+    get: {
+      parameters: {
+        query?: {
+          /**
+           * @description 分页，为空时不分页
+           * @example 1
+           */
+          page?: number;
+          /**
+           * @description 分页大小，默认为server.bulletin.limit
+           * @example 15
+           */
+          limit?: number;
+          /**
+           * @description 筛选的标签，为空时展示全部
+           * @example a,b,c
+           */
+          tags?: string;
+        };
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              bdocs: components["schemas"]["BulletinDoc"][];
+              /** @description 按当前limit的page数量 */
+              bdocsPage: number;
             };
           };
         };
@@ -1310,38 +2038,17 @@ export interface paths {
       };
     };
   };
-  "/login/{tokenId}": {
-    /** 短信验证码登录 */
-    post: {
+  "/problem/starred": {
+    /** 获取收藏题目 */
+    get: {
       parameters: {
+        query?: {
+          page?: number;
+          pageSize?: number;
+        };
         header?: {
           /** @example application/json */
           Accept?: string;
-        };
-        path: {
-          tokenId: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/x-www-form-urlencoded": {
-            /**
-             * @description 短信验证码
-             * @example 123456
-             */
-            verifyCode: string;
-            /**
-             * @description 长期记忆session
-             * @default false
-             * @example true
-             */
-            rememberme?: boolean;
-            /**
-             * @description 登陆后跳转url
-             * @example /
-             */
-            redirect?: string;
-          };
         };
       };
       responses: {
@@ -1351,70 +2058,19 @@ export interface paths {
             "application/json": {
               UserContext: components["schemas"]["UserContext"];
               UiContext: components["schemas"]["UiContext"];
-            };
-          };
-        };
-        /** @description Redirect */
-        "x-200:Redirect": {
-          content: {
-            "application/json": {
-              /** 重定向的URL */
-              url: string;
-              UiContext: components["schemas"]["UiContext"];
-              UserContext: components["schemas"]["UserContext"];
-            };
-          };
-        };
-      };
-    };
-  };
-  "/priv": {
-    /**
-     * 激活指定组权限
-     * @description 使用激活码激活指定组权限
-     */
-    post: {
-      parameters: {
-        header?: {
-          /** @example application/json */
-          Accept?: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/x-www-form-urlencoded": {
-            /**
-             * @description 操作名，Hydro特有的post魔法
-             * @example activate
-             * @constant
-             */
-            operation: "activate";
-            /**
-             * @description 激活码（6位）
-             * @example aaaaa
-             */
-            code: string;
-            /**
-             * @description UID（留空则使用session值）
-             * @example 1
-             */
-            uid?: number;
-          };
-        };
-      };
-      responses: {
-        /** @description 成功 */
-        200: {
-          content: {
-            "application/json": {
-              UserContext: components["schemas"]["UserContext"];
-              UiContext: components["schemas"]["UiContext"];
-              success: boolean;
-              /**
-               * 组名
-               * @description 激活的小组名称
-               */
-              group: string;
+              pids: number[];
+              psdict: {
+                [key: string]: components["schemas"]["ProblemStatus"];
+              };
+              pdict: {
+                [key: string]: components["schemas"]["Problem"];
+              };
+              page: number;
+              pageSize: number;
+              /** @description 总数 */
+              psdocCount: number;
+              /** @description 页数 */
+              pageCount: number;
             };
           };
         };
@@ -1443,27 +2099,249 @@ export interface paths {
       };
     };
   };
-  "/bulletin": {
-    /** 查询公告列表 */
+  "/record/{rid}": {
+    /** 获取题目评测详情 */
+    get: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+        path: {
+          rid: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              udoc: components["schemas"]["User"];
+              rdoc: components["schemas"]["Record"];
+              pdoc: components["schemas"]["Problem"];
+              tdoc?: components["schemas"]["Contest"] | null;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/user/lostpass/with_code": {
+    /** 2. 验证输入验证码正确性 */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /** @example */
+            tokenId: string;
+            /**
+             * @description 用户输入的验证码
+             * @example
+             */
+            verifyCode: string;
+            /**
+             * @description 需要找回的账号邮箱或手机号
+             * @example
+             */
+            emailOrPhone: string;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              /** @description 用户验证码是否正确 */
+              success: boolean;
+              /** @description 与传入的相同 */
+              tokenId: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/recommend_api/recommend": {
+    /**
+     * 推题
+     * @description 向用户推荐题目 (上读锁)
+     *
+     * - 如果同时发生refresh操作, 将等待refresh结束 [写优先]
+     */
+    get: {
+      parameters: {
+        query: {
+          /**
+           * @description 用户ID
+           * @example 6
+           */
+          uid: number;
+          /**
+           * @description 回顾用户历史提交题目的数量。默认100
+           * @example 100
+           */
+          ref_history_limit?: number;
+          /**
+           * @description 推荐数量。默认30
+           * @example 30
+           */
+          recommend_num?: number;
+        };
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": Record<string, never>;
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/user-plist/{tid}/detail": {
+    /** 获取题单详情 */
     get: {
       parameters: {
         query?: {
           /**
-           * @description 分页，为空时不分页
+           * @description 题单中题目的分页页数
            * @example 1
            */
           page?: number;
-          /**
-           * @description 分页大小，默认为server.bulletin.limit
-           * @example 15
-           */
-          limit?: number;
-          /**
-           * @description 筛选的标签，为空时展示全部
-           * @example a,b,c
-           */
-          tags?: string;
         };
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+        path: {
+          tid: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              /** @description 为一个字典，键为数字 pid，值为 ProblemDoc */
+              pdict: {
+                "[pid]": components["schemas"]["Problem"];
+              };
+              pldoc: components["schemas"]["UserProblemList"];
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/mei_value": {
+    /** 查询魅值 */
+    get: {
+      parameters: {
         header?: {
           /** @example application/json */
           Accept?: string;
@@ -1529,7 +2407,10 @@ export interface paths {
              * @example 123456
              */
             ticket: string;
-            /** @description 本次验证的随机串，后续票据校验时需传递该参数 */
+            /**
+             * @description 本次验证的随机串，后续票据校验时需传递该参数
+             * @example
+             */
             randStr: string;
           };
         };
@@ -1543,6 +2424,54 @@ export interface paths {
               success: boolean;
               code: number;
               tokenId: string;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/bulletin/tags": {
+    /**
+     * 获取可用公告标签
+     * @description 获取告示栏上方的标签列表
+     */
+    get: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              bulletinTags: string[];
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
             };
           };
         };
@@ -1571,10 +2500,7 @@ export interface paths {
           Accept?: string;
         };
         path: {
-          /**
-           * @description 题目ID
-           * @example 1
-           */
+          /** @description string or number */
           pid: string;
         };
       };
@@ -1624,6 +2550,8 @@ export interface paths {
                 };
                 assign?: string[];
                 config: string | components["schemas"]["ProblemConfig"];
+                /** 摘要 */
+                brief: string;
               };
               udoc: components["schemas"]["User"];
               /**
@@ -1751,6 +2679,8 @@ export interface paths {
                  * @description 仅用于作业
                  */
                 penaltySince?: string;
+                /** 拥有者UID */
+                owner: number;
               };
               /**
                * 比赛所有者信息
@@ -1857,16 +2787,24 @@ export interface paths {
       };
     };
   };
-  "/bulletin/tags": {
-    /**
-     * 获取可用公告标签
-     * @description 获取告示栏上方的标签列表
-     */
-    get: {
+  "/mei_value/order": {
+    /** 魅值充值下单 */
+    post: {
       parameters: {
         header?: {
           /** @example application/json */
           Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "multipart/form-data": {
+            /**
+             * @description 充值魅值点数
+             * @example 100
+             */
+            chargeCount: number;
+          };
         };
       };
       responses: {
@@ -1876,7 +2814,9 @@ export interface paths {
             "application/json": {
               UserContext: components["schemas"]["UserContext"];
               UiContext: components["schemas"]["UiContext"];
-              bulletinTags: string[];
+              bdocs: components["schemas"]["BulletinDoc"][];
+              /** @description 按当前limit的page数量 */
+              bdocsPage: number;
             };
           };
         };
@@ -2000,62 +2940,25 @@ export interface paths {
       };
     };
   };
-  "/p/{pid}/submit": {
-    /**
-     * 提交评测
-     * @description 客观题和编程题使用相同的接口提交
-     * 对于客观题的答案使用yaml编码，写入code字段中
-     * 格式如下：
-     * ```yaml
-     * '1': '2'
-     * '2':
-     *   - C
-     * '3':
-     *   - A
-     *   - B
-     *   - C
-     *   - D
-     * ```
-     */
+  "/user/lostpass/reset": {
+    /** 3. 重设用户密码 */
     post: {
       parameters: {
-        query?: {
-          /**
-           * @description 比赛ObjectID
-           * @example abcd
-           */
-          tid?: string;
-        };
         header?: {
           /** @example application/json */
           Accept?: string;
-        };
-        path: {
-          pid: string;
         };
       };
       requestBody?: {
         content: {
           "application/x-www-form-urlencoded": {
+            /** @example */
+            tokenId: string;
             /**
-             * @description 提交语言
-             * @example py.py3
-             * @enum {string}
+             * @description 新的密码
+             * @example
              */
-            lang: "cc.cc14o2" | "py.py3" | "scratch" | "_";
-            /**
-             * @description 代码内容
-             * @example print('Hello World')
-             */
-            code?: string;
-            /**
-             * @description 是否为比赛统一评测，若为统一评测则返回tid，否则返回rid
-             * @example true
-             */
-            pretest?: boolean;
-            input?: string;
-            /** @description 比赛ID，用于将评测记录关联到指定比赛记录 */
-            tid?: string;
+            password: string;
           };
         };
       };
@@ -2066,18 +2969,180 @@ export interface paths {
             "application/json": {
               UserContext: components["schemas"]["UserContext"];
               UiContext: components["schemas"]["UiContext"];
-              /** 跳转URL */
-              url: string;
-              /**
-               * 评测记录ID
-               * @description 非集中评测模式返回rid
-               */
-              rid?: string;
-              /**
-               * 比赛ID
-               * @description 集中评测模式返回tid
-               */
-              tid?: string;
+              /** @description 找回是否成功 */
+              success: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/user-plist/{tid}/edit": {
+    /**
+     * 修改用户题单
+     * @description 仅管理员 (PRIV.PRIV_VIEW_USER_SECRETS) 或用户本身可修改
+     */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+        path: {
+          tid: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            /** @description 要加入的pids */
+            insertPids: number[];
+            /** @description 要删除的pids */
+            deletePids: number[];
+            title: string;
+            content: string;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              success: boolean;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/mei_value/pay": {
+    /** 魅值获取支付链接 */
+    get: {
+      parameters: {
+        query: {
+          /** @example 669681309323fd2f5a058f7e */
+          orderId: string;
+        };
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              bdocs: components["schemas"]["BulletinDoc"][];
+              /** @description 按当前limit的page数量 */
+              bdocsPage: number;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+    /** 魅值同步更新支付状态 */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "multipart/form-data": {
+            /** @example */
+            orderId: string;
+            /**
+             * @description Alipay, Wechat(todo)
+             * @example Alipay
+             */
+            paymentType: string;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              bdocs: components["schemas"]["BulletinDoc"][];
+              /** @description 按当前limit的page数量 */
+              bdocsPage: number;
             };
           };
         };
@@ -2155,19 +3220,67 @@ export interface paths {
       };
     };
   };
-  "/contest/{tid}/problems": {
+  "/p/{pid}/submit": {
     /**
-     * 获取比赛题单
-     * @description 未加入、未开始的比赛会抛出错误；首次访问会被视为参加了比赛，会添加`startAt`记录
+     * 提交评测
+     * @description 客观题和编程题使用相同的接口提交
+     * 对于客观题的答案使用yaml编码，写入code字段中
+     * 格式如下：
+     * ```yaml
+     * '1': '2'
+     * '2':
+     *   - C
+     * '3':
+     *   - A
+     *   - B
+     *   - C
+     *   - D
+     * ```
      */
-    get: {
+    post: {
       parameters: {
+        query?: {
+          /**
+           * @description 比赛ObjectID
+           * @example abcd
+           */
+          tid?: string;
+        };
         header?: {
           /** @example application/json */
           Accept?: string;
         };
         path: {
-          tid: string;
+          pid: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /**
+             * @description 提交语言
+             * @example py.py3
+             * @enum {string}
+             */
+            lang: "cc.cc14o2" | "py.py3" | "scratch" | "_";
+            /**
+             * @description 代码内容
+             * @example print('Hello World')
+             */
+            code?: string;
+            /**
+             * @description 是否为比赛统一评测，若为统一评测则返回tid，否则返回rid
+             * @example true
+             */
+            pretest?: boolean;
+            /** @example */
+            input?: string;
+            /**
+             * @description 比赛ID，用于将评测记录关联到指定比赛记录
+             * @example
+             */
+            tid?: string;
+          };
         };
       };
       responses: {
@@ -2177,6 +3290,77 @@ export interface paths {
             "application/json": {
               UserContext: components["schemas"]["UserContext"];
               UiContext: components["schemas"]["UiContext"];
+              /** 跳转URL */
+              url: string;
+              /**
+               * 评测记录ID
+               * @description 非集中评测模式返回rid
+               */
+              rid?: string;
+              /**
+               * 比赛ID
+               * @description 集中评测模式返回tid
+               */
+              tid?: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/problem/{pid}/approve": {
+    /** 设置题目是否审核通过 */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+        path: {
+          pid: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /**
+             * @description 是否通过
+             * @example true
+             */
+            approved: boolean;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              success: boolean;
             };
           };
         };
@@ -2350,6 +3534,139 @@ export interface paths {
       };
     };
   };
+  "/contest/{tid}/problems": {
+    /**
+     * 获取比赛题单
+     * @description 未加入、未开始的比赛会抛出错误；首次访问会被视为参加了比赛，会添加`startAt`记录
+     */
+    get: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+        path: {
+          tid: string;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              pdict: {
+                [key: string]: components["schemas"]["Problem"];
+              };
+              psdict: {
+                [key: string]: components["schemas"]["ProblemStatus"];
+              };
+              udict: {
+                [key: string]: components["schemas"]["User"];
+              };
+              rdict: {
+                [key: string]: components["schemas"]["Record"];
+              };
+              tdoc: components["schemas"]["Contest"];
+              tsdoc: components["schemas"]["ContestStatus"];
+              tcdocs: string[];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+              /** @description 是否展示得分 */
+              showScore: boolean;
+              /** @description 是否可以查看记录详情 */
+              canViewRecord: boolean;
+              rdocs: components["schemas"]["Record"][];
+              [key: string]: Record<string, never>;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/user-plist/create": {
+    /** 创建用户题单 */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": {
+            /**
+             * @description 题单标题
+             * @example
+             */
+            title: string;
+            /**
+             * @description 题单简介
+             * @example
+             */
+            content: string;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              /** @description 创建的题单 id */
+              tid: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
   "/bulletin/create": {
     /**
      * 创建新公告
@@ -2396,6 +3713,114 @@ export interface paths {
               success: boolean;
               /** @description 新添加的公告 ID */
               docId: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/mei_value/notifier/alipay": {
+    /** 魅值异步充值状态更新 - 支付宝 */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "multipart/form-data": {
+            /** @example */
+            out_trade_no: string;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              bdocs: components["schemas"]["BulletinDoc"][];
+              /** @description 按当前limit的page数量 */
+              bdocsPage: number;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/user-plist/{tid}/delete": {
+    /** 删除用户题单 */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+        path: {
+          tid: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/x-www-form-urlencoded": Record<string, never>;
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
+              success: boolean;
             };
           };
         };
@@ -2491,6 +3916,95 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    UserProblemList: {
+      /** @description ObjectID */
+      _id: string;
+      /** @description ObjectID */
+      docId: string;
+      /**
+       * 类型
+       * Format: uint32
+       * @description 30=比赛 32=系统题单
+       * @enum {integer}
+       */
+      docType: 30 | 31 | 32 | 40;
+      /**
+       * 开始日期
+       * Format: date-time
+       * @description 比赛/作业的开放日期（题单不受此影响）
+       */
+      beginAt: string;
+      /**
+       * 结束日期
+       * Format: date-time
+       */
+      endAt: string;
+      /** 标题 */
+      title: string;
+      /** 说明内容 */
+      content: string;
+      /**
+       * 规则
+       * @description 比赛规则（赛制），homework为特殊规则
+       * @enum {string}
+       */
+      rule: "acm" | "oi" | "homework" | "ioi" | "ledo" | "strictioi";
+      /** 题目 */
+      pids: number[];
+      /**
+       * 分配给
+       * @description 若只分配给特定小组，则只有特定组有权限访问（与权限组结合）
+       */
+      assign?: string[];
+      /** 拥有者UID */
+      owner: number;
+      /** @description 个人题单中为 false */
+      visibility: boolean;
+    };
+    ProblemSolution: {
+      _id: string;
+      docId: string;
+      docType: number;
+      domainId: string;
+      owner: number;
+      maintainer?: number[];
+      approved?: string;
+      /** 所属题目pid */
+      parent: number;
+      reply: {
+        _id: string;
+        docId: string;
+        docType: number;
+        domainId: string;
+        owner: number;
+        maintainer?: number[];
+        content: string;
+        approved?: string;
+      }[];
+      /**
+       * 投票数
+       * @description 反对>赞成可能是负数
+       */
+      vote: number;
+      content: string;
+    };
+    RpInfo: {
+      /** 总 rp */
+      rp: number;
+      rpInfo: {
+        /** 通过题目获得的 rp */
+        problem: number;
+        /** 比赛获得的 rp */
+        contest: number;
+        problemCpp: number;
+        problemPy: number;
+        problemScratch: number;
+      };
+      rank: number;
+      level: number;
+      nAccept: number;
+      nSubmit: number;
+    };
     "SystemProblemList Recursive": {
       /**
        * 父节点
@@ -2538,13 +4052,16 @@ export interface components {
        * @description 若只分配给特定小组，则只有特定组有权限访问（与权限组结合）
        */
       assign?: string[];
+      /** 拥有者UID */
+      owner: number;
     };
     BulletinDoc: {
       _id: string;
       docId: string;
       docType: number;
       domainId: string;
-      maintainer: number[];
+      maintainer?: number[];
+      approved?: string;
       title: string;
       /** 标签 */
       tags: string[];
@@ -2726,6 +4243,8 @@ export interface components {
        * @description 仅用于作业
        */
       penaltySince?: string;
+      /** 拥有者UID */
+      owner: number;
       /**
        * 比赛标签
        * @description 用于筛选比赛
@@ -2810,7 +4329,9 @@ export interface components {
       docType: number;
       domainId: string;
       owner: number;
-      maintainer: number[];
+      maintainer?: number[];
+      content: string;
+      approved?: string;
     };
     ProblemStatus: {
       _id: string;
@@ -2865,6 +4386,8 @@ export interface components {
       };
       assign?: string[];
       config: string | components["schemas"]["ProblemConfig"];
+      /** 摘要 */
+      brief: string;
     };
     ProblemConfig: {
       redirect?: string[];
@@ -2926,6 +4449,8 @@ export interface components {
        * @description 若只分配给特定小组，则只有特定组有权限访问（与权限组结合）
        */
       assign?: string[];
+      /** 拥有者UID */
+      owner: number;
     };
     FileInfo: {
       _id: string;
@@ -3025,6 +4550,8 @@ export interface components {
        * @description 仅用于作业
        */
       penaltyRules?: Record<string, never>;
+      /** 拥有者UID */
+      owner: number;
     };
     Error: {
       /** 错误信息 */
@@ -3154,7 +4681,7 @@ export interface components {
       scope: string;
       domains: string[];
       pinnedDomains: string[];
-      id: string;
+      _id: number;
     };
   };
   responses: never;

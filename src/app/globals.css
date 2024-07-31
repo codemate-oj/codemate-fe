@@ -32,6 +32,15 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 21 100% 61%;
 
+    --success: #25ad40;
+    --fail: #fb5555;
+    --progress: #f39800;
+    --invalid: #9fa0a0;
+    --success-foreground: #ffffff; /* 示例前景色 */
+    --fail-foreground: #ffffff; /* 示例前景色 */
+    --progress-foreground: #ffffff; /* 示例前景色 */
+    --invalid-foreground: #000000; /* 示例前景色 */
+
     --radius: 0.5rem;
   }
 
@@ -93,5 +102,55 @@
 @keyframes l13 {
   100% {
     transform: rotate(1turn);
+  }
+}
+
+/* HTML: <div class="loader"></div> */
+.loader-bar {
+  width: 45px;
+  aspect-ratio: 0.75;
+  --c: no-repeat linear-gradient(#fff 0 0);
+  background:
+    var(--c) 0% 50%,
+    var(--c) 50% 50%,
+    var(--c) 100% 50%;
+  animation: l7 1s infinite linear alternate;
+}
+@keyframes l7 {
+  0% {
+    background-size:
+      20% 50%,
+      20% 50%,
+      20% 50%;
+  }
+  20% {
+    background-size:
+      20% 20%,
+      20% 50%,
+      20% 50%;
+  }
+  40% {
+    background-size:
+      20% 100%,
+      20% 20%,
+      20% 50%;
+  }
+  60% {
+    background-size:
+      20% 50%,
+      20% 100%,
+      20% 20%;
+  }
+  80% {
+    background-size:
+      20% 50%,
+      20% 50%,
+      20% 100%;
+  }
+  100% {
+    background-size:
+      20% 50%,
+      20% 50%,
+      20% 50%;
   }
 }

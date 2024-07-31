@@ -6,13 +6,11 @@ import Link from "next/link";
 
 interface BulletinItemProps {
   title: string;
-  maintainer: number[];
   tag?: string[];
   _id: string;
   content: string;
   owner: number;
   postAt: number | string;
-  updateAt: number | string;
 }
 
 interface ItemProps {
@@ -25,7 +23,7 @@ const BulletinItem: React.FC<ItemProps> = (props) => {
   const { title, _id, content, postAt } = item;
   const [isChildrenExpend, setIsChildrenExpend] = useState(false);
   const searchParams = useSearchParams();
-  const time = new Date(postAt ?? item.updateAt);
+  const time = new Date(postAt);
 
   return (
     <>

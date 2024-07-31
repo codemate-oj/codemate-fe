@@ -1,23 +1,24 @@
 import PageTitle from "@/components/common/page-title";
+import { BRANCH_NAME } from "@/constants/misc";
 import type { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "隐私协议 - CODEMATE",
+  title: `隐私协议 - ${BRANCH_NAME}`,
 };
 
 const PrivacyProtocal = () => {
   return (
     <div>
       <PageTitle>隐私协议</PageTitle>
-      <article className="prose lg:prose-xl">
+      <article className="prose">
         <h1>个人信息用户保护协议</h1>
         <p>
           欢迎您签署《扣叮魅个人信息保护协议》（下称“本协议”）并使用扣叮魅产品/服务！本协议是为了切实保护您的个人信息，优化用户体验而与您签订。本协议旨在说明在您使用扣叮魅产品/服务时，我们如何收集、使用、保存、共享和转让您的个人信息信息，以及您对您的个人信息享有的相关权利。本协议是《扣叮魅用户服务协议》(点击访问)的组成部分，与前述协议具有同等法律效力。
         </p>
         <h2>一、特别提示</h2>
         <p>
-          1.本协议适用各类扣叮魅平台以及扣叮魅平台提供的各项务，包括但不限于扣叮魅网站（https://www.codemate.cc）、CODEMATE小程序等网站及软件，以及该网站及软件上为您提供的各种扣叮魅服务。本协议由您和扣叮魅(深圳）网络技术有限公司（以下简称“扣叮魅”）在深圳市南山区共同签署。
+          1.本协议适用各类扣叮魅平台以及扣叮魅平台提供的各项务，包括但不限于扣叮魅网站（https://www.aioj.net）、AIOJ小程序等网站及软件，以及该网站及软件上为您提供的各种扣叮魅服务。本协议由您和扣叮魅(深圳）网络技术有限公司（以下简称“扣叮魅”）在深圳市南山区共同签署。
         </p>
         <p>
           2.本协议涉及的术语，我们尽量以简单易懂的方式向您表述。在签署本协议前，请您务必审慎阅读、充分理解本协议各条款的内容，尤其是免除或限制责任/权利的条款、法律适用与争议解决条款、或者其他以下划线/粗体/倾斜/高亮等形式特别标识的条款。如您对本协议内容有任何疑问的，您可通过扣叮魅在线客服、发送邮件33665922001@qq.com

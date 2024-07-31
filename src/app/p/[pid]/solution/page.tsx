@@ -3,14 +3,15 @@ import type { Metadata } from "next";
 import { request } from "@/lib/request";
 import { forwardAuthHeader } from "@/lib/forward-auth";
 import PageTitle from "@/components/common/page-title";
-import PRight from "@/components/problem/p-right";
-import SolutionItem from "@/components/solution/solution-item";
+import ProblemSidePanel from "@/components/problem/problem-side-panel";
+import SolutionList from "@/components/solution/solution-item-list";
 
 type Props = {
   params: {
     pid: string;
   };
 };
+
 async function getProblemDetail(pid: string) {
   return request.get(`/p/${pid}` as "/p/{pid}", {
     transformData: (data) => {
@@ -19,6 +20,7 @@ async function getProblemDetail(pid: string) {
     ...forwardAuthHeader(),
   });
 }
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!params.pid) throw new Error("No pid provided");
   const { data: pDetailData } = await getProblemDetail(params.pid);
@@ -37,13 +39,15 @@ function determineQuestionType(pdoc: Awaited<ReturnType<typeof getProblemDetail>
 }
 
 const SolutionPage = async ({ params }: Props) => {
-  const { data: pDetailData } = await getProblemDetail(params.pid!);
+  if (!params.pid) throw new Error("No pid provided");
 
+  const { data: pDetailData } = await getProblemDetail(params.pid!);
   const pType = determineQuestionType(pDetailData?.pdoc);
+
   return (
     <div className="mx-auto max-w-screen-xl p-4">
       <PageTitle>修炼场 {pType == "objective" ? "客观题 题解" : "编程题 题解"}</PageTitle>
-      <div className="flex w-4/5 items-center justify-between">
+      {/* <div className="flex w-4/5 items-center justify-between">
         <div>
           <span className="text-[2rem] font-bold">{pDetailData.pdoc?.pid} ：</span>
           <span className="mr-7 text-[2rem] font-bold">{pDetailData?.title}</span>
@@ -52,14 +56,14 @@ const SolutionPage = async ({ params }: Props) => {
       </div>
       <div>
         <span className="font-yahei text-[#797979]">文字解答数量：</span>
-        <span className="text-primary">2篇</span>
-      </div>
+        <span className="text-primary">{2}篇</span>
+      </div> */}
       <div className="mt-10 flex">
         <div className="w-4/5 border-r-2 border-dashed pr-4">
-          <SolutionItem></SolutionItem>
+          <SolutionList pid={params.pid}></SolutionList>
         </div>
         <div className="w-1/5 pl-5">
-          <PRight />
+          <ProblemSidePanel pid={params.pid} entryType="solution" />
         </div>
       </div>
     </div>

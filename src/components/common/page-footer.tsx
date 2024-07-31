@@ -20,7 +20,7 @@ const PageFooter = () => {
     <footer className="w-full bg-[#F8F8F8] text-center text-[#797979]">
       <div className="m-auto flex max-w-screen-2xl justify-center gap-14 p-10">
         <section className="text-center">
-          <Image src="/img/logo.png" alt="website-logo" width={178} height={178} />
+          <Image src="/img/new-logo.png" alt="website-logo" width={178} height={178} />
           <p className="mt-5 text-xl text-[#3D3D3D]">AI推题，高效有趣玩OJ</p>
         </section>
         <FooterSection
@@ -36,10 +36,16 @@ const PageFooter = () => {
           icon={<Image src="/svg/footer-cooperation.svg" alt="cooperation" width={42} height={34} />}
           title="商务合作"
         >
-          <li className="col-span-2">赛事平台委托评测</li>
-          <li className="col-span-2">中小学OJ平台定制</li>
-          <li className="col-span-2">教培机构OJ共享服务</li>
-          <li className="col-span-2">合作热线：400-850-8565</li>
+          <li className="col-span-2">
+            <Link href="/trade_collaboration/game_delegate_assessment">赛事平台委托评测</Link>
+          </li>
+          <li className="col-span-2">
+            <Link href="/trade_collaboration/training_org_assessment">中小学OJ平台定制</Link>
+          </li>
+          <li className="col-span-2">
+            <Link href="/trade_collaboration/training_org_assessment">教培机构OJ共享服务</Link>
+          </li>
+          <li className="col-span-2">合作热线：1892285257</li>
         </FooterSection>
         <FooterSection
           icon={<Image src="/svg/footer-rules.svg" alt="rules" width={30} height={34} />}
@@ -54,7 +60,7 @@ const PageFooter = () => {
         </FooterSection>
         <FooterSection
           icon={<Image src="/svg/footer-about.svg" alt="about-us" width={30} height={34} />}
-          title="关于CODEMATE"
+          title="关于 AIOJ"
         >
           <li>品牌故事</li>
           <li>平台优势</li>
@@ -75,8 +81,16 @@ const PageFooter = () => {
         <ul className="m-auto flex max-w-screen-2xl justify-end gap-4">
           <li>故障反馈</li>
           <li>用户条款</li>
-          <li>评测队列</li>
-          <li>服务状态</li>
+          <li>
+            <Link href="/record" target="_blank">
+              评测队列
+            </Link>
+          </li>
+          <li>
+            <a href="https://api.aioj.net/status" target="_blank">
+              服务状态
+            </a>
+          </li>
           {process.env.NEXT_PUBLIC_BEIAN && (
             <li>
               <a href="https://beian.miit.gov.cn/" target="_blank">

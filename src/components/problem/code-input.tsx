@@ -1,12 +1,12 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { AVAILABLE_LANG_MAP, useCodeLangContext, langType } from "@/providers/code-lang-provider";
+import { AVAILABLE_LANG_MAP, useCodeLangContext, LangType } from "@/providers/code-lang-provider";
 import { Textarea } from "../ui/textarea";
 
 interface CodeInputProps {
-  pid?: string;
-  langs: langType[];
+  pid?: string | number;
+  langs: LangType[];
 }
 
 const CodeInput: React.FC<CodeInputProps> = ({ langs, pid }) => {
@@ -29,7 +29,7 @@ const CodeInput: React.FC<CodeInputProps> = ({ langs, pid }) => {
     }
   };
 
-  const handleLangChange = (newLang: langType) => {
+  const handleLangChange = (newLang: LangType) => {
     setSelectedLang(newLang);
   };
 
@@ -46,7 +46,7 @@ const CodeInput: React.FC<CodeInputProps> = ({ langs, pid }) => {
               className={`mb-2 mr-2 justify-start ${selectedLang === lang ? "mr-2 border-2 border-primary text-primary hover:bg-accent/30 hover:text-primary" : ""}`}
               onClick={() => handleLangChange(lang)}
             >
-              {AVAILABLE_LANG_MAP[lang as langType]}
+              {AVAILABLE_LANG_MAP[lang as LangType]}
             </Button>
           ))}
         </div>

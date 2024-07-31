@@ -1,15 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   rewrites: async () => {
+    const ret = [
+      {
+        source: "/file/:path*",
+        destination: `${process.env.CDN_PREFIX ?? "https://cdn.aioj.net/"}:path*`,
+      },
+    ];
     if (process.env.NODE_ENV === "development" || process.env.IS_VERCEL) {
-      return [
-        {
-          source: "/api/:path*",
-          destination: `${process.env.API_URL ?? "https://api.aioj.net/"}:path*`,
-        },
-      ];
+      ret.push({
+        source: "/api/:path*",
+        destination: `${process.env.API_URL ?? "https://api.aioj.net/"}:path*`,
+      });
     }
-    return [];
+    return ret;
   },
   images: {
     dangerouslyAllowSVG: true, // 允许Image提供SVG而非img
@@ -22,10 +26,15 @@ const nextConfig = {
         port: "",
         pathname: "/file/**",
       },
-
       {
         protocol: "https",
         hostname: "www.aioj.net",
+        port: "",
+        pathname: "/file/**",
+      },
+      {
+        protocol: "https",
+        hostname: "api.aioj.net",
         port: "",
         pathname: "/file/**",
       },

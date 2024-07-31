@@ -1,0 +1,122 @@
+name: Deploy Next.js Project
+
+on:
+  push:
+    branches:
+      - main
+      - test
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # env:
+    # 在这里添加你的环境变量
+    # NEXT_PUBLIC_API_URL: https://api.aioj.net/
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Cache pnpm store
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Cache .next folder
+        uses: actions/cache@v3
+        with:
+          path: .next
+          key: ${{ runner.os }}-next-build-${{ hashFiles('**/*') }}
+          restore-keys: |
+            ${{ runner.os }}-next-build-
+
+      - name: Build project
+        run: pnpm build
+
+      - name: Archive multiple folders and files
+        run: tar -czf build-artifacts.tar.gz .next next.config.mjs public
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifact
+          path: |
+            build-artifacts.tar.gz
+            # add other paths if necessary
+
+  deploy-to-test:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/test' || github.ref == 'refs/heads/main'
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifact
+          path: build
+
+      - name: Copy files via scp
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          source: "build/build-artifacts.tar.gz"
+          target: "/home/ubuntu/nextjs-bootstrap/"
+          host: ${{ secrets.TEST_SERVER_HOST }}
+          username: ${{ secrets.TEST_SERVER_USER }}
+          password: ${{ secrets.TEST_SERVER_PASSWORD }}
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.TEST_SERVER_HOST }}
+          username: ${{ secrets.TEST_SERVER_USER }}
+          password: ${{ secrets.TEST_SERVER_PASSWORD }}
+          script: |
+            cd /home/ubuntu/nextjs-bootstrap
+            tar -xzf build-artifacts.tar.gz
+            rm build-artifacts.tar.gz
+            sudo su
+            pm2 restart next-app || pm2 start "npm start" --name next-app
+
+  deploy-to-prod:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifact
+          path: build
+
+      - name: Copy files via scp
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          source: "build/build-artifacts.tar.gz"
+          target: "/home/ubuntu/nextjs-bootstrap/"
+          host: ${{ secrets.PROD_SERVER_HOST }}
+          username: ${{ secrets.PROD_SERVER_USER }}
+          password: ${{ secrets.PROD_SERVER_PASSWORD }}
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.PROD_SERVER_HOST }}
+          username: ${{ secrets.PROD_SERVER_USER }}
+          password: ${{ secrets.PROD_SERVER_PASSWORD }}
+          script: |
+            sudo su -c 'mv /home/ubuntu/nextjs-bootstrap/build/build-artifacts.tar.gz /root/nextjs-bootstrap && cd /root/nextjs-bootstrap && tar -xzf build-artifacts.tar.gz && rm build-artifacts.tar.gz && /root/.nix-profile/bin/pm2 restart next-app || /root/.nix-profile/bin/pm2 start "npm start" --name next-app'

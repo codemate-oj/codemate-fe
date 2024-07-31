@@ -28,7 +28,7 @@ interface IProps {
 const EmailForm: React.FC<IProps> = ({
   title = "请输入邮箱",
   description,
-  buttonText = "提交",
+  buttonText,
   onSubmit,
   loading,
   error: errorText,
@@ -66,7 +66,6 @@ const EmailForm: React.FC<IProps> = ({
                 </FormItem>
               )}
             />
-
             {errorText && (
               <p className="flex items-center gap-x-2 px-1 text-sm text-red-500">
                 <Icon inline icon="ic:baseline-error" />

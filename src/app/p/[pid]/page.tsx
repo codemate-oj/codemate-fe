@@ -1,13 +1,13 @@
 import PageTitle from "@/components/common/page-title";
 import PTop from "@/components/problem/p-top";
-import PRight from "@/components/problem/p-right";
-import PBottom from "@/components/problem/p-bottom";
+import ProblemSidePanel from "@/components/problem/problem-side-panel";
+import CodeActionBar from "@/components/problem/code-action-bar";
 import CodeInput from "@/components/problem/code-input";
 import { request } from "@/lib/request";
 
 import type { Metadata } from "next";
 import { forwardAuthHeader } from "@/lib/forward-auth";
-import CodeLangProvider, { langType } from "@/providers/code-lang-provider";
+import CodeLangProvider, { LangType } from "@/providers/code-lang-provider";
 import { extractQuestionsFromMarkdown } from "@/lib/problem-parse";
 import React, { Suspense } from "react";
 import Loading from "@/components/ui/loading";
@@ -19,6 +19,10 @@ type Props = {
   params: {
     pid: string;
   };
+  searchParams: {
+    tid?: string;
+    fromContest?: string;
+  };
 };
 
 type ProblemType = "objective" | "scratch" | "default";
@@ -29,8 +33,11 @@ const FormilyRenderer = dynamic(() => import("@/components/problem/formily-rende
   loading: () => <Loading></Loading>,
 });
 
-async function getProblemDetail(pid: string) {
+async function getProblemDetail(pid: string, tid?: string) {
   return request.get(`/p/${pid}` as "/p/{pid}", {
+    params: {
+      tid,
+    },
     transformData: (data) => {
       return data;
     },
@@ -86,10 +93,12 @@ function extractMarkdownContent(pdoc: Awaited<ReturnType<typeof getProblemDetail
   return _content;
 }
 
-const Page = async ({ params }: Props) => {
+const Page = async ({ params, searchParams }: Props) => {
   if (!params.pid) throw new Error("No pid provided");
 
-  const { data: pDetailData } = await getProblemDetail(params.pid!);
+  const isFromContest = Boolean(searchParams.fromContest === "true" && searchParams.tid);
+
+  const { data: pDetailData } = await getProblemDetail(params.pid!, isFromContest ? searchParams.tid : undefined);
 
   const pType = determineQuestionType(pDetailData?.pdoc);
   const langs = determineAvailableLangs(pDetailData?.pdoc);
@@ -130,15 +139,11 @@ const Page = async ({ params }: Props) => {
                   </div>
                 </Suspense>
               </div>
-              {pType === "default" && (
-                <>
-                  <CodeInput langs={langs as langType[]} pid={params.pid} />
-                  <PBottom type={pType} pid={params.pid} />
-                </>
-              )}
+              {pType === "default" && <CodeInput langs={langs as LangType[]} pid={params.pid} />}
+              {pType !== "objective" && <CodeActionBar type={pType} pid={params.pid} />}
             </div>
             <div className="w-1/5 pl-5">
-              <PRight />
+              <ProblemSidePanel pid={params.pid} entryType={pType} />
             </div>
           </div>
         </div>
