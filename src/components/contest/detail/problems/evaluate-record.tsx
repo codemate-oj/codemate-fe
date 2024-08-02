@@ -24,24 +24,24 @@ const columns: TableProps<DataType>["columns"] = [
       );
     },
   },
-  {
-    title: "时间",
-    dataIndex: "time",
-    key: "time",
-    render: (_, record) => {
-      if (record.time == 0) return <span>-</span>;
-      return <span>{record.time}ms</span>;
-    },
-  },
-  {
-    title: "内存",
-    dataIndex: "memory",
-    key: "memory",
-    render: (_, record) => {
-      if (record.memory == 0) return <span>-</span>;
-      return <span>{record.memory}MiB</span>;
-    },
-  },
+  // {
+  //   title: "时间",
+  //   dataIndex: "time",
+  //   key: "time",
+  //   render: (_, record) => {
+  //     if (record.time == 0) return <span>-</span>;
+  //     return <span>{record.time}ms</span>;
+  //   },
+  // },
+  // {
+  //   title: "内存",
+  //   dataIndex: "memory",
+  //   key: "memory",
+  //   render: (_, record) => {
+  //     if (record.memory == 0) return <span>-</span>;
+  //     return <span>{record.memory}MiB</span>;
+  //   },
+  // },
   {
     title: "语言",
     dataIndex: "language",
