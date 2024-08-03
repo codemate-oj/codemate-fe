@@ -28,19 +28,19 @@ const TableList = ({ children }: any) => {
         href: routerConfig?.href,
       },
     ]);
-    if (pathname === "/user/plist/detail") {
+    if (pathname.match(/^\/user\/plist\/[^/]+\/detail$/)) {
       setBreadcrumbItems([
         {
           title: routerConfig?.name ?? "我的中心",
           href: routerConfig?.href,
         },
         {
-          title: "题目详情",
+          title: "题目管理",
           href: "/user/plist/detail",
         },
       ]);
     }
-    if (pathname === "/user/plist/import") {
+    if (pathname.match(/^\/user\/plist\/[^/]+\/import$/)) {
       setBreadcrumbItems([
         {
           title: routerConfig?.name ?? "我的中心",
@@ -63,7 +63,7 @@ const TableList = ({ children }: any) => {
             创建题单
           </Button>
         )}
-        {pathname === "/user/plist/detail" && (
+        {pathname.match(/^\/user\/plist\/[^/]+\/detail$/) && (
           <div className="flex">
             <Space>
               <Link href={"/user/plist/import"}>
@@ -75,7 +75,7 @@ const TableList = ({ children }: any) => {
             </Space>
           </div>
         )}
-        {pathname === "/user/plist/import" && (
+        {pathname.match(/^\/user\/plist\/[^/]+\/import$/) && (
           <div className="flex">
             <Space>
               <Link href={"/user/plist/import"}>
@@ -91,7 +91,7 @@ const TableList = ({ children }: any) => {
 
       {children}
 
-      {pathname === "/user/plist/detail" ? (
+      {pathname.match(/^\/user\/plist\/[^/]+\/detail$/) ? (
         <DeleteQuizModel
           ModalOpen={ModalOpen}
           onCancel={function (): void {
@@ -112,7 +112,7 @@ const TableList = ({ children }: any) => {
           }}
         ></CreateQuizModel>
       )}
-      {pathname === "/user/plist/import" ? (
+      {pathname.match(/^\/user\/plist\/[^/]+\/import$/) ? (
         <DeleteQuizModel
           ModalOpen={ModalOpen}
           onCancel={function (): void {

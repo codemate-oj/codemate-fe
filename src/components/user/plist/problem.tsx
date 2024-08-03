@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Table, TableColumnsType, Tag, Divider } from "antd";
+import { Table, TableColumnsType, Tag } from "antd";
 import Image from "next/image";
 import { useUrlParamState } from "@/hooks/useUrlParamState";
 import { request } from "@/lib/request";
@@ -95,7 +95,7 @@ const columns: TableColumnsType<DataType> = [
   },
 ];
 
-const ProblemListTable = () => {
+export const ProblemListTable = () => {
   const [page, setPage] = useUrlParamState("page", "1");
   const queryParams = useSearchParams();
 
@@ -204,14 +204,3 @@ const ProblemListTable = () => {
     </ProblemListMask>
   );
 };
-
-const UserProblemListPage: React.FC = () => {
-  return (
-    <div>
-      <Divider />
-      <ProblemListTable></ProblemListTable>;
-    </div>
-  );
-};
-
-export default UserProblemListPage;

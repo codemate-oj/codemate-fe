@@ -5,19 +5,25 @@ import { useRequest } from "ahooks";
 import { useUrlParamState } from "@/hooks/useUrlParamState";
 import { request } from "@/lib/request";
 import ProblemTable from "@/components/user/plist/problem-list";
+import { ProblemListTable } from "@/components/user/plist/problem";
 
-const UserProblemListPage: React.FC = () => {
+type Props = {
+  params: {
+    tid: string;
+  };
+};
+
+const UserProblemListPage = ({ params }: Props) => {
   const [page, setPage] = useUrlParamState("page", "1");
 
   const { data: problemListData, loading } = useRequest(
     async () => {
-      const { data } = await request.get(`/user-plist`, {
+      const { data } = await request.get(`/user-plist/${params.tid!}/detail`, {
         params: {
           page: Number(page),
-          all: false,
         },
       });
-      return data?.pldocs.map((item: { _id: unknown }) => ({ ...item, key: item._id }));
+      return [data.pldoc].map((item: { _id: unknown }) => ({ ...item, key: item._id }));
     },
     {
       refreshDeps: [URLSearchParams, page],
@@ -32,7 +38,10 @@ const UserProblemListPage: React.FC = () => {
         loading={loading}
         currentPage={Number(page) || 1}
         onPageChange={(page) => setPage(String(page))}
+        showButton={false}
       />
+      <Divider />
+      <ProblemListTable></ProblemListTable>;
     </div>
   );
 };
