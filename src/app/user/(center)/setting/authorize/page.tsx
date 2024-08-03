@@ -1,7 +1,8 @@
 import React from "react";
+import App from "./App";
 
 const UserAuthorizePage = () => {
-  return <div>实名认证</div>;
+  return <App />;
 };
 
 export default UserAuthorizePage;

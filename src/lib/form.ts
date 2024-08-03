@@ -65,3 +65,34 @@ export function objectToYaml(obj: { [key: string]: number | string }) {
     return null;
   }
 }
+
+export function validateIdNumber(id: string) {
+  // 15位和18位身份证号码的正则表达式
+  const regex = /^(?:\d{15}|\d{17}[\dXx])$/;
+  if (!regex.test(id)) {
+    return false;
+  }
+
+  // 校验18位身份证号码的校验码
+  if (id.length === 18) {
+    // 加权因子
+    const weights = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+    // 校验码
+    const checkCodes = ["1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2"];
+
+    // 计算校验码
+    let sum = 0;
+    for (let i = 0; i < 17; i++) {
+      const charCode = id[i].charCodeAt(0);
+      sum += charCode * weights[i];
+    }
+    const checkCode = checkCodes[sum % 11];
+
+    // 比较计算出的校验码和身份证号中的校验码
+    if (checkCode !== id[17].toUpperCase()) {
+      return false;
+    }
+  }
+
+  return true;
+}
