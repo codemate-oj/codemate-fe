@@ -7,10 +7,10 @@ import { request } from "@/lib/request";
 import LinkBtn from "../common/link-btn";
 import { paths } from "@/types/schema";
 import ProblemListMask from "@/components/home/problem-list-mask";
-import CommonModal from "@/components/common/common-modal";
 import { useRequest } from "ahooks";
 import { useProblemPermission } from "@/hooks/useProblemPermission";
 import { stripMarkdown } from "@/lib/markdown";
+import emitter from "@/lib/event-emitter";
 
 type DataType = paths["/p"]["get"]["responses"]["200"]["content"]["application/json"]["pdocs"][number];
 
@@ -39,7 +39,7 @@ export const columns: TableColumnsType<DataType> = [
     dataIndex: "tag",
     // ellipsis: true,
     render: (_, record) => (
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap gap-y-1">
         {record.tag?.map((tag: string) => {
           return (
             <Tag color={"volcano"} key={tag} className="!bg-orange-50 !leading-4 !text-primary">
@@ -100,10 +100,10 @@ const ProblemListTable: React.FC<Props> = ({ tid, lang }) => {
     run: refresh,
     loading,
   } = useRequest(
-    async () => {
+    async (page?: number) => {
       const data = await request.get("/p", {
         params: {
-          page: Number(page) || 1,
+          page: page || 1,
           limit: 15,
           source: tid,
           lang: lang,
@@ -120,7 +120,7 @@ const ProblemListTable: React.FC<Props> = ({ tid, lang }) => {
     }
   );
 
-  const { data: tdocData } = useRequest(
+  const { data: tdocData, run: fetchTdoc } = useRequest(
     async () => {
       if (!tid) return { ishasPermission: true };
       const { data } = await request.get(`/p-list/${tid}` as "/p-list/{tid}", {
@@ -140,11 +140,14 @@ const ProblemListTable: React.FC<Props> = ({ tid, lang }) => {
 
   // 在tid或lang变化时，重置page
   useEffect(() => {
-    if (cache.current) {
-      const newCache = JSON.stringify({ tid, lang });
-      if (cache.current === newCache) return;
+    const newCache = JSON.stringify({ tid, lang });
+    // ref=null的情况代表初始化，不重置page
+    if (!cache.current) {
+      cache.current = newCache;
+      return;
     }
-    cache.current = JSON.stringify({ tid, lang });
+    if (cache.current === newCache) return;
+    cache.current = newCache;
     if (page === "1") {
       refresh(); // page=1时需要手动刷新
     } else {
@@ -154,8 +157,20 @@ const ProblemListTable: React.FC<Props> = ({ tid, lang }) => {
 
   // 在page更新时刷新表格（tid和lang依赖page去刷新）
   useEffect(() => {
-    refresh();
+    refresh(Number(page));
   }, [page]);
+
+  useEffect(() => {
+    const handleRefresh = () => {
+      refresh(Number(page));
+      fetchTdoc();
+    };
+    emitter.on("refreshHomepage", handleRefresh);
+
+    return () => {
+      emitter.off("refreshHomepage", handleRefresh);
+    };
+  }, [fetchTdoc, page, refresh]);
 
   return (
     <ProblemListMask
@@ -163,7 +178,6 @@ const ProblemListTable: React.FC<Props> = ({ tid, lang }) => {
       content={tdocData?.content ?? ""}
       ishasPermission={tdocData?.ishasPermission ?? true}
     >
-      <CommonModal />
       <Table
         size="small"
         loading={loading}
@@ -174,7 +188,7 @@ const ProblemListTable: React.FC<Props> = ({ tid, lang }) => {
         onRow={(record) => {
           return {
             onClick: () => {
-              runCheckProblemPermission({ pid: record.pid, assign: record.assign, title: record.title });
+              runCheckProblemPermission(record);
             },
           };
         }}

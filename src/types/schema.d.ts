@@ -2822,6 +2822,8 @@ export interface paths {
                * @description 仅在hasPerm=false时才会返回ways
                */
               activation?: ("group" | "point")[];
+              /** @description 若为group激活方式，则返回可用的小组 */
+              assign?: string[];
             };
           };
         };

@@ -16,6 +16,7 @@ import dynamic from "next/dynamic";
 import NiceModalProvider from "@/providers/nice-modal-provider";
 import ApolloContextProvider from "@/providers/apollo-provider";
 import { BRANCH_NAME, BRANCH_SLOGAN } from "@/constants/misc";
+import CommonModal from "@/components/common/common-modal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -56,6 +57,7 @@ export default function RootLayout({
                 </header>
                 <main className="max-w-full">{children}</main>
                 <Toaster richColors />
+                <CommonModal />
               </NiceModalProvider>
             </AntdThemeConfigProvider>
           </AntdRegistry>
