@@ -37,3 +37,10 @@ export const userCenterRoutes: NavItemWithIcon[] = [
     icon: <Image src="/svg/popup-account.svg" alt="my-account" width={20} height={22} />,
   },
 ];
+
+export const userSettingRoutes: NavItemType[] = [
+  { name: "个人信息", href: "/user/setting/info" },
+  { name: "实名认证", href: "/user/setting/authorize" },
+  { name: "拓展信息", href: "/user/setting/appendix" },
+  // { name: "成就", href: "/user/setting/achievement" },
+];

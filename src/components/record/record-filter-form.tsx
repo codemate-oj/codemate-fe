@@ -89,7 +89,14 @@ const RecordFilterForm: React.FC<IProps> = ({ onSubmit, loading }) => {
         <Button type="primary" onClick={handleSubmit} loading={loading}>
           筛选
         </Button>
-        <Button onClick={() => form.resetFields()}>重置</Button>
+        <Button
+          onClick={() => {
+            form.resetFields();
+            handleSubmit();
+          }}
+        >
+          重置
+        </Button>
       </div>
     </Card>
   );

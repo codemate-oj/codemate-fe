@@ -7,7 +7,7 @@ import qs from "qs";
 import { NotLoginError, tryParseHydroResponse } from "./error";
 import { paths } from "@/types/schema";
 import { objectToFormData } from "./form";
-import { isBrowser } from "./utils";
+import { isBrowser, remoteUrl } from "./utils";
 
 const IS_DEV = process.env.NODE_ENV === "development";
 
@@ -64,6 +64,9 @@ export const alovaInstance = createAlova({
     if (data?.UserContext && typeof data.UserContext === "string") {
       try {
         data.UserContext = JSON.parse(data.UserContext);
+        if (data.UserContext?.avatarUrl) {
+          data.UserContext.avatarUrl = remoteUrl(data.UserContext.avatarUrl);
+        }
       } catch (e) {
         console.error(e);
         data.UserContext = null;
@@ -146,7 +149,16 @@ export const request = {
   postWithoutType: (url: string, data: any, config: Parameters<typeof alovaInstance.Post>[2] = {}) => {
     let payload: RequestBody | undefined = data;
     const contentType: string = config.headers?.["Content-Type"] ?? "application/x-www-form-urlencoded";
-
+    if (payload instanceof FormData) {
+      return alovaInstance.Post(url, payload, {
+        ...config,
+        headers: {
+          Accept: "application/json",
+          ...(config.headers ?? {}),
+        },
+        mode: "cors",
+      });
+    }
     if (data) {
       // 处理自动序列化逻辑
       switch (contentType) {
