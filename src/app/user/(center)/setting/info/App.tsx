@@ -17,7 +17,7 @@ const App = () => {
 
   const isAuthorized = globalUser?.verifyPassed ?? globalUser?.verifyInfo?.verifyPassed;
 
-  const { loading } = useRequest(async () => {
+  const { loading, run: refresh } = useRequest(async () => {
     const udoc = await request.get("/user/center", {
       transformData(data) {
         return data.data.udoc;
@@ -40,7 +40,10 @@ const App = () => {
         delete values.age;
       }
       try {
-        await request.post("/user/center", values);
+        await request.post("/user/center", values, {
+          transformData: (data) => data.data.UserContext,
+        });
+        refresh();
         toast.success("保存成功");
       } catch (e) {
         if (e instanceof HydroError) {

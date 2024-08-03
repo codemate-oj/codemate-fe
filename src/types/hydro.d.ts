@@ -3,7 +3,7 @@
 namespace Hydro {
   type UID = number;
 
-  export const enum UserGender {
+  export enum UserGender {
     Male = 0,
     Female,
     NotGiven,
