@@ -61,6 +61,11 @@ export interface paths {
              * @example 18
              */
             age?: number;
+            /**
+             * @description 昵称
+             * @example 123
+             */
+            nickname?: string;
           };
         };
       };
@@ -1327,10 +1332,6 @@ export interface paths {
               UserContext: components["schemas"]["UserContext"];
               UiContext: components["schemas"]["UiContext"];
               udoc: components["schemas"]["User"];
-              sdoc: {
-                createAt: string;
-                updateAt: string;
-              };
             };
           };
         };
@@ -1372,14 +1373,76 @@ export interface paths {
       requestBody?: {
         content: {
           "application/x-www-form-urlencoded": {
-            /** @example */
+            /**
+             * @description  用户昵称
+             * @example  JohnDoe
+             */
             nickname?: string;
-            /** @example */
+            /**
+             * @description  用户国籍
+             * @example  中国
+             */
             nationality?: string;
-            /** @example 0 */
+            /**
+             * @description  国内行政区划代码（国外用000000代替）
+             * @example  000000
+             */
+            regionCode?: number;
+            /**
+             * @description  用户角色（如机构老师、学生等）
+             * @example 1
+             */
+            userRole?: number;
+            /**
+             * @description  用户年龄
+             * @example 25
+             */
             age?: number;
-            /** @example */
-            oier?: boolean;
+            /**
+             * @description  是否 OI 竞赛选手
+             * @example  true
+             */
+            oier?: string;
+            /**
+             * @description  性别
+             * @example  1
+             */
+            sex?: string;
+            /**
+             * @description  学校
+             * @example  北京大学
+             */
+            school?: string;
+            /**
+             * @description  年级
+             * @example  大三
+             */
+            schoolGrade?: string;
+            /**
+             * @description  家长电话
+             * @example  13800138000
+             */
+            parentPhone?: string;
+            /**
+             * @description  重点关注
+             * @example  编程能力
+             */
+            commentFocus?: string;
+            /**
+             * @description  核心诉求
+             * @example  提高算法水平
+             */
+            commentPursue?: string;
+            /**
+             * @description  目前学习阶段
+             * @example  入门
+             */
+            learnLevel?: string;
+            /**
+             * @description  学术圈层
+             * @example  高等教育
+             */
+            academicLevel?: string;
           };
         };
       };
@@ -3034,6 +3097,62 @@ export interface paths {
               UserContext: components["schemas"]["UserContext"];
               UiContext: components["schemas"]["UiContext"];
               success: boolean;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "application/json": {
+              /** @description 错误信息 */
+              error: components["schemas"]["Error"];
+              UiContext: components["schemas"]["UiContext"];
+              UserContext: components["schemas"]["UserContext"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/home/avatar": {
+    /** 上传头像 */
+    post: {
+      parameters: {
+        header?: {
+          /** @example application/json */
+          Accept?: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "multipart/form-data": {
+            /**
+             * Format: binary
+             * @description 头像文件
+             * @example
+             */
+            file?: string;
+          };
+        };
+      };
+      responses: {
+        /** @description 成功 */
+        200: {
+          content: {
+            "application/json": {
+              UserContext: components["schemas"]["UserContext"];
+              UiContext: components["schemas"]["UiContext"];
             };
           };
         };

@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/user/setting",
+        destination: "/user/setting/info",
+        permanent: true,
+      },
+    ];
+  },
   rewrites: async () => {
     const ret = [
       {
@@ -21,22 +30,13 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {
-        protocol: "https",
         hostname: "cdn.aioj.net",
-        port: "",
-        pathname: "/file/**",
       },
       {
-        protocol: "https",
         hostname: "www.aioj.net",
-        port: "",
-        pathname: "/file/**",
       },
       {
-        protocol: "https",
         hostname: "api.aioj.net",
-        port: "",
-        pathname: "/file/**",
       },
     ],
   },

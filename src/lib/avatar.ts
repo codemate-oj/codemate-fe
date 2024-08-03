@@ -1,0 +1,30 @@
+import { md5 } from "js-md5";
+
+type AvatarProvider = (src: string, size: number) => string;
+
+export const FallbackAvatarUrl = "/img/avatar.png";
+
+export const providers: Record<string, AvatarProvider> = {
+  gravatar: (email, size) => `//cn.gravatar.com/avatar/${md5((email || "").trim().toLowerCase())}?d=mm&s=${size || 32}`,
+  qq: (id) => `//q1.qlogo.cn/g?b=qq&nk=${(/(\d+)/g.exec(id) || ["", ""])[1]}&s=160`,
+  github: (id, size) => `//github.com/${id}.png?size=${Math.min(size, 460)}`,
+  url: (url) => url,
+};
+
+export function getAvatarUrl(src: string, size = 64, fallback = "") {
+  src ||= fallback;
+  let index = src.indexOf(":");
+  if (index === -1 && fallback) {
+    src = fallback;
+    index = src.indexOf(":");
+  }
+  if (index === -1) return providers.gravatar("", size);
+  const [provider, str] = [src.substring(0, index), src.substring(index + 1, src.length)];
+  if (!providers[provider] || !str) return providers.gravatar("", size);
+  return providers[provider](str, size);
+}
+
+export function getAvatarUrlFromUserContext(user?: Hydro.UserContext) {
+  if (!user) return FallbackAvatarUrl;
+  return user.avatarUrl ?? getAvatarUrl(user.avatar) ?? FallbackAvatarUrl;
+}
