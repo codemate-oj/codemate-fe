@@ -40,14 +40,17 @@ const Scoreboard: React.FC<ScoreboardProps> = (props) => {
     let count = 0;
     item.forEach((k) => {
       if (k.type == "record") {
-        record[String.fromCharCode("A".charCodeAt(0) + count++)] = k.value;
+        record[String.fromCharCode("A".charCodeAt(0) + count++)] = k.score;
       }
     });
+    const total_score = item.slice(3).reduce((last, cur) => {
+      return last + Number(cur.score);
+    }, 0);
     return {
       key: index,
       rank: item[0].value,
       user: item[1].value,
-      total_score: item[2].value,
+      total_score: total_score,
       ...record,
     };
   });
