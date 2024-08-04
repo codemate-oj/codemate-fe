@@ -22,42 +22,57 @@ const TableList = ({ children }: any) => {
   const routerConfig = userCenterRoutes.find((r) => pathname.startsWith(r.href));
 
   useEffect((): void => {
-    setBreadcrumbItems([
+    const items = [
       {
         title: routerConfig?.name ?? "我的中心",
         href: routerConfig?.href,
       },
-    ]);
+    ];
+
     if (pathname.match(/^\/user\/plist\/[^/]+\/detail$/)) {
-      setBreadcrumbItems([
-        {
-          title: routerConfig?.name ?? "我的中心",
-          href: routerConfig?.href,
-        },
-        {
-          title: "题目管理",
-          href: "/user/plist/detail",
-        },
-      ]);
+      items.push({
+        title: "题目管理",
+        href: "/user/plist/detail",
+      });
+    } else if (pathname.match(/^\/user\/plist\/[^/]+\/import$/)) {
+      items.push({
+        title: "添加题目",
+        href: "/user/plist/import",
+      });
     }
-    if (pathname.match(/^\/user\/plist\/[^/]+\/import$/)) {
-      setBreadcrumbItems([
-        {
-          title: routerConfig?.name ?? "我的中心",
-          href: routerConfig?.href,
-        },
-        {
-          title: "添加题目",
-          href: "/user/plist/import",
-        },
-      ]);
-    }
-  }, [pathname]);
+
+    setBreadcrumbItems(items);
+  }, [pathname, routerConfig]);
+
+  const breadcrumbRenderItems = breadcrumbItems.map((item, index) => ({
+    key: index,
+    title: item.href ? (
+      <Link href={item.href}>
+        <span
+          className={
+            index === breadcrumbItems.length - 1
+              ? "text-xl font-bold text-orange-500"
+              : "text-xl font-bold text-gray-800"
+          }
+        >
+          {item.title}
+        </span>
+      </Link>
+    ) : (
+      <span
+        className={
+          index === breadcrumbItems.length - 1 ? "text-xl font-bold text-orange-500" : "text-xl font-bold text-gray-800"
+        }
+      >
+        {item.title}
+      </span>
+    ),
+  }));
 
   return (
     <div className="flex-1">
-      <h2 className="mb-5 flex items-center justify-between text-4xl font-bold">
-        <Breadcrumb items={breadcrumbItems} className="text-4xl" />
+      <h2 className="mb-5 flex items-center justify-between font-bold">
+        <Breadcrumb items={breadcrumbRenderItems} className="text-2xl" />
         {pathname === "/user/plist" && (
           <Button className="font-bold" onClick={() => setModalOpen(true)}>
             创建题单
@@ -67,7 +82,9 @@ const TableList = ({ children }: any) => {
           <div className="flex">
             <Space>
               <Link href={"/user/plist/import"}>
-                <Button className="font-bold">添加</Button>
+                <Button className="font-bold" type="primary">
+                  添加
+                </Button>
               </Link>
               <Button className="font-bold" onClick={() => setModalOpen(true)}>
                 删除
@@ -79,7 +96,9 @@ const TableList = ({ children }: any) => {
           <div className="flex">
             <Space>
               <Link href={"/user/plist/import"}>
-                <Button className="font-bold">添加</Button>
+                <Button className="font-bold" type="primary">
+                  添加
+                </Button>
               </Link>
               <Button className="font-bold" onClick={() => setModalOpen(true)}>
                 删除

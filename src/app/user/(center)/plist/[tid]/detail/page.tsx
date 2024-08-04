@@ -1,11 +1,13 @@
 "use client";
-import React from "react";
-import { Divider } from "antd";
+import React, { useState } from "react";
+import { Divider, Button } from "antd";
 import { useRequest } from "ahooks";
 import { useUrlParamState } from "@/hooks/useUrlParamState";
 import { request } from "@/lib/request";
-import ProblemTable from "@/components/user/plist/problem-list";
+// import ProblemTable from "@/components/user/plist/problem-list";
 import { ProblemListTable } from "@/components/user/plist/problem";
+import HeaderComponent from "@/components/user/plist/head";
+import ProblemTable from "@/components/user/plist/problem-list";
 
 type Props = {
   params: {
@@ -15,7 +17,7 @@ type Props = {
 
 const UserProblemListPage = ({ params }: Props) => {
   const [page, setPage] = useUrlParamState("page", "1");
-
+  const [pldoc, setPldoc] = useState<unknown>([]);
   const { data: problemListData, loading } = useRequest(
     async () => {
       const { data } = await request.get(`/user-plist/${params.tid!}/detail`, {
@@ -23,15 +25,18 @@ const UserProblemListPage = ({ params }: Props) => {
           page: Number(page),
         },
       });
-      return [data.pldoc].map((item: { _id: unknown }) => ({ ...item, key: item._id }));
+      setPldoc(data.pldoc);
+      return data;
     },
     {
       refreshDeps: [URLSearchParams, page],
     }
   );
+  // console.log(problemListData);
 
   return (
     <div>
+      <HeaderComponent title={pldoc?.title} content={pldoc?.content}></HeaderComponent>
       <Divider />
       <ProblemTable
         data={problemListData}
@@ -40,8 +45,7 @@ const UserProblemListPage = ({ params }: Props) => {
         onPageChange={(page) => setPage(String(page))}
         showButton={false}
       />
-      <Divider />
-      <ProblemListTable></ProblemListTable>;
+      <ProblemListTable></ProblemListTable>;<Button onClick={setPage(1)}></Button>
     </div>
   );
 };

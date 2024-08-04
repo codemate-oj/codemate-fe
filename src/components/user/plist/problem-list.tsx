@@ -58,7 +58,7 @@ const LinkBtn: React.FC<{ children: React.ReactNode }> = ({ children, ...props }
   );
 };
 
-const ProblemTable: React.FC<ProblemTableProps> = ({ data, loading, currentPage, onPageChange, showButton }) => {
+const ProblemTable: React.FC<ProblemTableProps> = ({ data, loading, currentPage, onPageChange }) => {
   return (
     <Table
       showHeader={false}
@@ -73,25 +73,23 @@ const ProblemTable: React.FC<ProblemTableProps> = ({ data, loading, currentPage,
         onChange: onPageChange,
         showSizeChanger: false,
         itemRender(_, type, element) {
-          if (showButton) {
-            if (type === "prev") {
-              return (
-                <>
-                  <LinkBtn>首页</LinkBtn>
-                  <LinkBtn>上一页</LinkBtn>
-                </>
-              );
-            }
-            if (type === "next") {
-              return (
-                <>
-                  <LinkBtn>下一页</LinkBtn>
-                  <LinkBtn>末页</LinkBtn>
-                </>
-              );
-            }
-            return element;
+          if (type === "prev") {
+            return (
+              <>
+                <LinkBtn>首页</LinkBtn>
+                <LinkBtn>上一页</LinkBtn>
+              </>
+            );
           }
+          if (type === "next") {
+            return (
+              <>
+                <LinkBtn>下一页</LinkBtn>
+                <LinkBtn>末页</LinkBtn>
+              </>
+            );
+          }
+          return element;
         },
       }}
     />
