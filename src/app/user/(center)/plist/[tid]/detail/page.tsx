@@ -43,7 +43,6 @@ const UserProblemListPage = ({ params }: Props) => {
         loading={loading}
         currentPage={Number(page) || 1}
         onPageChange={(page) => setPage(String(page))}
-        showButton={false}
       />
       <ProblemListTable></ProblemListTable>;<Button onClick={setPage(1)}></Button>
     </div>
