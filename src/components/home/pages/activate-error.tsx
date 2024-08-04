@@ -12,12 +12,10 @@ const ActivateError: React.FC = () => {
   const reInput = useLockFn(async () => {
     if (currentContext.from === "activate") {
       store.modalJumpTo("activate", {
-        tid: currentContext?.tid,
         content: currentContext?.content,
       });
     } else if (currentContext.from === "activate-question-group") {
       store.modalJumpTo("activate-question-group", {
-        tid: currentContext?.tid,
         group: currentContext?.group,
       });
     }

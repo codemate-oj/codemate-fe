@@ -3,7 +3,7 @@
 namespace Hydro {
   type UID = number;
 
-  export const enum UserGender {
+  export enum UserGender {
     Male = 0,
     Female,
     NotGiven,
@@ -37,6 +37,7 @@ namespace Hydro {
     authn: boolean;
     _id: UID;
     uname: string;
+    nickname?: string;
     mail: string;
     gender: UserGender;
     avatar: string;
@@ -72,6 +73,14 @@ namespace Hydro {
     // Domain Related
     domains: string[];
     pinnedDomains: string[];
+
+    // Authority
+    verifyPassed?: boolean;
+    verifyInfo?: {
+      idNumber?: string;
+      realName?: string;
+      verifyPassed?: boolean;
+    };
 
     [key: string]: any;
   }

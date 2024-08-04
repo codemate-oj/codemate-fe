@@ -1,7 +1,12 @@
 import React from "react";
+import PersonalInfo from "./App";
 
 const UserAppendixSettingPage = () => {
-  return <div>用户额外信息</div>;
+  return (
+    <div>
+      <PersonalInfo />
+    </div>
+  );
 };
 
 export default UserAppendixSettingPage;

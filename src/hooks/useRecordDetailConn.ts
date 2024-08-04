@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 export default function useRealtimeRecordDetail(rid = "", defaultValue?: RecordDoc) {
   const [rdoc, setRdoc] = useState(defaultValue);
 
-  const { latestMessage } = useHydroWebSocket(`/record-detail-conn`, { rid, domainId: "system" });
+  const { latestMessage } = useHydroWebSocket(`/record-detail-conn`, { rid, domainId: "system" }, { manual: false });
 
   useEffect(() => {
     try {

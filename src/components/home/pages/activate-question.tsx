@@ -9,6 +9,7 @@ import FormInput from "@/components/form/form-input";
 import store from "@/store/modal";
 import { useLockFn } from "ahooks";
 import { request } from "@/lib/request";
+import { HydroError } from "@/lib/error";
 
 const formSchema = z.object({
   activationCode: z
@@ -28,28 +29,31 @@ const ActivateQuestion: React.FC = () => {
 
   const handleSubmit = useLockFn(async (values: z.infer<typeof formSchema>) => {
     setErrorText("");
-    const { data } = await request.post(
-      `/priv`,
-      { operation: "activate", code: values.activationCode },
-      {
-        transformData: (data) => {
-          return data;
-        },
-      }
-    );
-    if (data.success) {
+    try {
+      const { data } = await request.post(
+        `/priv`,
+        { operation: "activate", code: values.activationCode },
+        {
+          transformData: (data) => {
+            return data;
+          },
+        }
+      );
       store.modalJumpTo("activate-success", {
         from: "activate-question-group",
-        tid: currentContext?.tid,
         content: data.group,
+        pid: currentContext.pid,
       });
-    } else {
-      setErrorText("激活码错误");
-      store.modalJumpTo("activate-error", {
-        from: "activate-question-group",
-        tid: currentContext?.tid,
-        group: currentContext?.group,
-      });
+    } catch (e) {
+      if (e instanceof HydroError) {
+        setErrorText("激活码错误");
+        store.modalJumpTo("activate-error", {
+          from: "activate-question-group",
+          group: currentContext?.group,
+        });
+      } else {
+        throw e;
+      }
     }
   });
 
@@ -68,13 +72,17 @@ const ActivateQuestion: React.FC = () => {
           <form onSubmit={form.handleSubmit(handleSubmit)}>
             <div className="my-3 space-y-3">
               <p>亲爱的用户：</p>
-              <p>该题目属于专属题库内容：</p>
-              <article className="space-y-3 indent-3">
-                {currentContext.group.map((item: string) => (
-                  <p key={item}>{item}</p>
-                ))}
-              </article>
-              <p>专属题库内容需要使用 以上任一【激活码】 激活后才能开始 练习。</p>
+              <p>该题目属于专属题库内容，需激活后才能练习</p>
+              {currentContext.group && (
+                <>
+                  <p className="space-y-3 indent-3">
+                    {currentContext.group.map((item: string) => (
+                      <p key={item}>{item}</p>
+                    ))}
+                  </p>
+                  <p>专属题库内容需要使用 以上任一【激活码】 激活后才能开始 练习。</p>
+                </>
+              )}
               <p>如果您已获得激活码，请直接输入。如果希望获得激活码，请联系客服。</p>
             </div>
             <div className="flex justify-between">

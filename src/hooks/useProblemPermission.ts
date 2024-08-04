@@ -10,7 +10,8 @@ export const useProblemPermission = () => {
   const searchParams = useSearchParams();
 
   const { run: runCheckProblemPermission } = useRequest(
-    async ({ pid, assign, title }) => {
+    async (props: { pid: string | number; assign?: string[]; title?: string }) => {
+      const { pid, assign, title } = props;
       const { data } = await request.post(
         `/p/${pid}` as "/p/{pid}",
         { operation: "check" },
@@ -29,13 +30,13 @@ export const useProblemPermission = () => {
         if (data.activation?.includes("group")) {
           storeModal.modalJumpTo("activate-question-group", {
             pid,
-            group: assign,
+            group: assign ?? data.assign,
           });
           storeModal.isModalShow.set(true);
         } else if (data.activation?.includes("point")) {
           storeModal.modalJumpTo("activate-question-point", {
             pid,
-            group: assign,
+            group: assign ?? data.assign,
             title,
           });
           storeModal.isModalShow.set(true);

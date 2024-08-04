@@ -4,9 +4,10 @@ on:
   push:
     branches:
       - main
+      - test
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     # env:
@@ -22,8 +23,8 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Cache pnpm store
         uses: actions/cache@v3
@@ -50,24 +51,72 @@ jobs:
       - name: Archive multiple folders and files
         run: tar -czf build-artifacts.tar.gz .next next.config.mjs public
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifact
+          path: |
+            build-artifacts.tar.gz
+            # add other paths if necessary
+
+  deploy-to-test:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/test' || github.ref == 'refs/heads/main'
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifact
+          path: build
+
       - name: Copy files via scp
         uses: appleboy/scp-action@v0.1.4
         with:
-          source: "build-artifacts.tar.gz"
+          source: "build/build-artifacts.tar.gz"
           target: "/home/ubuntu/nextjs-bootstrap/"
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
+          host: ${{ secrets.TEST_SERVER_HOST }}
+          username: ${{ secrets.TEST_SERVER_USER }}
+          password: ${{ secrets.TEST_SERVER_PASSWORD }}
 
       - name: Deploy on server
         uses: appleboy/ssh-action@v0.1.6
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
+          host: ${{ secrets.TEST_SERVER_HOST }}
+          username: ${{ secrets.TEST_SERVER_USER }}
+          password: ${{ secrets.TEST_SERVER_PASSWORD }}
           script: |
             cd /home/ubuntu/nextjs-bootstrap
             tar -xzf build-artifacts.tar.gz
             rm build-artifacts.tar.gz
             sudo su
             pm2 restart next-app || pm2 start "npm start" --name next-app
+
+  deploy-to-prod:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifact
+          path: build
+
+      - name: Copy files via scp
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          source: "build/build-artifacts.tar.gz"
+          target: "/home/ubuntu/nextjs-bootstrap/"
+          host: ${{ secrets.PROD_SERVER_HOST }}
+          username: ${{ secrets.PROD_SERVER_USER }}
+          password: ${{ secrets.PROD_SERVER_PASSWORD }}
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.PROD_SERVER_HOST }}
+          username: ${{ secrets.PROD_SERVER_USER }}
+          password: ${{ secrets.PROD_SERVER_PASSWORD }}
+          script: |
+            sudo su -c 'mv /home/ubuntu/nextjs-bootstrap/build/build-artifacts.tar.gz /root/nextjs-bootstrap && cd /root/nextjs-bootstrap && tar -xzf build-artifacts.tar.gz && rm build-artifacts.tar.gz && /root/.nix-profile/bin/pm2 restart next-app || /root/.nix-profile/bin/pm2 start "npm start" --name next-app'

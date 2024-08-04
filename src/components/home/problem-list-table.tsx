@@ -1,21 +1,20 @@
 "use client";
 import { Table, TableColumnsType, Tag } from "antd";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useUrlParamState } from "@/hooks/useUrlParamState";
 import { request } from "@/lib/request";
 import LinkBtn from "../common/link-btn";
-import { useWatcher } from "alova";
 import { paths } from "@/types/schema";
-import { useSearchParams } from "next/navigation";
 import ProblemListMask from "@/components/home/problem-list-mask";
-import CommonModal from "@/components/common/common-modal";
 import { useRequest } from "ahooks";
 import { useProblemPermission } from "@/hooks/useProblemPermission";
+import { stripMarkdown } from "@/lib/markdown";
+import emitter from "@/lib/event-emitter";
 
 type DataType = paths["/p"]["get"]["responses"]["200"]["content"]["application/json"]["pdocs"][number];
 
-const columns: TableColumnsType<DataType> = [
+export const columns: TableColumnsType<DataType> = [
   {
     title: "编号",
     dataIndex: "pid",
@@ -40,7 +39,7 @@ const columns: TableColumnsType<DataType> = [
     dataIndex: "tag",
     // ellipsis: true,
     render: (_, record) => (
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-y-1">
         {record.tag?.map((tag: string) => {
           return (
             <Tag color={"volcano"} key={tag} className="!bg-orange-50 !leading-4 !text-primary">
@@ -87,29 +86,42 @@ const columns: TableColumnsType<DataType> = [
   },
 ];
 
-const ProblemListTable = () => {
-  const [page, setPage] = useUrlParamState("page", "1");
-  const queryParams = useSearchParams();
+interface Props {
+  tid?: string;
+  lang?: string;
+}
 
-  const { data, loading = true } = useWatcher(
-    request.get("/p", {
-      params: {
-        page: Number(page) || 1,
-        limit: 15,
-        source: queryParams.get("tid") || undefined,
-        lang: queryParams.get("lang") || undefined,
-      },
-      transformData: (data) => {
-        return data.data;
-      },
-    }),
-    [queryParams, page],
-    { immediate: true }
+const ProblemListTable: React.FC<Props> = ({ tid, lang }) => {
+  const [page, setPage] = useUrlParamState("page", "1");
+  const cache = useRef<string | null>(null);
+
+  const {
+    data,
+    run: refresh,
+    loading,
+  } = useRequest(
+    async (page?: number) => {
+      const data = await request.get("/p", {
+        params: {
+          page: page || 1,
+          limit: 15,
+          source: tid,
+          lang: lang,
+        },
+        transformData: (data) => {
+          return data.data;
+        },
+      });
+
+      return data;
+    },
+    {
+      manual: true,
+    }
   );
 
-  const { data: tdocData } = useRequest(
+  const { data: tdocData, run: fetchTdoc } = useRequest(
     async () => {
-      const tid = queryParams.get("tid");
       if (!tid) return { ishasPermission: true };
       const { data } = await request.get(`/p-list/${tid}` as "/p-list/{tid}", {
         transformData: (data) => {
@@ -120,11 +132,45 @@ const ProblemListTable = () => {
     },
     {
       cacheKey: "/home/filter-data/hasPermission",
-      refreshDeps: [queryParams.get("tid")],
+      refreshDeps: [tid],
     }
   );
 
   const { runCheckProblemPermission } = useProblemPermission();
+
+  // 在tid或lang变化时，重置page
+  useEffect(() => {
+    const newCache = JSON.stringify({ tid, lang });
+    // ref=null的情况代表初始化，不重置page
+    if (!cache.current) {
+      cache.current = newCache;
+      return;
+    }
+    if (cache.current === newCache) return;
+    cache.current = newCache;
+    if (page === "1") {
+      refresh(); // page=1时需要手动刷新
+    } else {
+      setPage("1");
+    }
+  }, [tid, lang]);
+
+  // 在page更新时刷新表格（tid和lang依赖page去刷新）
+  useEffect(() => {
+    refresh(Number(page));
+  }, [page]);
+
+  useEffect(() => {
+    const handleRefresh = () => {
+      refresh(Number(page));
+      fetchTdoc();
+    };
+    emitter.on("refreshHomepage", handleRefresh);
+
+    return () => {
+      emitter.off("refreshHomepage", handleRefresh);
+    };
+  }, [fetchTdoc, page, refresh]);
 
   return (
     <ProblemListMask
@@ -132,8 +178,8 @@ const ProblemListTable = () => {
       content={tdocData?.content ?? ""}
       ishasPermission={tdocData?.ishasPermission ?? true}
     >
-      <CommonModal />
       <Table
+        size="small"
         loading={loading}
         dataSource={data?.pdocs}
         columns={columns}
@@ -142,11 +188,12 @@ const ProblemListTable = () => {
         onRow={(record) => {
           return {
             onClick: () => {
-              runCheckProblemPermission({ pid: record.pid, assign: record.assign, title: record.title });
+              runCheckProblemPermission(record);
             },
           };
         }}
         expandable={{
+          showExpandColumn: false,
           expandedRowRender: (record) => (
             <div
               style={{
@@ -155,12 +202,12 @@ const ProblemListTable = () => {
                 borderBottom: "0.1rem dashed #F1F1F1",
               }}
             >
-              {record?.brief?.slice(0, 100)}...
+              {stripMarkdown(record?.brief)?.slice(0, 100)}...
             </div>
           ),
           expandedRowClassName: () => "!text-grey",
           expandedRowKeys: data?.pdocs?.filter((item) => Boolean(item.brief))?.map((item) => item.pid),
-          expandIcon: () => <></>,
+          expandIcon: () => null,
         }}
         pagination={{
           position: ["bottomCenter"],

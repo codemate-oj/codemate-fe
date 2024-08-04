@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { createForm, onFormValuesChange } from "@formily/core";
 import { FormProvider, createSchemaField, ISchema } from "@formily/react";
 import { Form } from "antd";
@@ -68,11 +68,13 @@ interface FormilySchemaProps {
 const FormilyRenderer: React.FC<FormilySchemaProps> = ({ schema, pid }) => {
   const [isJudging, setIsJudging] = React.useState(false);
   const searchParams = useSearchParams();
+  const isFromContest = searchParams.get("fromContest") === "true" && searchParams.get("tid");
 
   const { run: handleSubmit, data: rid } = useRequest(
     async () => {
       let rid: string | undefined;
       await loginGuard(async () => {
+        setAnswerText(null);
         setIsJudging(true);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const ans: Record<string, any> = {};
@@ -87,7 +89,6 @@ const FormilyRenderer: React.FC<FormilySchemaProps> = ({ schema, pid }) => {
           choices = choices.map((choice: number) => String.fromCharCode(65 + choice));
           ans[key] = choices;
         }
-        const isFromContest = searchParams.get("fromContest") === "true" && searchParams.get("tid");
         rid = await request.post(
           `/p/${pid}/submit` as "/p/{pid}/submit",
           {
@@ -107,25 +108,34 @@ const FormilyRenderer: React.FC<FormilySchemaProps> = ({ schema, pid }) => {
 
   const rdoc = useRealtimeRecordDetail(rid);
 
-  const answerText = useMemo(() => {
-    if (!rdoc || rdoc._id !== rid) return null;
+  const [answerText, setAnswerText] = useState<React.ReactNode>(null);
+
+  useEffect(() => {
+    if (rid && isFromContest) {
+      setIsJudging(false);
+      setAnswerText(<span className="text-success">提交成功</span>);
+      return;
+    }
+    if (!rdoc || rdoc._id !== rid) return;
     switch (rdoc.status) {
+      case STATUS_ENUM.STATUS_ACCEPTED:
+        setIsJudging(false);
+        setAnswerText(<span className="text-success">回答正确</span>);
+        break;
+      case STATUS_ENUM.STATUS_WRONG_ANSWER:
+        setIsJudging(false);
+        setAnswerText(<span className="text-fail">回答错误</span>);
+        break;
       case STATUS_ENUM.STATUS_WAITING:
       case STATUS_ENUM.STATUS_JUDGING:
       case STATUS_ENUM.STATUS_COMPILING:
-        setIsJudging(true);
-        return null;
-      case STATUS_ENUM.STATUS_ACCEPTED:
-        setIsJudging(false);
-        return <span className="text-success">回答正确</span>;
-      case STATUS_ENUM.STATUS_WRONG_ANSWER:
-        setIsJudging(false);
-        return <span className="text-fail">回答错误</span>;
+        break;
       default:
         setIsJudging(false);
-        return <span className="text-fail">系统错误</span>;
+        setAnswerText(<span className="text-fail">系统错误</span>);
+        break;
     }
-  }, [rdoc, rid]);
+  }, [rdoc, rid, isFromContest]);
 
   return (
     <FormProvider form={form}>

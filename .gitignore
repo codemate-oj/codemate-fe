@@ -12,6 +12,7 @@
 # next.js
 /.next/
 /out/
+*.tar.gz
 
 # production
 /build
@@ -39,3 +40,4 @@ next-env.d.ts
 *storybook.log
 
 .idea
+.vscode

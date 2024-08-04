@@ -5,17 +5,20 @@ import { Button } from "../../ui/button";
 import { Icon } from "@iconify/react";
 import store from "@/store/modal";
 import { useLockFn } from "ahooks";
-import { useUrlParamState } from "@/hooks/useUrlParamState";
+import emitter from "@/lib/event-emitter";
 
 const ActivateSuccess: React.FC = () => {
   const currentContext = store.currentContext.use();
-  const [, setTid] = useUrlParamState("tid");
 
   const handleSubmit = useLockFn(async () => {
     if (currentContext.from === "activate") {
-      setTid(currentContext.tid);
+      emitter.emit("refreshHomepage");
     }
     store.isModalShow.set(false);
+    if (currentContext.pid) {
+      const target = window.location.pathname.startsWith("/p") ? "_self" : "_blank";
+      window.open(`/p/${currentContext.pid}?tid=${new URLSearchParams(window.location.search).get("tid")}`, target);
+    }
   });
 
   function transformContent(input: string) {

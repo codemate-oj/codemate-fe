@@ -1,6 +1,6 @@
 import { getWsUrl } from "@/lib/socket";
 import { useWebSocket } from "ahooks";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function useHydroWebSocket(
   path: string,
@@ -9,10 +9,16 @@ export function useHydroWebSocket(
 ) {
   const { onOpen, onMessage, onClose, ...rest } = options;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [url, setUrl] = useState<string>("");
 
-  return useWebSocket(getWsUrl(path, params), {
+  useEffect(() => {
+    setUrl(getWsUrl(path, params));
+  }, [params, path]);
+
+  return useWebSocket(url, {
     reconnectLimit: 100,
     reconnectInterval: 10000,
+    manual: true,
     onOpen: (_, ws) => {
       timerRef.current = setInterval(() => {
         ws.send("ping");

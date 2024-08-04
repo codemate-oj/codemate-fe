@@ -8,6 +8,7 @@ import { cn, getTimeDiffFromNow } from "@/lib/utils";
 import loginStore from "@/store/login";
 import { useInfiniteScroll } from "ahooks";
 import { Button, Table, TableProps } from "antd";
+import Link from "next/link";
 import React from "react";
 
 const tableColumns: TableProps["columns"] = [
@@ -15,11 +16,35 @@ const tableColumns: TableProps["columns"] = [
     title: "编号",
     dataIndex: "pid",
     width: 100,
+    render(value) {
+      return (
+        <Link
+          className="transition hover:text-primary hover:underline"
+          href={`/p/${value}`}
+          target="_blank"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {value}
+        </Link>
+      );
+    },
   },
   {
     title: "题目名称",
     dataIndex: "name",
     width: 150,
+    render(value, row) {
+      return (
+        <Link
+          className="transition hover:text-primary hover:underline"
+          href={`/p/${row.pid}`}
+          target="_blank"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {value}
+        </Link>
+      );
+    },
   },
   {
     title: "算法标签",
@@ -139,7 +164,18 @@ const SubmitRecords = () => {
         selectedKey={activeKey}
         onChange={setActiveKey}
       />
-      <Table columns={tableColumns} loading={loading} pagination={false} dataSource={data?.list ?? []} />
+      <Table
+        columns={tableColumns}
+        loading={loading}
+        pagination={false}
+        dataSource={data?.list ?? []}
+        rowClassName="!cursor-pointer"
+        onRow={(row) => ({
+          onClick: () => {
+            window.open(`/record/${row.rid}`, "_blank");
+          },
+        })}
+      />
       {!loading && (
         <div className="mt-8 w-full text-center">
           <Button onClick={loadMore} disabled={noMore} loading={loadingMore}>

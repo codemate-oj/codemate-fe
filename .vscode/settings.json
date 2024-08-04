@@ -11,5 +11,14 @@
   "editor.quickSuggestions": {
     "strings": true
   },
+<<<<<<< HEAD
   "cSpell.words": ["Alova", "antd", "userplist"]
 }
+=======
+  "cSpell.words": [
+    "Alova",
+    "antd"
+  ],
+  "C_Cpp_Runner.msvcBatchPath": ""
+}
+>>>>>>> main

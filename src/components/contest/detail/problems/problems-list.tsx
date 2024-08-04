@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import CommitRecord from "./commit-record";
 import EvaluateRecord from "./evaluate-record";
-import { useDocumentVisibility, useRequest } from "ahooks";
+import { useRequest } from "ahooks";
 import { request } from "@/lib/request";
 import Loading from "@/app/(home)/loading";
 import loginStore from "@/store/login";
@@ -13,7 +13,7 @@ interface PropsType {
 const ProblemsList: React.FC<PropsType> = (props) => {
   const { tid } = props;
 
-  const { data, loading, refresh } = useRequest(
+  const { data, loading } = useRequest(
     async () => {
       const { data } = await request.get(`/contest/${tid as "{tid}"}/problems`, {
         transformData: ({ data }) => {
@@ -22,16 +22,8 @@ const ProblemsList: React.FC<PropsType> = (props) => {
       });
       return data;
     },
-    { manual: true }
+    { refreshOnWindowFocus: true }
   );
-
-  const documentVisibility = useDocumentVisibility();
-
-  useEffect(() => {
-    if (documentVisibility === "visible") {
-      refresh();
-    }
-  }, [documentVisibility]);
 
   const plist = data?.pdict ?? {};
   const plistKeys = Object.keys(plist || {});
@@ -63,12 +55,13 @@ const ProblemsList: React.FC<PropsType> = (props) => {
 
   const evaluaRecords =
     rdocs?.map((item) => {
+      const pdoc = plist[item.pid];
       return {
         key: item._id,
         score: item.score,
         status: item.status,
-        title: plist[item.pid].title,
-        time: parseInt(String(item.time)),
+        title: `${pdoc.pid} - ${pdoc.title}`,
+        time: item.time,
         memory: ((item.memory as number) / 1024).toFixed(1),
         language: item.lang,
         last_commit: item.judgeAt,
