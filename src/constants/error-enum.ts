@@ -1,9 +1,9 @@
 import ERROR_DATA_MAP from "@/constants/error.yml";
 
 const enum ERROR_TYPE {
+  USER_NOT_LOGIN_ERROR = -2,
   UNKNOWN_SERVER_ERROR = -1,
-  USER_NOT_LOGIN_ERROR = 0,
-  VALIDATION_ERROR = 1,
+  VALIDATION_ERROR = 0,
   USER_NOT_FOUND_ERROR,
   USER_ALREADY_EXISTS_ERROR,
   INVALID_PASSWORD_ERROR,
@@ -16,18 +16,19 @@ const enum ERROR_TYPE {
   USER_NOT_AUTHORIZED_ERROR,
   CONTEST_ATTEND_MULTIPLE_ERROR,
   PROBLEM_NOT_FOUND_ERROR,
+  PERMISSION_DENIED_ERROR,
 }
 
 /** ErrMsg(raw) -> ErrCode 映射 */
 const ERROR_CODE_MAP = {} as Record<string, ERROR_TYPE>;
 Object.keys(ERROR_DATA_MAP).forEach((key, index) => {
-  ERROR_CODE_MAP[key] = index + 1;
+  ERROR_CODE_MAP[key] = index;
 });
 
 /** ErrCode -> ErrMsg(cn) 映射 */
 const ERROR_MAP = {} as Record<ERROR_TYPE, string>;
 Object.keys(ERROR_DATA_MAP).forEach((key, index) => {
-  ERROR_MAP[(index + 1) as ERROR_TYPE] = ERROR_DATA_MAP[key];
+  ERROR_MAP[index as ERROR_TYPE] = ERROR_DATA_MAP[key];
 });
 
 export { ERROR_CODE_MAP, ERROR_MAP, ERROR_TYPE };
