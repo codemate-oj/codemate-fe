@@ -1,5 +1,3 @@
-import { request } from "./request";
-
 export type ProblemType = "objective" | "scratch" | "default";
 
 interface PdocWithConfig {
