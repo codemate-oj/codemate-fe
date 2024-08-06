@@ -2,7 +2,17 @@ import { request } from "@/lib/request";
 import type { Metadata } from "next";
 import { forwardAuthHeader } from "@/lib/forward-auth";
 import React from "react";
-import App from "./App";
+import dynamic from "next/dynamic";
+import Skeleton from "@/components/ui/skeleton";
+
+const App = dynamic(() => import("./App"), {
+  ssr: false,
+  loading: () => (
+    <div className="max-w-[1200px] p-20">
+      <Skeleton />
+    </div>
+  ),
+});
 
 type Props = {
   params: {

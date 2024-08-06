@@ -11,6 +11,7 @@ import media from "@/lib/unified/media";
 import CodeInput from "./code-input";
 import { LangType } from "@/providers/code-lang-provider";
 import CodeActionBar from "./code-action-bar";
+import ProblemSidePanel from "./problem-side-panel";
 
 const FormilyRenderer = React.lazy(() => import("./formily-renderer"));
 const MarkdownRenderer = React.lazy(() => import("../common/markdown-renderer"));
@@ -22,7 +23,7 @@ interface Props {
   fromContest?: boolean;
 }
 
-const DetailBodyPage: React.FC<Props> = ({ pid, data, tid, fromContest }) => {
+const DetailBodyPage: React.FC<Props> = ({ pid, data }) => {
   const problemType = getProblemType(data?.pdoc);
   const markdownContent = getMarkdownContent(data?.pdoc);
   const langs = getProgrammingLangs(data?.pdoc);
@@ -67,15 +68,14 @@ const DetailBodyPage: React.FC<Props> = ({ pid, data, tid, fromContest }) => {
       <PageTitle>修炼场 {problemType === "objective" ? "客观题" : "编程题"}</PageTitle>
       <PTop {...data?.pdoc} starred={data?.psdoc?.star} uname={data?.udoc?.uname} />
       <div className="mt-10 flex">
-        <div className="w-4/5 border-r-2 border-dashed pr-4">
+        <div className="flex-1 border-r-2 border-dashed pr-4">
           <div>
             <Suspense fallback={<Loading />}>{renderContent()}</Suspense>
           </div>
-          {pType === "default" && <CodeInput langs={langs as LangType[]} pid={params.pid} />}
-          {pType !== "objective" && <CodeActionBar type={pType} pid={params.pid} />}
+          {renderActions()}
         </div>
-        <div className="w-1/5 pl-5">
-          <ProblemSidePanel pid={params.pid} entryType={pType} />
+        <div className="min-w-1/5 pl-5">
+          <ProblemSidePanel pid={pid} entryType={problemType} />
         </div>
       </div>
     </div>

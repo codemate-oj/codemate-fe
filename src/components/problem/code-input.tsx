@@ -1,50 +1,37 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { AVAILABLE_LANG_MAP, LangType } from "@/providers/code-lang-provider";
+import { AVAILABLE_LANG_MAP, useCodeLangContext, LangType } from "@/providers/code-lang-provider";
 import { Textarea } from "../ui/textarea";
-import { debounce } from "lodash";
-import { toast } from "sonner";
 
 interface CodeInputProps {
   pid?: string | number;
   langs: LangType[];
-  onChange?: (lang: LangType, code: string) => void;
 }
 
-const CodeInput: React.FC<CodeInputProps> = ({ langs, pid, onChange }) => {
+const CodeInput: React.FC<CodeInputProps> = ({ langs, pid }) => {
   const [code, setCode] = useState<string>("");
-  const [lang, setLang] = useState<LangType | undefined>(langs[0]);
+  const { lang: selectedLang, setLang: setSelectedLang } = useCodeLangContext();
+  const cacheKey = useRef(`code-${pid}`);
 
-  const cacheKeyPrefix = useRef(`code-${pid}`);
-  const getCacheKey = () => `${cacheKeyPrefix.current}-${lang}`;
+  // 初始化
+  useEffect(() => {
+    const cachedCode = localStorage.getItem(cacheKey.current);
+    if (cachedCode) {
+      setCode(cachedCode);
+    }
+  }, []);
 
   const handleCodeChange = (newCode: string | undefined) => {
     if (newCode !== undefined) {
       setCode(newCode);
-      localStorage.setItem(cacheKeyPrefix.current, newCode); // TODO: 用于代码提交 提取到context中
-      localStorage.setItem(getCacheKey(), newCode);
+      localStorage.setItem(cacheKey.current, newCode);
     }
   };
 
   const handleLangChange = (newLang: LangType) => {
-    setLang(newLang);
+    setSelectedLang(newLang);
   };
-
-  useEffect(() => {
-    const cachedCode = localStorage.getItem(getCacheKey());
-    if (cachedCode) {
-      setCode(cachedCode);
-    }
-  }, [lang]);
-
-  useEffect(() => {
-    if (!lang) {
-      toast.error("请选择语言");
-      return;
-    }
-    onChange?.(lang, code);
-  }, [lang, code]);
 
   return (
     <>
@@ -52,24 +39,18 @@ const CodeInput: React.FC<CodeInputProps> = ({ langs, pid, onChange }) => {
         <span className="my-4 text-2xl font-bold">请答题</span>
         <span className="mb-4 text-gray-500">选择编译器</span>
         <div className="mb-4">
-          {langs.map((l) => (
+          {langs.map((lang) => (
             <Button
-              key={l}
+              key={lang}
               variant={"outline"}
-              className={`mb-2 mr-2 justify-start ${lang === l ? "mr-2 border-2 border-primary text-primary hover:bg-accent/30 hover:text-primary" : ""}`}
-              onClick={() => handleLangChange(l)}
+              className={`mb-2 mr-2 justify-start ${selectedLang === lang ? "mr-2 border-2 border-primary text-primary hover:bg-accent/30 hover:text-primary" : ""}`}
+              onClick={() => handleLangChange(lang)}
             >
-              {AVAILABLE_LANG_MAP[l as LangType]}
+              {AVAILABLE_LANG_MAP[lang as LangType]}
             </Button>
           ))}
         </div>
-        <Textarea
-          className="mb-8 min-h-[500px] pr-4"
-          value={code}
-          onChange={(e) => {
-            debounce(() => handleCodeChange(e.target.value), 500)();
-          }}
-        />
+        <Textarea className="mb-8 min-h-[500px] pr-4" value={code} onChange={(e) => handleCodeChange(e.target.value)} />
       </div>
     </>
   );

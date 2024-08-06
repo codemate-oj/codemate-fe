@@ -1,17 +1,15 @@
 "use client";
-import PageTitle from "@/components/common/page-title";
 import NotLogin from "@/components/error/not-login";
 import DetailBodyPage from "@/components/problem/detail-body-page";
-import PTop from "@/components/problem/p-top";
 import { ERROR_TYPE } from "@/constants/error-enum";
 import { useProblemPermission } from "@/hooks/useProblemPermission";
 import { HydroError, NotLoginError } from "@/lib/error";
-import { getProblemType } from "@/lib/problem";
 import { request } from "@/lib/request";
+import CodeLangProvider from "@/providers/code-lang-provider";
 import type { paths } from "@/types/schema";
 import { useRequest } from "ahooks";
 import { Button, Result } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 export type ProblemDetailAPI = paths["/p/{pid}"]["get"]["responses"]["200"]["content"]["application/json"];
 
@@ -107,7 +105,11 @@ const App: React.FC<Props> = (props) => {
     );
   }
 
-  return <DetailBodyPage data={data} pid={pid} />;
+  return (
+    <CodeLangProvider>
+      <DetailBodyPage data={data} pid={pid} />
+    </CodeLangProvider>
+  );
 };
 
 export default App;
