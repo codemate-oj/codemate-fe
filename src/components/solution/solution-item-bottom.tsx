@@ -39,7 +39,7 @@ const DislikeIcon = ({ isActive, onClick }: IconProps) => (
 const SolutionItemBottom: React.FC<SolutionItemBottomProps> = (props) => {
   const { pid, psid, voteNumber } = props;
 
-  const [voteCount, setVoteCount] = useState(Number(voteNumber));
+  const [voteCount, setVoteCount] = useState(Number(voteNumber) > 0 ? Number(voteNumber) : 0);
   const [voteCountDislike, setVoteCountDislike] = useState(Number(voteNumber) < 0 ? Math.abs(Number(voteNumber)) : 0);
 
   const [isLike, setIsLike] = useState(false);
