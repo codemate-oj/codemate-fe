@@ -95,9 +95,10 @@ const columns: TableColumnsType<DataType> = [
   },
 ];
 
-export const ProblemListTable = () => {
+export const ProblemTable = ({}) => {
   const [page, setPage] = useUrlParamState("page", "1");
   const queryParams = useSearchParams();
+  // console.log(tid);
 
   const { data, loading = true } = useWatcher(
     request.get("/p", {
@@ -114,6 +115,19 @@ export const ProblemListTable = () => {
     [queryParams, page],
     { immediate: true }
   );
+  // const { data: problemListData = {} } = useRequest(
+  //   async () => {
+  //     const { data } = await request.get(`/user-plist/${tid}/detail` as "/user-plist/{tid}/detail", {
+  //       params: {
+  //         page: 1,
+  //       },
+  //     });
+  //     return data.pldoc;
+  //   },
+  //   {
+  //     refreshDeps: [tid],
+  //   }
+  // );
 
   const { data: tdocData } = useRequest(
     async () => {

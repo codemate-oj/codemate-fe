@@ -7,6 +7,12 @@ import CreateQuizModel from "./plist/create-quiz-model";
 import DeleteQuizModel from "./plist/delete-quiz-modal";
 import Link from "next/link";
 
+/** @desc 获取tid */
+function extractCodeFromPathname(pathname: string): string | null {
+  const match = pathname.match(/^\/user\/plist\/([^/]+)\/detail$/);
+  return match ? match[1] : null;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const TableList = ({ children }: any) => {
   const pathname = usePathname();
@@ -20,7 +26,7 @@ const TableList = ({ children }: any) => {
   ]);
 
   const routerConfig = userCenterRoutes.find((r) => pathname.startsWith(r.href));
-
+  const tid = extractCodeFromPathname(pathname);
   useEffect((): void => {
     const items = [
       {
@@ -69,43 +75,41 @@ const TableList = ({ children }: any) => {
     ),
   }));
 
+  /** @desc 右上角按钮渲染 */
+  const renderButtons = () => {
+    if (pathname === "/user/plist") {
+      return (
+        <Button className="font-bold" onClick={() => setModalOpen(true)}>
+          创建题单
+        </Button>
+      );
+    }
+
+    if (pathname.match(/^\/user\/plist\/[^/]+\/detail$/) || pathname.match(/^\/user\/plist\/[^/]+\/import$/)) {
+      return (
+        <div className="flex">
+          <Space>
+            <Link href={`/user/plist/${tid}/import`}>
+              <Button className="font-bold" type="primary">
+                添加
+              </Button>
+            </Link>
+            <Button className="font-bold" onClick={() => setModalOpen(true)}>
+              删除
+            </Button>
+          </Space>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div className="flex-1">
       <h2 className="mb-5 flex items-center justify-between font-bold">
         <Breadcrumb items={breadcrumbRenderItems} className="text-2xl" />
-        {pathname === "/user/plist" && (
-          <Button className="font-bold" onClick={() => setModalOpen(true)}>
-            创建题单
-          </Button>
-        )}
-        {pathname.match(/^\/user\/plist\/[^/]+\/detail$/) && (
-          <div className="flex">
-            <Space>
-              <Link href={"/user/plist/import"}>
-                <Button className="font-bold" type="primary">
-                  添加
-                </Button>
-              </Link>
-              <Button className="font-bold" onClick={() => setModalOpen(true)}>
-                删除
-              </Button>
-            </Space>
-          </div>
-        )}
-        {pathname.match(/^\/user\/plist\/[^/]+\/import$/) && (
-          <div className="flex">
-            <Space>
-              <Link href={"/user/plist/import"}>
-                <Button className="font-bold" type="primary">
-                  添加
-                </Button>
-              </Link>
-              <Button className="font-bold" onClick={() => setModalOpen(true)}>
-                删除
-              </Button>
-            </Space>
-          </div>
-        )}
+        {renderButtons()}
       </h2>
 
       {children}

@@ -2,6 +2,9 @@ import React from "react";
 import { Table, TableColumnsType, Button } from "antd";
 import Link from "next/link";
 import Image from "next/image";
+import { useRequest } from "ahooks";
+import { useUrlParamState } from "@/hooks/useUrlParamState";
+import { request } from "@/lib/request";
 
 export interface ProblemList {
   _id: string;
@@ -16,18 +19,13 @@ export interface ProblemList {
   content?: string;
 }
 
-interface ProblemTableProps {
-  data: ProblemList[];
-  loading: boolean;
-  currentPage: number;
-  onPageChange: (page: number) => void;
-}
-
 const columns: TableColumnsType<ProblemList> = [
   {
     title: "Title",
     dataIndex: "title",
     key: "title",
+    width: "20%",
+    ellipsis: true,
   },
   {
     title: "Pids",
@@ -38,6 +36,8 @@ const columns: TableColumnsType<ProblemList> = [
     title: "Description",
     dataIndex: "content",
     key: "content",
+    width: "60%",
+    render: (text) => <div style={{ wordWrap: "break-word", wordBreak: "break-word" }}>{text}</div>,
   },
   {
     title: "Action",
@@ -47,32 +47,58 @@ const columns: TableColumnsType<ProblemList> = [
         <Image src="/svg/app-user-plist-editIcon.svg" alt="editQuiz" width={20} height={24} />
       </Link>
     ),
+    width: "10%",
   },
 ];
 
-const LinkBtn: React.FC<{ children: React.ReactNode }> = ({ children, ...props }) => {
-  return (
-    <Button className="hover:!text-primary" {...props} type="link">
-      {children}
-    </Button>
-  );
-};
+const LinkBtn: React.FC<{ children: React.ReactNode }> = ({ children, ...props }) => (
+  <Button className="hover:!text-primary" {...props} type="link">
+    {children}
+  </Button>
+);
 
-const ProblemTable: React.FC<ProblemTableProps> = ({ data, loading, currentPage, onPageChange }) => {
+/** @desc 题单列表 */
+const ProblemListTable: React.FC = () => {
+  const [page, setPage] = useUrlParamState("page", "1");
+
+  const { data: problemListData, loading: requestLoading } = useRequest(
+    async () => {
+      const { data } = await request.get(`/user-plist`, {
+        params: {
+          page: Number(page) > 0 ? Number(page) : 1,
+          all: false,
+        },
+      });
+      return data;
+    },
+    {
+      refreshDeps: [page],
+    }
+  );
+
+  const dataSource = problemListData?.pldocs || [];
+  const total = problemListData?.pldocsCount || 0;
+
+  const onPageChange = (page: number) => {
+    if (page > 0) {
+      setPage(page.toString());
+    }
+  };
+
   return (
     <Table
       showHeader={false}
-      dataSource={data}
+      dataSource={dataSource}
       columns={columns}
-      loading={loading}
+      loading={requestLoading}
+      rowKey="_id"
       pagination={{
         position: ["bottomCenter"],
-        current: currentPage,
-        total: 3,
-        pageSize: 15,
+        current: Number(page) > 0 ? Number(page) : 1,
+        total,
         onChange: onPageChange,
         showSizeChanger: false,
-        itemRender(_, type, element) {
+        itemRender: (_, type, element) => {
           if (type === "prev") {
             return (
               <>
@@ -96,4 +122,4 @@ const ProblemTable: React.FC<ProblemTableProps> = ({ data, loading, currentPage,
   );
 };
 
-export default ProblemTable;
+export default ProblemListTable;
