@@ -2,7 +2,7 @@ import { TreeItem } from "@/components/common/filter-tabs-tree";
 
 export enum ContestTagEnum {
   "AIOJ争霸赛" = 0,
-  "神犇争霸赛",
+  "神犇邀请赛",
   "诸侯赛",
   "模拟测试",
   "专项赛",
@@ -48,8 +48,8 @@ export const contestFilterTreeData: TreeItem[] = [
     ],
   },
   {
-    label: "神犇争霸赛",
-    key: String(ContestTagEnum["神犇争霸赛"]),
+    label: "神犇邀请赛",
+    key: String(ContestTagEnum["神犇邀请赛"]),
     children: [
       {
         label: "全部",
